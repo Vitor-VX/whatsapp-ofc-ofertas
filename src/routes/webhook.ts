@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express';
 import { validateWhatsAppWebhook } from '../middleware/validateWebhook';
 import { publishMessage } from '../config/rabbitmq';
 import { logger } from '../logger';
+import { getEnv } from '../config/env';
 
 const router = Router();
 
@@ -13,7 +14,7 @@ router.get('/webhook/whatsapp', (req: Request, res: Response) => {
     const token = req.query['hub.verify_token'];
     const challenge = req.query['hub.challenge'];
 
-    if (mode === 'subscribe' && token === process.env.META_VERIFY_TOKEN) {
+    if (mode === 'subscribe' && token === getEnv().META_VERIFY_TOKEN) {
         res.status(200).send(challenge);
     } else {
         res.status(403).json({ error: 'Forbidden' });
