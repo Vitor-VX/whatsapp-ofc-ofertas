@@ -1,0 +1,285 @@
+{
+  "id": "pet-art-mx",
+  "name": "Arte Digital de Mascota",
+  "startNode": "welcome",
+  "nodes": {
+    "welcome": {
+      "id": "welcome",
+      "type": "typing",
+      "durationMs": 1500,
+      "action": "typing",
+      "nextNode": "attention_1"
+    },
+    "attention_1": {
+      "id": "attention_1",
+      "type": "text",
+      "content": "¡Hola! 🐾 ¿Tienes una mascota que amas con todo tu corazón?",
+      "nextNode": "delay_1"
+    },
+    "delay_1": {
+      "id": "delay_1",
+      "type": "delay",
+      "ms": 1200,
+      "nextNode": "attention_image"
+    },
+    "attention_image": {
+      "id": "attention_image",
+      "type": "image",
+      "url": "https://files.botsync.site/quadros/img-sites/sky_theme.jpg",
+      "caption": "✨ Mira cómo transformamos a las mascotas en verdaderas obras de arte clásico...",
+      "nextNode": "delay_2"
+    },
+    "delay_2": {
+      "id": "delay_2",
+      "type": "delay",
+      "ms": 1500,
+      "nextNode": "interest_1"
+    },
+    "interest_1": {
+      "id": "interest_1",
+      "type": "text",
+      "content": "🎨 Convertimos la foto de tu mascota en un retrato estilo *Renacentista*, *Rococó* o *Cielo Épico*.\n\nArte digital lista en menos de 24h, directo aquí en WhatsApp. Solo $5 USD 🐶🐱",
+      "nextNode": "delay_3"
+    },
+    "delay_3": {
+      "id": "delay_3",
+      "type": "delay",
+      "ms": 1000,
+      "nextNode": "interest_audio"
+    },
+    "interest_audio": {
+      "id": "interest_audio",
+      "type": "audio",
+      "url": "https://your-cdn.com/audio/explicacion.ogg",
+      "nextNode": "delay_4"
+    },
+    "delay_4": {
+      "id": "delay_4",
+      "type": "delay",
+      "ms": 1200,
+      "nextNode": "desire_buttons"
+    },
+    "desire_buttons": {
+      "id": "desire_buttons",
+      "type": "buttons",
+      "body": "¿Te gustaría ver cómo quedaría tu mascota? 😍\n\nElige una opción:",
+      "buttons": [
+        {
+          "id": "yes",
+          "title": "¡Sí, quiero verlo! 🎨",
+          "nextNode": "ask_pet_name"
+        },
+        {
+          "id": "more_info",
+          "title": "¿Cómo funciona? 🤔",
+          "nextNode": "how_it_works"
+        },
+        {
+          "id": "no",
+          "title": "Ahora no 👋",
+          "nextNode": "remarketing_setup"
+        }
+      ]
+    },
+    "how_it_works": {
+      "id": "how_it_works",
+      "type": "text",
+      "content": "Es muy sencillo 👇\n\n1️⃣ Me envías una foto de tu mascota\n2️⃣ Nuestra IA crea el retrato artístico\n3️⃣ Ves una *previa* aquí mismo\n4️⃣ Si te gusta, pagas solo $5 USD\n5️⃣ Recibes el archivo en alta resolución 🖼️",
+      "nextNode": "delay_how"
+    },
+    "delay_how": {
+      "id": "delay_how",
+      "type": "delay",
+      "ms": 1000,
+      "nextNode": "desire_buttons"
+    },
+    "ask_pet_name": {
+      "id": "ask_pet_name",
+      "type": "typing",
+      "durationMs": 1000,
+      "action": "typing",
+      "nextNode": "ask_pet_name_msg"
+    },
+    "ask_pet_name_msg": {
+      "id": "ask_pet_name_msg",
+      "type": "waitInput",
+      "saveAs": "petName",
+      "content": "¡Perfecto! 🐾 Primero dime, ¿cómo se llama tu mascota?",
+      "nextNode": "ask_style"
+    },
+    "ask_style": {
+      "id": "ask_style",
+      "type": "buttons",
+      "body": "¡Qué nombre tan bonito! 🥰\n\nAhora elige el estilo artístico para {{petName}}:",
+      "buttons": [
+        {
+          "id": "sky",
+          "title": "🌩️ Cielo Épico",
+          "nextNode": "style_selected_sky"
+        },
+        {
+          "id": "renaissance",
+          "title": "🎭 Renacentista",
+          "nextNode": "style_selected_renaissance"
+        },
+        {
+          "id": "rococo",
+          "title": "🌸 Rococó",
+          "nextNode": "style_selected_rococo"
+        }
+      ]
+    },
+    "style_selected_sky": {
+      "id": "style_selected_sky",
+      "type": "text",
+      "content": "¡Excelente elección! 🌩️ *Cielo Épico* es el estilo más popular. ¡Tu mascota va a quedar increíble!",
+      "nextNode": "save_style_sky"
+    },
+    "save_style_sky": {
+      "id": "save_style_sky",
+      "type": "action",
+      "action": "saveStyle",
+      "nextNode": "ask_photo"
+    },
+    "style_selected_renaissance": {
+      "id": "style_selected_renaissance",
+      "type": "text",
+      "content": "¡Magnífico! 🎭 El estilo *Renacentista* va a darle un aire de nobleza a {{petName}}.",
+      "nextNode": "save_style_renaissance"
+    },
+    "save_style_renaissance": {
+      "id": "save_style_renaissance",
+      "type": "action",
+      "action": "saveStyle",
+      "nextNode": "ask_photo"
+    },
+    "style_selected_rococo": {
+      "id": "style_selected_rococo",
+      "type": "text",
+      "content": "¡Qué gusto! 🌸 El estilo *Rococó* es elegante y sofisticado. ¡Le va a quedar perfecto a {{petName}}!",
+      "nextNode": "save_style_rococo"
+    },
+    "save_style_rococo": {
+      "id": "save_style_rococo",
+      "type": "action",
+      "action": "saveStyle",
+      "nextNode": "ask_photo"
+    },
+    "ask_photo": {
+      "id": "ask_photo",
+      "type": "waitPhoto",
+      "content": "📸 Ahora envíame una foto de {{petName}}. Asegúrate de que se vea bien su carita 🐾",
+      "timeoutMs": 300000,
+      "timeoutNode": "photo_timeout",
+      "nextNode": "generating_image"
+    },
+    "photo_timeout": {
+      "id": "photo_timeout",
+      "type": "text",
+      "content": "Parece que te perdiste 😅 Cuando quieras continuar, solo envíame la foto de {{petName}} 📸",
+      "nextNode": "ask_photo"
+    },
+    "generating_image": {
+      "id": "generating_image",
+      "type": "typing",
+      "durationMs": 3000,
+      "action": "typing",
+      "nextNode": "generating_image_msg"
+    },
+    "generating_image_msg": {
+      "id": "generating_image_msg",
+      "type": "text",
+      "content": "🎨 ¡Estamos creando el retrato de {{petName}}! Dame un momento... ✨",
+      "nextNode": "action_generate"
+    },
+    "action_generate": {
+      "id": "action_generate",
+      "type": "action",
+      "action": "generatePetImage",
+      "nextNode": "send_preview"
+    },
+    "send_preview": {
+      "id": "send_preview",
+      "type": "image",
+      "url": "{{generatedImageUrl}}",
+      "caption": "🖼️ ¡Así quedó {{petName}}! Esta es una *previa con marca de agua*.\n\n¿Qué te parece? 😍",
+      "nextNode": "action_decision"
+    },
+    "action_decision": {
+      "id": "action_decision",
+      "type": "buttons",
+      "body": "¿Te gustó el resultado?",
+      "buttons": [
+        {
+          "id": "pay",
+          "title": "💳 ¡Quiero el original! $5",
+          "nextNode": "create_payment"
+        },
+        {
+          "id": "regenerate",
+          "title": "🔄 Generar de nuevo",
+          "nextNode": "generating_image"
+        },
+        {
+          "id": "cancel",
+          "title": "❌ No por ahora",
+          "nextNode": "soft_cancel"
+        }
+      ]
+    },
+    "create_payment": {
+      "id": "create_payment",
+      "type": "action",
+      "action": "createStripePaymentLink",
+      "nextNode": "send_payment_link"
+    },
+    "send_payment_link": {
+      "id": "send_payment_link",
+      "type": "text",
+      "content": "💳 ¡Perfecto! Aquí está tu link de pago seguro:\n\n{{stripePaymentLink}}\n\nSon solo *$5 USD* y recibirás el arte de {{petName}} en alta resolución directo aquí 🎨\n\n_El link expira en 30 minutos._",
+      "nextNode": "wait_payment"
+    },
+    "wait_payment": {
+      "id": "wait_payment",
+      "type": "waitInput",
+      "saveAs": "_paymentConfirmation",
+      "content": "⏳ Esperando tu pago... Una vez confirmado, enviaré el arte de {{petName}} de inmediato 🚀",
+      "nextNode": "payment_pending_hold"
+    },
+    "payment_pending_hold": {
+      "id": "payment_pending_hold",
+      "type": "text",
+      "content": "Si ya pagaste, dame un momento que estoy verificando... 🔍"
+    },
+    "deliver_image": {
+      "id": "deliver_image",
+      "type": "action",
+      "action": "deliverFinalImage",
+      "nextNode": "final_message"
+    },
+    "final_message": {
+      "id": "final_message",
+      "type": "text",
+      "content": "🎉 ¡Listo! Aquí está el arte original de *{{petName}}* en alta resolución.\n\n¡Gracias por confiar en nosotros! 🐾❤️\n\nPuedes imprimirlo, enmarcarlo o usarlo como quieras. ¡Que lo disfruten!",
+      "nextNode": "end_node"
+    },
+    "soft_cancel": {
+      "id": "soft_cancel",
+      "type": "text",
+      "content": "¡No hay problema! 😊 Si cambias de opinión, aquí estaré.\n\nRecuerda que el arte de {{petName}} ya está listo, solo falta que lo reclames 🎨",
+      "nextNode": "remarketing_setup"
+    },
+    "remarketing_setup": {
+      "id": "remarketing_setup",
+      "type": "remarketing",
+      "delayMs": 82800000,
+      "message": "¡Hola! 👋 ¿Recuerdas el retrato de {{petName}}? Todavía está disponible por solo $5 USD. ¡No dejes que expire! 🎨",
+      "nextNodeAfterRemarketing": "end_node"
+    },
+    "end_node": {
+      "id": "end_node",
+      "type": "end",
+      "message": null
+    }
+  }
+}

@@ -1,0 +1,303 @@
+{
+  "id": "pet-art-br",
+  "name": "Arte Digital de Pet",
+  "startNode": "welcome",
+  "nodes": {
+    "welcome": {
+      "id": "welcome",
+      "type": "typing",
+      "durationMs": 1500,
+      "action": "typing",
+      "nextNode": "attention_1"
+    },
+    "attention_1": {
+      "id": "attention_1",
+      "type": "text",
+      "content": "Olá! 🐾 Você tem um pet que ama de todo o coração?",
+      "nextNode": "delay_1"
+    },
+    "delay_1": {
+      "id": "delay_1",
+      "type": "delay",
+      "ms": 1200,
+      "nextNode": "attention_image"
+    },
+    "delay_5": {
+      "id": "delay_5",
+      "type": "delay",
+      "ms": 1500,
+      "nextNode": "action_decision"
+    },
+    "attention_image": {
+      "id": "attention_image",
+      "type": "image",
+      "url": "https://files.botsync.site/quadros/img-sites/sky_theme.jpg",
+      "caption": "✨ Veja como transformamos pets em verdadeiras obras de arte clássica...",
+      "nextNode": "delay_2"
+    },
+    "delay_2": {
+      "id": "delay_2",
+      "type": "delay",
+      "ms": 1500,
+      "nextNode": "interest_1"
+    },
+    "interest_1": {
+      "id": "interest_1",
+      "type": "text",
+      "content": "🎨 Transformamos a foto do seu pet em um retrato estilo *Renascentista*, *Rococó* ou *Céu Épico*.\n\nArte digital pronta em menos de 24h, direto aqui no WhatsApp. Só R$14.90 🐶🐱",
+      "nextNode": "delay_3"
+    },
+    "delay_3": {
+      "id": "delay_3",
+      "type": "delay",
+      "ms": 1000,
+      "nextNode": "interest_audio"
+    },
+    "interest_audio": {
+      "id": "interest_audio",
+      "type": "audio",
+      "url": "https://your-cdn.com/audio/explicacao.ogg",
+      "nextNode": "delay_4"
+    },
+    "delay_4": {
+      "id": "delay_4",
+      "type": "delay",
+      "ms": 1200,
+      "nextNode": "desire_buttons"
+    },
+    "desire_buttons": {
+      "id": "desire_buttons",
+      "type": "buttons",
+      "body": "Quer ver como ficaria o seu pet? 😍\n\nEscolha uma opção:",
+      "buttons": [
+        {
+          "id": "yes",
+          "title": "Sim, quero ver! 🎨",
+          "nextNode": "ask_pet_name"
+        },
+        {
+          "id": "more_info",
+          "title": "Como funciona? 🤔",
+          "nextNode": "how_it_works"
+        },
+        {
+          "id": "no",
+          "title": "Agora não 👋",
+          "nextNode": "remarketing_setup"
+        }
+      ]
+    },
+    "how_it_works": {
+      "id": "how_it_works",
+      "type": "text",
+      "content": "É bem simples 👇\n\n1️⃣ Você me envia uma foto do seu pet\n2️⃣ Nossa IA cria o retrato artístico\n3️⃣ Você vê uma *prévia* aqui mesmo\n4️⃣ Se gostar, paga só R$14.90\n5️⃣ Recebe o arquivo em alta resolução 🖼️",
+      "nextNode": "delay_how"
+    },
+    "delay_how": {
+      "id": "delay_how",
+      "type": "delay",
+      "ms": 1000,
+      "nextNode": "desire_buttons"
+    },
+    "ask_pet_name": {
+      "id": "ask_pet_name",
+      "type": "typing",
+      "durationMs": 1000,
+      "action": "typing",
+      "nextNode": "ask_pet_name_msg"
+    },
+    "ask_pet_name_msg": {
+      "id": "ask_pet_name_msg",
+      "type": "waitInput",
+      "saveAs": "petName",
+      "content": "Perfeito! 🐾 Primeiro me diz, qual é o nome do seu pet?",
+      "nextNode": "ask_style"
+    },
+    "ask_style": {
+      "id": "ask_style",
+      "type": "buttons",
+      "body": "Que nome lindo! 🥰\n\nAgora escolhe o estilo artístico para o {{petName}}:",
+      "buttons": [
+        {
+          "id": "sky",
+          "title": "🌩️ Céu Épico",
+          "nextNode": "style_selected_sky"
+        },
+        {
+          "id": "renaissance",
+          "title": "🎭 Renascentista",
+          "nextNode": "style_selected_renaissance"
+        },
+        {
+          "id": "rococo",
+          "title": "🌸 Rococó",
+          "nextNode": "style_selected_rococo"
+        }
+      ]
+    },
+    "style_selected_sky": {
+      "id": "style_selected_sky",
+      "type": "text",
+      "content": "Ótima escolha! 🌩️ *Céu Épico* é o estilo mais popular. Seu pet vai ficar incrível!",
+      "nextNode": "save_style_sky"
+    },
+    "save_style_sky": {
+      "id": "save_style_sky",
+      "type": "action",
+      "action": "saveStyle",
+      "nextNode": "ask_photo"
+    },
+    "style_selected_renaissance": {
+      "id": "style_selected_renaissance",
+      "type": "text",
+      "content": "Magnífico! 🎭 O estilo *Renascentista* vai dar um ar de nobreza para o {{petName}}.",
+      "nextNode": "save_style_renaissance"
+    },
+    "save_style_renaissance": {
+      "id": "save_style_renaissance",
+      "type": "action",
+      "action": "saveStyle",
+      "nextNode": "ask_photo"
+    },
+    "style_selected_rococo": {
+      "id": "style_selected_rococo",
+      "type": "text",
+      "content": "Que gosto refinado! 🌸 O estilo *Rococó* é elegante e sofisticado. Vai cair muito bem no {{petName}}!",
+      "nextNode": "save_style_rococo"
+    },
+    "save_style_rococo": {
+      "id": "save_style_rococo",
+      "type": "action",
+      "action": "saveStyle",
+      "nextNode": "ask_photo"
+    },
+    "ask_photo": {
+      "id": "ask_photo",
+      "type": "waitPhoto",
+      "content": "📸 Agora me envia uma foto do {{petName}}. Garante que o rostinho dele apareça bem 🐾",
+      "timeoutMs": 300000,
+      "timeoutNode": "photo_timeout",
+      "nextNode": "generating_image"
+    },
+    "photo_timeout": {
+      "id": "photo_timeout",
+      "type": "text",
+      "content": "Parece que você sumiu 😅 Quando quiser continuar, é só me mandar a foto do {{petName}} 📸",
+      "nextNode": "ask_photo"
+    },
+    "generating_image": {
+      "id": "generating_image",
+      "type": "typing",
+      "durationMs": 3000,
+      "action": "typing",
+      "nextNode": "generating_image_msg"
+    },
+    "generating_image_msg": {
+      "id": "generating_image_msg",
+      "type": "text",
+      "content": "🎨 Estamos criando o retrato do {{petName}}! Só um instante... ✨",
+      "nextNode": "action_generate"
+    },
+    "action_generate": {
+      "id": "action_generate",
+      "type": "action",
+      "action": "generatePetImage",
+      "nextNode": "send_preview"
+    },
+    "send_preview": {
+      "id": "send_preview",
+      "type": "image",
+      "url": "{{generatedImageUrl}}",
+      "caption": "🖼️ Olha como ficou o {{petName}}! Essa é uma *prévia com marca d'água*.\n\nO que achou? 😍",
+      "nextNode": "delay_5"
+    },
+    "action_decision": {
+      "id": "action_decision",
+      "type": "buttons",
+      "body": "Gostou do resultado? Espero que sim!",
+      "buttons": [
+        {
+          "id": "pay",
+          "title": "💳 Original R$14.90",
+          "nextNode": "create_payment"
+        },
+        {
+          "id": "regenerate",
+          "title": "🔄 Gerar novamente",
+          "nextNode": "generating_image"
+        },
+        {
+          "id": "cancel",
+          "title": "❌ Não por agora",
+          "nextNode": "soft_cancel"
+        }
+      ]
+    },
+    "create_payment": {
+      "id": "create_payment",
+      "type": "action",
+      "action": "createPixPayment",
+      "nextNode": "send_payment_link"
+    },
+    "send_payment_link": {
+      "id": "send_payment_link",
+      "type": "text",
+      "content": "💳 Perfeito! Aqui estão as informações para pagamento via *PIX*:\n\n📋 No próximo envio você receberá o código *Copia e Cola* 👇\n\n⏳ _O PIX expira em 30 minutos._",
+      "nextNode": "send_code_pix"
+    },
+    "send_code_pix": {
+      "id": "send_code_pix",
+      "type": "text",
+      "content": "{{pixCode}}",
+      "nextNode": "send_qrcode"
+    },
+    "send_qrcode": {
+      "id": "send_qrcode",
+      "type": "action",
+      "action": "sendPixQrCode",
+      "nextNode": "wait_payment"
+    },
+    "wait_payment": {
+      "id": "wait_payment",
+      "type": "waitInput",
+      "saveAs": "_paymentConfirmation",
+      "content": "⏳ Aguardando seu pagamento... Assim que confirmado, envio a arte do {{petName}} na hora 🚀",
+      "nextNode": "payment_pending_hold"
+    },
+    "payment_pending_hold": {
+      "id": "payment_pending_hold",
+      "type": "text",
+      "content": "Se você já pagou, me dá um segundo que estou verificando... 🔍"
+    },
+    "deliver_image": {
+      "id": "deliver_image",
+      "type": "action",
+      "action": "deliverFinalImage",
+      "nextNode": "final_message"
+    },
+    "final_message": {
+      "id": "final_message",
+      "type": "text",
+      "content": "🎉 Pronto! Aqui está a arte original do *{{petName}}* em alta resolução.\n\nObrigado pela confiança! 🐾❤️\n\nVocê pode imprimir, emoldurar ou usar como quiser. Aproveitem muito!",
+      "nextNode": "end_node"
+    },
+    "soft_cancel": {
+      "id": "soft_cancel",
+      "type": "text",
+      "content": "Sem problema! 😊 Se mudar de ideia, estarei por aqui.\n\nLembra que a arte do {{petName}} já está pronta, é só você resgatar 🎨",
+      "nextNode": "remarketing_setup"
+    },  
+    "remarketing_setup": {
+      "id": "remarketing_setup",
+      "type": "remarketing",
+      "delayMs": 82800000,
+      "message": "Oi! 👋 Lembra do retrato do {{petName}}? Ainda está disponível por só R$14.90. Não deixa expirar! 🎨",
+      "nextNodeAfterRemarketing": "end_node"
+    },
+    "end_node": {
+      "id": "end_node",
+      "type": "end",
+      "message": null
+    }
+  }
+}
