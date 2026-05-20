@@ -90,7 +90,7 @@
     "how_it_works": {
       "id": "how_it_works",
       "type": "text",
-      "content": "É bem simples 👇\n\n1️⃣ Você me envia uma foto do seu pet\n2️⃣ Nossa IA cria o retrato artístico\n3️⃣ Você vê uma *prévia* aqui mesmo\n4️⃣ Se gostar, paga só R$10.90\n5️⃣ Recebe o arquivo em alta resolução 🖼️",
+      "content": "É bem simples 👇\n\n1️⃣ Você me envia uma foto do seu pet\n2️⃣ Nós criamos o retrato artístico\n3️⃣ Você vê uma *prévia* aqui mesmo\n4️⃣ Se gostar, paga só R$10.90\n5️⃣ Recebe o arquivo em alta resolução 🖼️",
       "nextNode": "delay_how"
     },
     "delay_how": {
