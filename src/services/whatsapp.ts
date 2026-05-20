@@ -13,6 +13,36 @@ interface WhatsAppMessage {
     interactive?: any;
 }
 
+interface PixDynamicCode {
+    code: string;
+    merchant_name: string;
+    key: string;
+    key_type: 'CPF' | 'CNPJ' | 'EMAIL' | 'PHONE' | 'EVP';
+}
+
+interface OrderItem {
+    retailer_id: string;
+    name: string;
+    amount: {
+        value: number;
+        offset: number;
+    };
+    quantity: number;
+}
+
+interface PixPaymentOptions {
+    referenceId: string;
+    bodyText: string;
+    totalAmount: number;
+    pix: PixDynamicCode;
+    order?: {
+        items: OrderItem[];
+        subtotal: number;
+        tax?: number;
+        taxDescription?: string;
+    };
+}
+
 export class WhatsAppService {
     private client: AxiosInstance;
     private phoneNumberId: string;
@@ -77,29 +107,104 @@ export class WhatsAppService {
     }
 
     /**
-     * Send chat action (typing indicator, recording audio indicator)
+     * Send PIX payment button (botão de pagamento via Pix)
      */
-    async sendChatAction(phoneNumber: string, action: 'typing' | 'recording_audio'): Promise<void> {
+    async sendPixPayment(phoneNumber: string, options: PixPaymentOptions): Promise<void> {
         try {
-            const payload = {
-                messaging_product: 'whatsapp',
-                to: phoneNumber.replace(/\D/g, ''),
-                type: 'text',
-                text: {
-                    preview_url: false,
+            const { referenceId, bodyText, totalAmount, pix, order } = options;
+
+            const parameters: any = {
+                reference_id: referenceId,
+                type: 'digital-goods',
+                payment_type: 'br',
+                payment_settings: [
+                    {
+                        type: 'pix_dynamic_code',
+                        pix_dynamic_code: {
+                            code: pix.code,
+                            merchant_name: pix.merchant_name,
+                            key: pix.key,
+                            key_type: pix.key_type,
+                        },
+                    },
+                ],
+                currency: 'BRL',
+                total_amount: {
+                    value: totalAmount,
+                    offset: 100,
                 },
             };
 
-            await this.client.post('', {
-                ...payload,
-                status: action === 'typing' ? 'typing' : 'recording',
-            });
+            if (order) {
+                parameters.order = {
+                    status: 'pending',
+                    tax: {
+                        value: order.tax ?? 0,
+                        offset: 100,
+                        description: order.taxDescription ?? '',
+                    },
+                    items: order.items.map((item) => ({
+                        retailer_id: item.retailer_id,
+                        name: item.name,
+                        amount: {
+                            value: item.amount.value,
+                            offset: item.amount.offset,
+                        },
+                        quantity: item.quantity,
+                    })),
+                    subtotal: {
+                        value: order.subtotal,
+                        offset: 100,
+                    },
+                };
+            }
 
-            logger.debug(`Chat action sent: ${action} to ${phoneNumber}`);
+            const payload = {
+                recipient_type: 'individual',
+                messaging_product: 'whatsapp',
+                to: phoneNumber.replace(/\D/g, ''),
+                type: 'interactive',
+                interactive: {
+                    type: 'order_details',
+                    body: {
+                        text: bodyText,
+                    },
+                    action: {
+                        name: 'review_and_pay',
+                        parameters,
+                    },
+                },
+            };
+
+            await this.client.post('', payload);
+            logger.debug(`PIX payment sent to ${phoneNumber} — ref: ${referenceId}`);
         } catch (error) {
             const errorMsg = error instanceof Error ? error.message : String(error);
-            logger.debug(`Failed to send chat action: ${errorMsg}`);
-            // Don't throw - chat actions are optional
+            logger.error(`Failed to send PIX payment to ${phoneNumber}: ${errorMsg}`);
+            throw error;
+        }
+    }
+
+    /**
+     * Mark message as read and show typing indicator
+     * Use messageId from the incoming webhook (messages.id)
+     * Typing indicator is automatically removed after reply or 25 seconds
+     */
+    async sendChatAction(messageId: string): Promise<void> {
+        try {
+            await this.client.post('', {
+                messaging_product: 'whatsapp',
+                status: 'read',
+                message_id: messageId,
+                typing_indicator: {
+                    type: 'text',
+                },
+            });
+
+            logger.debug(`Typing indicator sent for message ${messageId}`);
+        } catch (error) {
+            const errorMsg = error instanceof Error ? error.message : String(error);
+            logger.debug(`Failed to send typing indicator: ${errorMsg}`);
         }
     }
 

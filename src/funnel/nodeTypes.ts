@@ -14,6 +14,14 @@ export interface TextNode extends BaseNode {
     content: string; // suporta variáveis: {{name}}, {{petName}}
 }
 
+export interface PixNode extends BaseNode {
+    type: 'pix';
+    content: string;
+    key: string;
+    keyType: string;
+    code: string;
+}
+
 // Imagem
 export interface ImageNode extends BaseNode {
     type: 'image';
@@ -130,6 +138,7 @@ export type FunnelNode =
     | WaitPhotoNode
     | ActionNode
     | RemarketingNode
+    | PixNode
     | EndNode;
 
 export interface Funnel {

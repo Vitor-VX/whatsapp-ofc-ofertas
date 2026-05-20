@@ -44,7 +44,7 @@
     "interest_1": {
       "id": "interest_1",
       "type": "text",
-      "content": "🎨 Transformamos a foto do seu pet em um retrato estilo *Renascentista*, *Rococó* ou *Céu Épico*.\n\nArte digital pronta em menos de 24h, direto aqui no WhatsApp. Só R$14.90 🐶🐱",
+      "content": "🎨 Transformamos a foto do seu pet em um retrato estilo *Renascentista*, *Rococó* ou *Céu Épico*.\n\nArte digital pronta em menos de 24h, direto aqui no WhatsApp. Só R$10.90 🐶🐱",
       "nextNode": "delay_3"
     },
     "delay_3": {
@@ -90,7 +90,7 @@
     "how_it_works": {
       "id": "how_it_works",
       "type": "text",
-      "content": "É bem simples 👇\n\n1️⃣ Você me envia uma foto do seu pet\n2️⃣ Nossa IA cria o retrato artístico\n3️⃣ Você vê uma *prévia* aqui mesmo\n4️⃣ Se gostar, paga só R$14.90\n5️⃣ Recebe o arquivo em alta resolução 🖼️",
+      "content": "É bem simples 👇\n\n1️⃣ Você me envia uma foto do seu pet\n2️⃣ Nossa IA cria o retrato artístico\n3️⃣ Você vê uma *prévia* aqui mesmo\n4️⃣ Se gostar, paga só R$10.90\n5️⃣ Recebe o arquivo em alta resolução 🖼️",
       "nextNode": "delay_how"
     },
     "delay_how": {
@@ -218,7 +218,7 @@
       "buttons": [
         {
           "id": "pay",
-          "title": "💳 Original R$14.90",
+          "title": "💳 Original R$10.90",
           "nextNode": "create_payment"
         },
         {
@@ -247,8 +247,11 @@
     },
     "send_code_pix": {
       "id": "send_code_pix",
-      "type": "text",
+      "type": "pix",
       "content": "{{pixCode}}",
+      "namePix": "João Victor Rocha Neto",
+      "key": "69993161840",
+      "keyType": "PHONE",
       "nextNode": "send_qrcode"
     },
     "send_qrcode": {
@@ -291,7 +294,7 @@
       "id": "remarketing_setup",
       "type": "remarketing",
       "delayMs": 82800000,
-      "message": "Oi! 👋 Lembra do retrato do {{petName}}? Ainda está disponível por só R$14.90. Não deixa expirar! 🎨",
+      "message": "Oi! 👋 Lembra do retrato do {{petName}}? Ainda está disponível por só R$10.90. Não deixa expirar! 🎨",
       "nextNodeAfterRemarketing": "end_node"
     },
     "end_node": {

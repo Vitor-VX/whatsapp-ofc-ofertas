@@ -121,33 +121,33 @@ function initializeActionHandlers(): void {
     actionRegistry.register("sendPixQrCode", async (node: ActionNode, user, ctx) => {
         logger.info(`Sending PIX QR Code to ${user.whatsappId}`);
 
-        try {
-            const freshUser = await User.findOne({ _id: user._id });
-            const qrCodeBase64 = freshUser?.payment?.qrCode;
+        // try {
+        //     const freshUser = await User.findOne({ _id: user._id });
+        //     const qrCodeBase64 = freshUser?.payment?.qrCode;
 
-            if (!qrCodeBase64) {
-                throw new Error('QR Code not found');
-            }
+        //     if (!qrCodeBase64) {
+        //         throw new Error('QR Code not found');
+        //     }
 
-            const qrBuffer = Buffer.from(qrCodeBase64, 'base64');
-            const tmpDir = tmpdir();
-            const qrPath = path.join(tmpDir, `${user.whatsappId}_qrcode.png`);
-            writeFileSync(qrPath, qrBuffer);
+        //     const qrBuffer = Buffer.from(qrCodeBase64, 'base64');
+        //     const tmpDir = tmpdir();
+        //     const qrPath = path.join(tmpDir, `${user.whatsappId}_qrcode.png`);
+        //     writeFileSync(qrPath, qrBuffer);
 
-            const uploaded = await r2Cloudflare.uploadBuffer(qrBuffer, "quadros-whatsapp");
-            if (!uploaded?.url) return;
+        //     const uploaded = await r2Cloudflare.uploadBuffer(qrBuffer, "quadros-whatsapp");
+        //     if (!uploaded?.url) return;
 
-            await whatsappService.sendMessage(user.whatsappId, {
-                type: 'image',
-                image: { link: uploaded.url },
-                caption: '📲 Escaneie o QR Code acima para pagar via PIX\n\nApós o pagamento, sua arte será enviada automaticamente! 🎨',
-            });
+        //     await whatsappService.sendMessage(user.whatsappId, {
+        //         type: 'image',
+        //         image: { link: uploaded.url },
+        //         caption: '📲 Escaneie o QR Code acima para pagar via PIX\n\nApós o pagamento, sua arte será enviada automaticamente! 🎨',
+        //     });
 
-            logger.info(`PIX QR Code sent to ${user.whatsappId}`);
-        } catch (error) {
-            logger.error(`Failed to send QR Code: ${error instanceof Error ? error.message : String(error)}`);
-            throw error;
-        }
+        //     logger.info(`PIX QR Code sent to ${user.whatsappId}`);
+        // } catch (error) {
+        //     logger.error(`Failed to send QR Code: ${error instanceof Error ? error.message : String(error)}`);
+        //     throw error;
+        // }
     });
 
     // Action: deliverFinalImage
@@ -184,7 +184,7 @@ async function processIncomingMessage(msg: ConsumeMessage | null): Promise<void>
         if (!msg) return;
 
         const data = JSON.parse(msg.content.toString());
-        const { from: phoneNumber, type, timestamp, text, image, button, interactive } = data;
+        const { from: phoneNumber, type, timestamp, text, image, button, interactive, messageId } = data;
 
         let user = await User.findOne({ whatsappId: phoneNumber });
 
@@ -317,7 +317,7 @@ async function processIncomingMessage(msg: ConsumeMessage | null): Promise<void>
         }
 
         user = (await User.findOne({ whatsappId: phoneNumber })) || user;
-        await executeNodeSequence(user, funnelEngine);
+        await executeNodeSequence(user, funnelEngine, messageId);
     } catch (error) {
         logger.error(`Error processing message: ${error instanceof Error ? error.message : String(error)}`);
         throw error;
@@ -344,6 +344,7 @@ function getValidButtonIds(node: any): string[] {
 async function executeNodeSequence(
     user: any,
     engine: FunnelEngine,
+    messageId: string = "",
     forced: boolean = false
 ): Promise<void> {
     if (forced) {
@@ -360,6 +361,7 @@ async function executeNodeSequence(
         geminiService,
         stripeService,
         watermarkService,
+        messageId
     };
 
     const executor = new FunnelExecutor(context);
@@ -456,7 +458,7 @@ async function processPaymentEvent(msg: ConsumeMessage | null): Promise<void> {
                     { _id: user._id },
                     { currentNodeId: 'deliver_image', paymentStatus: 'paid' },
                 );
-                await executeNodeSequence(user, engine, true);
+                await executeNodeSequence(user, engine, "", true);
                 break;
             }
 

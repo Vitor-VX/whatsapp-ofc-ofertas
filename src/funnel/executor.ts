@@ -9,6 +9,7 @@ import {
 import { FunnelEngine } from './engine';
 import { logger } from '../logger';
 import { User } from '../models/User';
+import { randomUUID } from 'crypto';
 
 /**
  * Context passed to node executors
@@ -20,6 +21,7 @@ export interface FunnelContext {
     geminiService: any;
     stripeService: any;
     watermarkService: any;
+    messageId: string;
 }
 
 /**
@@ -72,6 +74,8 @@ export class FunnelExecutor {
                 return await this.executeImage(node);
             case 'audio':
                 return await this.executeAudio(node);
+            case 'pix':
+                return await this.executePix(node);
             case 'video':
                 return await this.executeVideo(node);
             case 'delay':
@@ -160,6 +164,35 @@ export class FunnelExecutor {
         return node.nextNode || null;
     }
 
+    private async executePix(node: any): Promise<string | null> {
+        try {
+            if (node.content && node.namePix && node.key && node.keyType) {
+                const content = this.context.engine.interpolateText(node.content, this.context.user);
+                const name = node.namePix;
+                const key = node.key;
+                const keyType = node.keyType;
+
+                await this.context.whatsappService.sendPixPayment(this.context.user.whatsappId, {
+                    referenceId: randomUUID().toString(),
+                    bodyText: 'Seu pagamento está pronto!',
+                    totalAmount: 1090,
+                    pix: {
+                        code: content,
+                        merchant_name: name,
+                        key,
+                        key_type: keyType,
+                    },
+                });
+                logger.botMessage(this.context.user.phone, `[PIX] ${node.key}`);
+            }
+        } catch (error) {
+            logger.error(`Failed to send pix: ${error instanceof Error ? error.message : String(error)}`);
+            throw error;
+        }
+
+        return node.nextNode || null;
+    }
+
     /**
      * Send video to user
      */
@@ -196,15 +229,13 @@ export class FunnelExecutor {
      */
     private async executeTyping(node: any): Promise<string | null> {
         try {
-            const action = node.action === 'recording_audio' ? 'recording_audio' : 'typing';
-            await this.context.whatsappService.sendChatAction(this.context.user.whatsappId, action);
-
-            // Wait for the specified duration while showing indicator
-            await new Promise((resolve) => setTimeout(resolve, node.durationMs));
+            if (this.context.messageId) {
+                await this.context.whatsappService.sendChatAction(this.context.messageId);
+                await new Promise((resolve) => setTimeout(resolve, 1500));
+            }
         } catch (error) {
             logger.error(`Failed to send typing indicator: ${error instanceof Error ? error.message : String(error)}`);
         }
-
         return node.nextNode || null;
     }
 
