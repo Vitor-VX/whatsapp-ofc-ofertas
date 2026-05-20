@@ -44,7 +44,7 @@
     "interest_1": {
       "id": "interest_1",
       "type": "text",
-      "content": "🎨 Transformamos a foto do seu pet em um retrato estilo *Renascentista*, *Rococó* ou *Céu Épico*.\n\nArte digital pronta em menos de 24h, direto aqui no WhatsApp. Só R$10.90 🐶🐱",
+      "content": "🎨 Quer ver seu pet como uma obra de arte?\n\nTransformamos a foto em estilo *Renascentista*, *Rococó* ou *Céu Épico* 🐶🐱\n\nEntrega em até 24h direto no WhatsApp.\n\n🔥 De ~R$19,90~ por *R$10,90*",
       "nextNode": "delay_3"
     },
     "delay_3": {
@@ -289,7 +289,7 @@
       "type": "text",
       "content": "Sem problema! 😊 Se mudar de ideia, estarei por aqui.\n\nLembra que a arte do {{petName}} já está pronta, é só você resgatar 🎨",
       "nextNode": "remarketing_setup"
-    },  
+    },
     "remarketing_setup": {
       "id": "remarketing_setup",
       "type": "remarketing",
