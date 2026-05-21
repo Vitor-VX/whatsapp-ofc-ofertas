@@ -49,8 +49,6 @@ export class FunnelEngine {
 
         for (const [key, value] of Object.entries(data)) {
             const regex = new RegExp(`{{${key}}}`, 'g');
-            console.log(value);
-            
             result = result.replace(regex, String(value));
         }
 
