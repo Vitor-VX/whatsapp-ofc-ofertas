@@ -231,6 +231,13 @@ async function processIncomingMessage(msg: ConsumeMessage | null): Promise<void>
             interactive?.button_reply?.id ||
             interactive?.list_reply?.id;
 
+        if (currentNode.id === "payment_pending_hold") {
+             logger.warn(
+                `Texto de verificação de pagamento ignorado por enquanto..`,
+            );
+            return;
+        }
+
         if (incomingButtonId && currentNode.type !== 'buttons' && currentNode.type !== 'list') {
             // Botão de mensagem antiga clicado enquanto usuário está em outro nó → ignorar
             logger.warn(
