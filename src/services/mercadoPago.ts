@@ -21,7 +21,7 @@ export class MercadoPagoService {
     /**
      * Create a PIX payment (expires in 30 min)
      */
-    async createPixPayment(whatsappId: string, userId: string, petName: string): Promise<{
+    async createPixPayment(whatsappId: string, userId: string, amount: number, petName: string): Promise<{
         code: string;
         qrCodeBase64: string;
         paymentId: string;
@@ -31,7 +31,7 @@ export class MercadoPagoService {
             const expiresAt = new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString();
             const response = await this.payment.create({
                 body: {
-                    transaction_amount: this.amount,
+                    transaction_amount: amount,
                     description: `Arte Digital - ${petName}`,
                     payment_method_id: 'pix',
                     date_of_expiration: expiresAt,

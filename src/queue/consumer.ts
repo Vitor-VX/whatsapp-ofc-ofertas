@@ -40,14 +40,25 @@ function initializeActionHandlers(): void {
     actionRegistry.register("prepareCheckout", async (node, user, ctx) => {
         const deliveredCount = Number(user.collectedData.get("deliveredCount")) || 0;
 
+        // 💰 preço em reais
         const price = deliveredCount > 0 ? 7.90 : 10.90;
+
+        // 💳 preço em centavos (pro gateway)
+        const priceInCents = Math.round(price * 100);
+
         const priceStr = `R$${price.toFixed(2).replace(".", ",")}`;
 
-        await User.updateOne({ _id: user._id }, {
-            $set: {
-                "collectedData.packagePrice": priceStr
+        await User.updateOne(
+            { _id: user._id },
+            {
+                $set: {
+                    "collectedData.packagePrice": priceStr,  
+                    "collectedData.packagePriceValue": price,
+                    "collectedData.packagePriceCents": priceInCents 
+                }
             }
-        });
+        );
+
         ctx.user.currentNodeId = "delay_5";
     });
 
@@ -114,8 +125,9 @@ function initializeActionHandlers(): void {
         logger.info(`Creating Pix payment link for ${user.whatsappId}`);
 
         try {
-            const petName = user.collectedData.get("petName") || 'Pet Art';
-            const { code, qrCodeBase64, paymentId, expiresAt } = await mercadoPagoService.createPixPayment(user.whatsappId, user._id, petName);
+            const petName = user.collectedData.get("petName") || "Pet Art";
+            const packagePrice = Number(user.collectedData.get("packagePriceCents")) || 1090
+            const { code, qrCodeBase64, paymentId, expiresAt } = await mercadoPagoService.createPixPayment(user.whatsappId, user._id, packagePrice, petName);
 
             await User.updateOne(
                 { _id: user._id },
