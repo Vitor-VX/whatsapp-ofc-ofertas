@@ -171,11 +171,12 @@ export class FunnelExecutor {
                 const name = node.namePix;
                 const key = node.key;
                 const keyType = node.keyType;
+                const price = this.context.engine.interpolateText(node.price, this.context.user)
 
                 await this.context.whatsappService.sendPixPayment(this.context.user.whatsappId, {
                     referenceId: randomUUID().toString(),
                     bodyText: 'Seu pagamento está pronto!',
-                    totalAmount: 1090,
+                    totalAmount: price,
                     pix: {
                         code: content,
                         merchant_name: name,
