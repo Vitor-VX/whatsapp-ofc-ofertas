@@ -248,7 +248,7 @@
       "id": "send_code_pix",
       "type": "pix",
       "content": "{{pixCode}}",
-      "price": "{{packagePriceValue}}",
+      "price": "{{packagePriceCents}}",
       "namePix": "João Victor Rocha Neto",
       "key": "69993161840",
       "keyType": "PHONE",

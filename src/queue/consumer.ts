@@ -126,7 +126,7 @@ function initializeActionHandlers(): void {
 
         try {
             const petName = user.collectedData.get("petName") || "Pet Art";
-            const packagePrice = Number(user.collectedData.get("packagePriceCents")) || 1090
+            const packagePrice = Number(user.collectedData.get("packagePriceValue")) || 1090
             const { code, qrCodeBase64, paymentId, expiresAt } = await mercadoPagoService.createPixPayment(user.whatsappId, user._id, packagePrice, petName);
 
             await User.updateOne(
