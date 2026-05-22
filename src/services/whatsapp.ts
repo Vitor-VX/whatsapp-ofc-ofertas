@@ -7,7 +7,7 @@ interface WhatsAppMessage {
     type: 'text' | 'image' | 'audio' | 'video' | 'document' | 'interactive';
     body?: string;
     image?: { link: string };
-    audio?: { link: string };
+    audio?: { link: string, voice: boolean };
     video?: { link: string };
     caption?: string;
     interactive?: any;
@@ -85,6 +85,7 @@ export class WhatsAppService {
                     break;
                 case 'audio':
                     payload.audio = message.audio;
+                    payload.audio.voice = true;
                     break;
                 case 'video':
                     payload.video = message.video;

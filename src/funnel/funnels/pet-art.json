@@ -22,12 +22,6 @@
       "ms": 1200,
       "nextNode": "attention_image"
     },
-    "delay_5": {
-      "id": "delay_5",
-      "type": "delay",
-      "ms": 1500,
-      "nextNode": "action_decision"
-    },
     "attention_image": {
       "id": "attention_image",
       "type": "image",
@@ -44,7 +38,7 @@
     "interest_1": {
       "id": "interest_1",
       "type": "text",
-      "content": "🎨 Quer ver seu pet como uma obra de arte?\n\nTransformamos a foto em estilo *Renascentista*, *Rococó* ou *Céu Épico* 🐶🐱\n\nEntrega em até 24h direto no WhatsApp.\n\n🔥 De ~R$19,90~ por *R$10,90*",
+      "content": "🎨 Quer ver seu pet como uma obra de arte?\n\nTransformamos a foto em estilo *Renascentista*, *Rococó* ou *Céu Épico* 🐶🐱\n\nEntrega instantânea *AQUI no WhatsApp*.\n\n🔥 De ~R$19,90~ por *R$10,90* e o melhor: caso queira fazer de outros pets depois, você ganha um *desconto especial*!\n\nEntrega em até 24h direto no WhatsApp.",
       "nextNode": "delay_3"
     },
     "delay_3": {
@@ -73,7 +67,7 @@
         {
           "id": "yes",
           "title": "Sim, quero ver! 🎨",
-          "nextNode": "ask_pet_name"
+          "nextNode": "ask_style"
         },
         {
           "id": "more_info",
@@ -99,24 +93,10 @@
       "ms": 1000,
       "nextNode": "desire_buttons"
     },
-    "ask_pet_name": {
-      "id": "ask_pet_name",
-      "type": "typing",
-      "durationMs": 1000,
-      "action": "typing",
-      "nextNode": "ask_pet_name_msg"
-    },
-    "ask_pet_name_msg": {
-      "id": "ask_pet_name_msg",
-      "type": "waitInput",
-      "saveAs": "petName",
-      "content": "Perfeito! 🐾 Primeiro me diz, qual é o nome do seu pet?",
-      "nextNode": "ask_style"
-    },
     "ask_style": {
       "id": "ask_style",
       "type": "buttons",
-      "body": "Que nome lindo! 🥰\n\nAgora escolhe o estilo artístico para o {{petName}}:",
+      "body": "Perfeito! 🥰 Escolhe o estilo artístico do seu pet:",
       "buttons": [
         {
           "id": "sky",
@@ -150,7 +130,7 @@
     "style_selected_renaissance": {
       "id": "style_selected_renaissance",
       "type": "text",
-      "content": "Magnífico! 🎭 O estilo *Renascentista* vai dar um ar de nobreza para o {{petName}}.",
+      "content": "Magnífico! 🎭 O estilo *Renascentista* vai dar um ar de nobreza ao seu pet.",
       "nextNode": "save_style_renaissance"
     },
     "save_style_renaissance": {
@@ -162,7 +142,7 @@
     "style_selected_rococo": {
       "id": "style_selected_rococo",
       "type": "text",
-      "content": "Que gosto refinado! 🌸 O estilo *Rococó* é elegante e sofisticado. Vai cair muito bem no {{petName}}!",
+      "content": "Que gosto refinado! 🌸 O estilo *Rococó* é elegante e sofisticado. Vai cair muito bem!",
       "nextNode": "save_style_rococo"
     },
     "save_style_rococo": {
@@ -174,7 +154,8 @@
     "ask_photo": {
       "id": "ask_photo",
       "type": "waitPhoto",
-      "content": "📸 Agora me envia uma foto do {{petName}}!\n\n_Dica: quanto mais nítido o rostinho, mais bonita fica a arte_ 🐾",
+      "saveAs": "photoMediaId",
+      "content": "📸 Me envia *APENAS 1 foto* do seu pet!\nNão envie MAIS de 1 foto..\n\n_Dica: quanto mais nítido o rostinho, mais bonita fica a arte_ 🐾",
       "timeoutMs": 300000,
       "timeoutNode": "photo_timeout",
       "nextNode": "generating_image"
@@ -182,7 +163,7 @@
     "photo_timeout": {
       "id": "photo_timeout",
       "type": "text",
-      "content": "Parece que você sumiu 😅 Quando quiser continuar, é só me mandar a foto do {{petName}} 📸",
+      "content": "Parece que você sumiu 😅 Quando quiser continuar, é só me mandar a foto do seu pet 📸",
       "nextNode": "ask_photo"
     },
     "generating_image": {
@@ -195,7 +176,7 @@
     "generating_image_msg": {
       "id": "generating_image_msg",
       "type": "text",
-      "content": "🎨 Estamos criando o retrato do {{petName}}! Só um instante... ✨",
+      "content": "🎨 Estamos criando o retrato! Só um instante... ✨",
       "nextNode": "action_generate"
     },
     "action_generate": {
@@ -207,28 +188,46 @@
     "send_preview": {
       "id": "send_preview",
       "type": "image",
-      "url": "{{generatedImageUrl}}",
-      "caption": "🖼️ Olha como ficou o {{petName}}! Essa é a *prévia com marca d'água*.\n\nO que achou? 😍",
+      "url": "{{lastPreview}}",
+      "caption": "🖼️ Olha como ficou! Essa é a *prévia com marca d'água*.\n\nO que achou? 😍",
+      "nextNode": "action_prepare_checkout"
+    },
+    "action_prepare_checkout": {
+      "id": "action_prepare_checkout",
+      "type": "action",
+      "action": "prepareCheckout",
       "nextNode": "delay_5"
+    },
+    "delay_5": {
+      "id": "delay_5",
+      "type": "delay",
+      "ms": 1500,
+      "nextNode": "action_decision_tip"
+    },
+    "action_decision_tip": {
+      "id": "action_decision_tip",
+      "type": "text",
+      "content": "👇 Para garantir a arte original sem marca d'água, clique na *primeira opção* abaixo:\n\n *\"💳 Gerar Pix\"*",
+      "nextNode": "action_decision"
     },
     "action_decision": {
       "id": "action_decision",
       "type": "buttons",
-      "body": "Gostou? 🥰\n\nPor *R$10,90 via PIX* você recebe o arquivo original em alta resolução — sem marca d'água — aqui mesmo no WhatsApp. Dá pra imprimir em qualquer tamanho e emoldurar! 🖼️",
+      "body": "Por *{{packagePrice}} via PIX* você recebe o arquivo original em alta resolução — sem marca d'água — aqui mesmo no WhatsApp. Dá pra imprimir e emoldurar! 🖼️",
       "buttons": [
         {
           "id": "pay",
-          "title": "💳 Pagar R$10,90",
+          "title": "💳 Gerar Pix",
           "nextNode": "create_payment"
         },
         {
           "id": "regenerate",
-          "title": "🔄 Gerar novamente",
-          "nextNode": "generating_image"
+          "title": "🔄 Fazer outra foto",
+          "nextNode": "ask_style"
         },
         {
           "id": "cancel",
-          "title": "❌ Não por agora",
+          "title": "❌ Agora não",
           "nextNode": "soft_cancel"
         }
       ]
@@ -242,7 +241,7 @@
     "send_payment_link": {
       "id": "send_payment_link",
       "type": "text",
-      "content": "💳 Ótimo! Vou te enviar o PIX agora:\n\n• Valor: *R$10,90*\n• Vencimento: ⏳ *30 minutos*\n• Após o pagamento: arquivo enviado *automaticamente* aqui no WhatsApp ✅\n\n👇 Código Copia e Cola:",
+      "content": "💳 Ótimo! Vou te enviar o PIX agora:\n\n• Valor: *{{packagePrice}}*\n• Vencimento: ⏳ *30 minutos*\n• Após o pagamento: a arte original será enviada *automaticamente* aqui ✅\n\n👇 Clique no botão *Copiar código* abaixo!",
       "nextNode": "send_code_pix"
     },
     "send_code_pix": {
@@ -252,19 +251,19 @@
       "namePix": "João Victor Rocha Neto",
       "key": "69993161840",
       "keyType": "PHONE",
-      "nextNode": "send_qrcode"
+      "nextNode": "pix_audio_tip"
     },
-    "send_qrcode": {
-      "id": "send_qrcode",
-      "type": "action",
-      "action": "sendPixQrCode",
+    "pix_audio_tip": {
+      "id": "pix_audio_tip",
+      "type": "audio",
+      "url": "https://files.botsync.site/quadros/audio_funil_01.opus",
       "nextNode": "wait_payment"
     },
     "wait_payment": {
       "id": "wait_payment",
       "type": "waitInput",
       "saveAs": "_paymentConfirmation",
-      "content": "⏳ Assim que o pagamento cair, a arte do {{petName}} chega aqui na hora! 🚀\n\n_Se tiver dúvida sobre o PIX, é só mandar uma mensagem aqui._",
+      "content": "⏳ Assim que o pagamento cair, a arte original chega aqui na hora! 🚀\n\n_Qualquer dúvida, é só me chamar aqui._",
       "nextNode": "payment_pending_hold"
     },
     "payment_pending_hold": {
@@ -281,26 +280,43 @@
     "final_message": {
       "id": "final_message",
       "type": "text",
-      "content": "🎉 Pronto! Aqui está a arte original do *{{petName}}* em alta resolução, sem marca d'água!\n\nSalva a imagem e leva numa gráfica ou farmácia para imprimir — fica lindo emoldurado! 🖼️\n\nObrigado pela confiança! 🐾❤️",
+      "content": "🎉 Pronto! Aqui está a arte do seu pet em alta resolução e sem marca d'água!",
       "nextNode": "final_tip"
     },
     "final_tip": {
       "id": "final_tip",
       "type": "text",
-      "content": "💡 *Dica:* Impressão 20x30 cm custa em torno de R$8 a R$13 em qualquer gráfica ou farmácia com serviço de foto. Moldura simples no Mercado Livre a partir de R$15. Fica incrível na parede! 🤩",
-      "nextNode": "end_node"
+      "content": "💡 *Dica:* Impressão 20x30 cm custa em torno de R$8 a R$13 em gráficas. Moldura simples no Mercado Livre a partir de R$15. Fica incrível na parede! 🤩",
+      "nextNode": "upsell_offer"
+    },
+    "upsell_offer": {
+      "id": "upsell_offer",
+      "type": "buttons",
+      "body": "🎁 *Você desbloqueou nosso Desconto de Fidelidade!*\n\nQuer gerar mais uma arte para o seu pet (ou de um outro pet)?\nA partir de agora qualquer foto nova sai por apenas *R$ 7.90*! 😻",
+      "buttons": [
+        {
+          "id": "yes_more",
+          "title": "🐾 Sim, quero outra!",
+          "nextNode": "ask_style"
+        },
+        {
+          "id": "no_thanks",
+          "title": "✅ Por hoje deu!",
+          "nextNode": "end_node"
+        }
+      ]
     },
     "soft_cancel": {
       "id": "soft_cancel",
       "type": "text",
-      "content": "Sem problema! 😊 A arte do {{petName}} fica guardada aqui por um tempinho.\n\nQualquer dúvida sobre o processo ou o pagamento, é só me chamar. Estarei por aqui! 🐾",
+      "content": "Sem problema! 😊 A arte do seu pet fica guardada aqui por um tempinho.\n\nQualquer dúvida, é só chamar! 🐾",
       "nextNode": "remarketing_setup"
     },
     "remarketing_setup": {
       "id": "remarketing_setup",
       "type": "remarketing",
       "delayMs": 82800000,
-      "message": "Oi! 👋 Lembra do retrato do {{petName}}? Ainda está disponível por *R$10,90 via PIX* — é só me responder aqui que gero o código na hora! 🎨",
+      "message": "Oi! 👋 Lembra do retrato do seu pet? Ainda está disponível — é só me responder aqui que gero o código na hora! 🎨",
       "nextNodeAfterRemarketing": "end_node"
     },
     "end_node": {

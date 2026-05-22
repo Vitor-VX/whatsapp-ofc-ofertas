@@ -21,28 +21,49 @@ import { mercadoPagoService } from '../services/mercadoPago';
  * Initialize action handlers
  */
 function initializeActionHandlers(): void {
-    // Action: saveStyle
+
     actionRegistry.register('saveStyle', async (node: ActionNode, user, ctx) => {
-        // Style is already saved from button selection in funnel logic
-        // This action just passes through
-        logger.debug(`Style saved for user ${user.whatsappId}`);
+        const styleMap: Record<string, string> = {
+            save_style_sky: "sky",
+            save_style_renaissance: "renaissance",
+            save_style_rococo: "rococo"
+        };
+        const style = styleMap[node.id] || "sky";
+
+        await User.updateOne(
+            { _id: user._id },
+            { $set: { "collectedData.style": style } }
+        );
+        logger.debug(`Style ${style} saved for user ${user.whatsappId}`);
     });
 
-    // Action: generatePetImage
+    actionRegistry.register("prepareCheckout", async (node, user, ctx) => {
+        const deliveredCount = Number(user.collectedData.get("deliveredCount")) || 0;
+
+        const price = deliveredCount > 0 ? 7.90 : 10.90;
+        const priceStr = `R$${price.toFixed(2).replace(".", ",")}`;
+
+        await User.updateOne({ _id: user._id }, {
+            $set: {
+                "collectedData.packagePrice": priceStr
+            }
+        });
+        ctx.user.currentNodeId = "delay_5";
+    });
+
     actionRegistry.register("generatePetImage", async (node: ActionNode, user, ctx) => {
         logger.info(`Generating pet image for ${user.whatsappId}`);
 
         try {
             const data = user.collectedData;
             const photoMediaId = data.get("photoMediaId");
-            if (!photoMediaId) {
-                throw new Error("No photo provided");
-            }
+
+            if (!photoMediaId) throw new Error("No photo provided");
 
             const photoBuffer = await whatsappService.downloadMedia(photoMediaId);
 
             const tmpDir = tmpdir();
-            const photoPath = path.join(tmpDir, `${user.whatsappId}_original.jpg`);
+            const photoPath = path.join(tmpDir, `${user.whatsappId}_${Date.now()}_original.jpg`);
             writeFileSync(photoPath, photoBuffer);
 
             const style = (data.get("style") || "sky") as "sky" | "renaissance" | "rococo";
@@ -54,8 +75,8 @@ function initializeActionHandlers(): void {
                 photoPath,
             });
 
-            const watermarkedPath = path.join(tmpDir, `${user.whatsappId}_watermarked.jpg`);
-            const finalPath = path.join(tmpDir, `${user.whatsappId}_final.jpg`);
+            const finalPath = path.join(tmpDir, `${user.whatsappId}_${Date.now()}_final.jpg`);
+            const watermarkedPath = path.join(tmpDir, `${user.whatsappId}_${Date.now()}_preview.jpg`);
 
             writeFileSync(finalPath, generatedBuffer);
             await watermarkService.processImage(finalPath, watermarkedPath, {
@@ -66,38 +87,35 @@ function initializeActionHandlers(): void {
             const previewBuffer = readFileSync(watermarkedPath);
             const finalImageBuffer = readFileSync(finalPath);
 
-            const generatedImageUrl = await r2Cloudflare.uploadBuffer(previewBuffer, "quadros-whatsapp");
-            const originalImageUrl = await r2Cloudflare.uploadBuffer(finalImageBuffer, "quadros-whatsapp");
+            const previewUpload = await r2Cloudflare.uploadBuffer(previewBuffer, "quadros-whatsapp");
+            const finalUpload = await r2Cloudflare.uploadBuffer(finalImageBuffer, "quadros-whatsapp");
 
             await User.updateOne(
                 { _id: user._id },
                 {
-                    $set: {
-                        generatedImageUrl: generatedImageUrl?.url,
-                        originalImageUrl: originalImageUrl?.url,
-                        "collectedData.generatedImageUrl": generatedImageUrl?.url,
+                    $push: {
+                        generatedPreviews: previewUpload?.url,
+                        generatedImages: finalUpload?.url,
                     },
-                },
+                    $set: {
+                        "collectedData.lastPreview": previewUpload?.url
+                    }
+                }
             );
 
             logger.info(`Pet image generated for ${user.whatsappId}`);
         } catch (error) {
-            logger.error(`Failed to generate pet image: ${error instanceof Error ? error.message : String(error)}`);
+            logger.error(`Failed: ${error instanceof Error ? error.message : String(error)}`);
             throw error;
         }
     });
 
     actionRegistry.register("createPixPayment", async (node: ActionNode, user, ctx) => {
-        logger.info(`Creating Stripe payment link for ${user.whatsappId}`);
+        logger.info(`Creating Pix payment link for ${user.whatsappId}`);
 
         try {
             const petName = user.collectedData.get("petName") || 'Pet Art';
-            const {
-                code,
-                qrCodeBase64,
-                paymentId,
-                expiresAt
-            } = await mercadoPagoService.createPixPayment(user.whatsappId, user._id, petName);
+            const { code, qrCodeBase64, paymentId, expiresAt } = await mercadoPagoService.createPixPayment(user.whatsappId, user._id, petName);
 
             await User.updateOne(
                 { _id: user._id },
@@ -118,59 +136,36 @@ function initializeActionHandlers(): void {
         }
     });
 
-    actionRegistry.register("sendPixQrCode", async (node: ActionNode, user, ctx) => {
-        logger.info(`Sending PIX QR Code to ${user.whatsappId}`);
-
-        // try {
-        //     const freshUser = await User.findOne({ _id: user._id });
-        //     const qrCodeBase64 = freshUser?.payment?.qrCode;
-
-        //     if (!qrCodeBase64) {
-        //         throw new Error('QR Code not found');
-        //     }
-
-        //     const qrBuffer = Buffer.from(qrCodeBase64, 'base64');
-        //     const tmpDir = tmpdir();
-        //     const qrPath = path.join(tmpDir, `${user.whatsappId}_qrcode.png`);
-        //     writeFileSync(qrPath, qrBuffer);
-
-        //     const uploaded = await r2Cloudflare.uploadBuffer(qrBuffer, "quadros-whatsapp");
-        //     if (!uploaded?.url) return;
-
-        //     await whatsappService.sendMessage(user.whatsappId, {
-        //         type: 'image',
-        //         image: { link: uploaded.url },
-        //         caption: '📲 Escaneie o QR Code acima para pagar via PIX\n\nApós o pagamento, sua arte será enviada automaticamente! 🎨',
-        //     });
-
-        //     logger.info(`PIX QR Code sent to ${user.whatsappId}`);
-        // } catch (error) {
-        //     logger.error(`Failed to send QR Code: ${error instanceof Error ? error.message : String(error)}`);
-        //     throw error;
-        // }
-    });
-
-    // Action: deliverFinalImage
-    actionRegistry.register('deliverFinalImage', async (node: ActionNode, user, ctx) => {
-        logger.info(`Delivering final image to ${user.whatsappId}`);
+    actionRegistry.register("deliverFinalImage", async (node: ActionNode, user, ctx) => {
+        logger.info(`Delivering image to ${user.whatsappId}`);
 
         try {
-            const finalImageUrl = user.originalImageUrl;
-            if (!finalImageUrl) {
-                throw new Error('No image URL available');
-            }
+            const freshUser = await User.findById(user._id);
+            const images = freshUser?.generatedImages || [];
+            const deliveredCount = Number(freshUser?.collectedData.get("deliveredCount") || 0);
+
+            if (images.length === 0) throw new Error("No images to deliver");
+            const latestImage = images[images.length - 1];
 
             await whatsappService.sendMessage(user.whatsappId, {
-                type: 'image',
-                image: { link: finalImageUrl },
-                caption: `🎨 Final artwork for ${user.collectedData.get("petName") || 'Pet'}`,
+                type: "image",
+                image: { link: latestImage },
+                caption: `🎨 Aqui está sua arte original em alta resolução!`,
             });
 
-            await User.updateOne({ _id: user._id }, { paymentStatus: 'paid' });
+            await User.updateOne(
+                { _id: user._id },
+                {
+                    $set: {
+                        "collectedData.deliveredCount": deliveredCount + 1,
+                        paymentStatus: 'paid'
+                    }
+                }
+            );
 
-            logger.info(`Final image delivered to ${user.whatsappId}`);
+            logger.info(`Delivered image successfully`);
         } catch (error) {
-            logger.error(`Failed to deliver image: ${error instanceof Error ? error.message : String(error)}`);
+            logger.error(`Delivery error: ${error instanceof Error ? error.message : String(error)}`);
             throw error;
         }
     });
@@ -232,7 +227,7 @@ async function processIncomingMessage(msg: ConsumeMessage | null): Promise<void>
             interactive?.list_reply?.id;
 
         if (currentNode.id === "payment_pending_hold") {
-             logger.warn(
+            logger.warn(
                 `Texto de verificação de pagamento ignorado por enquanto..`,
             );
             return;
@@ -247,7 +242,7 @@ async function processIncomingMessage(msg: ConsumeMessage | null): Promise<void>
         }
 
         if (incomingButtonId && (currentNode.type === 'buttons' || currentNode.type === 'list')) {
-            // Verificar se o buttonId pertence ao nó atual
+            // Verificar se o buttonId pertence ao nó atualFD
             const validIds = getValidButtonIds(currentNode);
             if (!validIds.includes(incomingButtonId)) {
                 logger.warn(

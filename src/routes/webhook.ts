@@ -77,6 +77,12 @@ router.post('/webhook/whatsapp', validateWhatsAppWebhook, async (req: Request, r
                                 logger.debug(
                                     `Message status update: ${status.id} -> ${status.status} (${status.recipient_id})`,
                                 );
+
+                                if (status.errors) {
+                                    logger.error(
+                                        `❌ WhatsApp Error: ${JSON.stringify(status.errors, null, 2)}`
+                                    );
+                                }
                             }
                         }
                     }

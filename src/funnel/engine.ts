@@ -55,12 +55,13 @@ export class FunnelEngine {
         if (user.name) {
             result = result.replace(/{{name}}/g, user.name);
         }
-        if (user.generatedImageUrl) {
-            result = result.replace(/{{generatedImageUrl}}/g, user.generatedImageUrl);
-        }
-        if (user.originalImageUrl) {
-            result = result.replace(/{{originalImageUrl}}/g, user.originalImageUrl);
-        }
+        const lastPreview =
+            data.lastPreview ||
+            user.generatedPreviews?.slice(-1)[0] ||
+            user.generatedImages?.slice(-1)[0] ||
+            "";
+
+        result = result.replace(/{{lastPreview}}/g, lastPreview);
 
         return result;
     }

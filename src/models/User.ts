@@ -1,10 +1,10 @@
 import { Schema, model, Document, connection } from 'mongoose';
 
 interface IPayment {
-    id: string;
-    link: string;
-    code: string;
-    qrCode: string;
+    id: string | null;
+    link: string | null;
+    code: string | null;
+    qrCode: string | null;
 }
 
 export interface IUser extends Document {
@@ -20,9 +20,12 @@ export interface IUser extends Document {
     collectedData: Map<string, string>;
     paymentStatus: 'pending' | 'paid' | 'failed';
     payment: IPayment;
-    stripeSessionId: string | null;
-    generatedImageUrl: string | null;
-    originalImageUrl: string | null;
+
+    // 🔥 NOVO
+    originalImages: string[];
+    generatedImages: string[];
+    generatedPreviews: string[];
+
     remarketingSentAt: Date | null;
     createdAt: Date;
     updatedAt: Date;
@@ -80,35 +83,25 @@ const userSchema = new Schema<IUser>(
             default: 'pending',
         },
         payment: {
-            id: {
-                type: String,
-                default: null
-            },
-            link: {
-                type: String,
-                default: null,
-            },
-            code: {
-                type: String,
-                default: null,
-            },
-            qrCode: {
-                type: String,
-                default: null
-            }
+            id: { type: String, default: null },
+            link: { type: String, default: null },
+            code: { type: String, default: null },
+            qrCode: { type: String, default: null },
         },
-        stripeSessionId: {
-            type: String,
-            default: null,
+
+        originalImages: {
+            type: [String],
+            default: [],
         },
-        generatedImageUrl: {
-            type: String,
-            default: null,
+        generatedImages: {
+            type: [String],
+            default: [],
         },
-        originalImageUrl: {
-            type: String,
-            default: null,
+        generatedPreviews: {
+            type: [String],
+            default: [],
         },
+
         remarketingSentAt: {
             type: Date,
             default: null,
@@ -116,14 +109,13 @@ const userSchema = new Schema<IUser>(
     },
     {
         timestamps: true,
-    },
+    }
 );
 
-// Indexes for performance
 userSchema.index({ whatsappId: 1 });
 userSchema.index({ phone: 1 });
 userSchema.index({ funnelCompleted: 1 });
-userSchema.index({ windowExpiresAt: 1 }); 
+userSchema.index({ windowExpiresAt: 1 });
 userSchema.index({ paymentStatus: 1 });
 
 export const User = connection.useDb("whatsapp-ofc").model<IUser>('User', userSchema);
