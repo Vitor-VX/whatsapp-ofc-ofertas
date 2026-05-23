@@ -22,6 +22,12 @@ export interface PixNode extends BaseNode {
     code: string;
 }
 
+export interface CardsNode extends BaseNode {
+    type: 'cards';
+    content: string;
+    cards: any[];
+}
+
 // Imagem
 export interface ImageNode extends BaseNode {
     type: 'image';
@@ -139,6 +145,7 @@ export type FunnelNode =
     | ActionNode
     | RemarketingNode
     | PixNode
+    | CardsNode
     | EndNode;
 
 export interface Funnel {

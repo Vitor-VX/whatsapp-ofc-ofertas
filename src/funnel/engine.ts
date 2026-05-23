@@ -85,6 +85,15 @@ export class FunnelEngine {
             }
         }
 
+        if (node.type === 'cards') {
+            for (const card of (node as any).cards) {
+                const button = card.buttons.find((b: any) => b.id === selectedId);
+                if (button) {
+                    return button.nextNode || null;
+                }
+            }
+        }
+
         return null;
     }
 

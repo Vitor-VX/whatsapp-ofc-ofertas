@@ -95,8 +95,49 @@
     },
     "ask_style": {
       "id": "ask_style",
-      "type": "buttons",
+      "type": "cards",
       "body": "Perfeito! 🥰 Escolhe o estilo artístico do seu pet:",
+      "cards": [
+        {
+          "headerType": "image",
+          "mediaUrl": "https://files.botsync.site/quadros/img-sites/sky_theme.jpg",
+          "body": "🌩️ Céu Épico\nO estilo mais popular!",
+          "buttons": [
+            {
+              "type": "quick_reply",
+              "id": "sky",
+              "title": "Escolher este",
+              "nextNode": "style_selected_sky"
+            }
+          ]
+        },
+        {
+          "headerType": "image",
+          "mediaUrl": "https://files.botsync.site/quadros/img-sites/renaissance.jpg",
+          "body": "🎭 Renascentista\nAr de nobreza clássica.",
+          "buttons": [
+            {
+              "type": "quick_reply",
+              "id": "renaissance",
+              "title": "Escolher este",
+              "nextNode": "style_selected_renaissance"
+            }
+          ]
+        },
+        {
+          "headerType": "image",
+          "mediaUrl": "https://files.botsync.site/quadros/img-sites/recoco.jpg",
+          "body": "🌸 Rococó\nElegante e sofisticado.",
+          "buttons": [
+            {
+              "type": "quick_reply",
+              "id": "rococo",
+              "title": "Escolher este",
+              "nextNode": "style_selected_rococo"
+            }
+          ]
+        }
+      ],
       "buttons": [
         {
           "id": "sky",
@@ -315,8 +356,49 @@
     },
     "ask_style_bonus": {
       "id": "ask_style_bonus",
-      "type": "buttons",
+      "type": "cards",
       "body": "Perfeito! 🥰 Escolhe o estilo artístico para seu bônus:",
+      "cards": [
+        {
+          "headerType": "image",
+          "mediaUrl": "https://files.botsync.site/quadros/img-sites/sky_theme.jpg",
+          "body": "🌩️ Céu Épico\nO estilo mais popular!",
+          "buttons": [
+            {
+              "type": "quick_reply",
+              "id": "sky",
+              "title": "Escolher este",
+              "nextNode": "style_selected_sky_bonus"
+            }
+          ]
+        },
+        {
+          "headerType": "image",
+          "mediaUrl": "https://files.botsync.site/quadros/img-sites/renaissance.jpg",
+          "body": "🎭 Renascentista\nAr de nobreza clássica.",
+          "buttons": [
+            {
+              "type": "quick_reply",
+              "id": "renaissance",
+              "title": "Escolher este",
+              "nextNode": "style_selected_renaissance_bonus"
+            }
+          ]
+        },
+        {
+          "headerType": "image",
+          "mediaUrl": "https://files.botsync.site/quadros/img-sites/recoco.jpg",
+          "body": "🌸 Rococó\nElegante e sofisticado.",
+          "buttons": [
+            {
+              "type": "quick_reply",
+              "id": "rococo",
+              "title": "Escolher este",
+              "nextNode": "style_selected_rococo_bonus"
+            }
+          ]
+        }
+      ],
       "buttons": [
         {
           "id": "sky",

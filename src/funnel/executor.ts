@@ -74,6 +74,8 @@ export class FunnelExecutor {
                 return await this.executeImage(node);
             case 'audio':
                 return await this.executeAudio(node);
+            case 'cards':
+                return await this.executeCards(node);
             case 'pix':
                 return await this.executePix(node);
             case 'video':
@@ -144,6 +146,27 @@ export class FunnelExecutor {
         }
 
         return node.nextNode || null;
+    }
+
+    /**
+     * Send CARDS to user
+     */
+    private async executeCards(node: any): Promise<string | null> {
+        const body = this.context.engine.interpolateText(node.body, this.context.user);
+        const cards = node.cards || [];
+
+        try {
+            await this.context.whatsappService.sendCarousel(this.context.user.whatsappId, {
+                bodyText: body,
+                cards: cards
+           });
+            logger.botMessage(this.context.user.phone, `[CARDS] ${body}`);
+        } catch (error) {
+            logger.error(`Failed to send image: ${error instanceof Error ? error.message : String(error)}`);
+            throw error;
+        }
+
+        return null;
     }
 
     /**

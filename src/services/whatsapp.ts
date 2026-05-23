@@ -1,10 +1,10 @@
-import axios, { AxiosInstance } from 'axios';
-import { getEnv } from '../config/env';
-import { logger } from '../logger';
+import axios, { AxiosInstance } from "axios";
+import { getEnv } from "../config/env";
+import { logger } from "../logger";
 import crypto from "crypto";
 
 interface WhatsAppMessage {
-    type: 'text' | 'image' | 'audio' | 'video' | 'document' | 'interactive';
+    type: "text" | "image" | "audio" | "video" | "document" | "interactive";
     body?: string;
     image?: { link: string };
     audio?: { link: string, voice: boolean };
@@ -17,7 +17,7 @@ interface PixDynamicCode {
     code: string;
     merchant_name: string;
     key: string;
-    key_type: 'CPF' | 'CNPJ' | 'EMAIL' | 'PHONE' | 'EVP';
+    key_type: "CPF" | "CNPJ" | "EMAIL" | "PHONE" | "EVP";
 }
 
 interface OrderItem {
@@ -43,6 +43,26 @@ interface PixPaymentOptions {
     };
 }
 
+interface CarouselCard {
+    headerType: "image" | "video";
+    mediaUrl: string;
+    body?: string;
+    buttons: CarouselButton[];
+}
+
+interface CarouselButton {
+    type: "quick_reply" | "url";
+    id?: string;
+    title: string;
+    url?: string;
+}
+
+interface CarouselOptions {
+    phoneNumber: string;
+    bodyText: string;
+    cards: CarouselCard[];
+}
+
 export class WhatsAppService {
     private client: AxiosInstance;
     private phoneNumberId: string;
@@ -57,7 +77,7 @@ export class WhatsAppService {
             baseURL: `https://graph.facebook.com/v23.0/${this.phoneNumberId}/messages`,
             headers: {
                 Authorization: `Bearer ${this.accessToken}`,
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
             },
         });
     }
@@ -68,37 +88,37 @@ export class WhatsAppService {
     async sendMessage(phoneNumber: string, message: WhatsAppMessage): Promise<void> {
         try {
             const payload: any = {
-                messaging_product: 'whatsapp',
-                to: phoneNumber.replace(/\D/g, ''),
+                messaging_product: "whatsapp",
+                to: phoneNumber.replace(/\D/g, ""),
                 type: message.type,
             };
 
             switch (message.type) {
-                case 'text':
+                case "text":
                     payload.text = { body: message.body };
                     break;
-                case 'image':
+                case "image":
                     payload.image = message.image;
                     if (message.caption) {
                         payload.image.caption = message.caption;
                     }
                     break;
-                case 'audio':
+                case "audio":
                     payload.audio = message.audio;
                     payload.audio.voice = true;
                     break;
-                case 'video':
+                case "video":
                     payload.video = message.video;
                     if (message.caption) {
                         payload.video.caption = message.caption;
                     }
                     break;
-                case 'interactive':
+                case "interactive":
                     payload.interactive = message.interactive;
                     break;
             }
 
-            await this.client.post('', payload);
+            await this.client.post("", payload);
             logger.debug(`Message sent to ${phoneNumber}`);
         } catch (error) {
             const errorMsg = error instanceof Error ? error.message : String(error);
@@ -116,11 +136,11 @@ export class WhatsAppService {
 
             const parameters: any = {
                 reference_id: referenceId,
-                type: 'digital-goods',
-                payment_type: 'br',
+                type: "digital-goods",
+                payment_type: "br",
                 payment_settings: [
                     {
-                        type: 'pix_dynamic_code',
+                        type: "pix_dynamic_code",
                         pix_dynamic_code: {
                             code: pix.code,
                             merchant_name: pix.merchant_name,
@@ -129,7 +149,7 @@ export class WhatsAppService {
                         },
                     },
                 ],
-                currency: 'BRL',
+                currency: "BRL",
                 total_amount: {
                     value: totalAmount,
                     offset: 100,
@@ -138,11 +158,11 @@ export class WhatsAppService {
 
             if (order) {
                 parameters.order = {
-                    status: 'pending',
+                    status: "pending",
                     tax: {
                         value: order.tax ?? 0,
                         offset: 100,
-                        description: order.taxDescription ?? '',
+                        description: order.taxDescription ?? "",
                     },
                     items: order.items.map((item) => ({
                         retailer_id: item.retailer_id,
@@ -161,23 +181,23 @@ export class WhatsAppService {
             }
 
             const payload = {
-                recipient_type: 'individual',
-                messaging_product: 'whatsapp',
-                to: phoneNumber.replace(/\D/g, ''),
-                type: 'interactive',
+                recipient_type: "individual",
+                messaging_product: "whatsapp",
+                to: phoneNumber.replace(/\D/g, ""),
+                type: "interactive",
                 interactive: {
-                    type: 'order_details',
+                    type: "order_details",
                     body: {
                         text: bodyText,
                     },
                     action: {
-                        name: 'review_and_pay',
+                        name: "review_and_pay",
                         parameters,
                     },
                 },
             };
 
-            await this.client.post('', payload);
+            await this.client.post("", payload);
             logger.debug(`PIX payment sent to ${phoneNumber} — ref: ${referenceId}`);
         } catch (error) {
             const errorMsg = error instanceof Error ? error.message : String(error);
@@ -193,12 +213,12 @@ export class WhatsAppService {
      */
     async sendChatAction(messageId: string): Promise<void> {
         try {
-            await this.client.post('', {
-                messaging_product: 'whatsapp',
-                status: 'read',
+            await this.client.post("", {
+                messaging_product: "whatsapp",
+                status: "read",
                 message_id: messageId,
                 typing_indicator: {
-                    type: 'text',
+                    type: "text",
                 },
             });
 
@@ -206,6 +226,88 @@ export class WhatsAppService {
         } catch (error) {
             const errorMsg = error instanceof Error ? error.message : String(error);
             logger.debug(`Failed to send typing indicator: ${errorMsg}`);
+        }
+    }
+
+    /**
+     * Send carousel message (2-10 cards with image/video header)
+     * All cards must have the same button types and quantity
+    */
+    async sendCarousel(phoneNumber:string, options: CarouselOptions): Promise<void> {
+        const { bodyText, cards } = options;
+
+        if (cards.length < 2 || cards.length > 10) {
+            throw new Error(`Carousel must have between 2 and 10 cards. Got: ${cards.length}`);
+        }
+
+        try {
+            const formattedCards = cards.map((card, index) => {
+                const hasUrlButton = card.buttons.some(b => b.type === "url");
+                const formattedCard: any = {
+                    card_index: index,
+                    type: hasUrlButton ? "cta_url" : "button",
+                    header: {
+                        type: card.headerType,
+                        [card.headerType]: {
+                            link: card.mediaUrl,
+                        },
+                    },
+                };
+
+                if (card.body) {
+                    formattedCard.body = { text: card.body };
+                }
+
+                if (hasUrlButton) {
+                    formattedCard.type = "cta_url";
+                    const urlButton = card.buttons.find(b => b.type === "url")!;
+                    formattedCard.action = {
+                        name: "cta_url",
+                        parameters: {
+                            display_text: urlButton.title,
+                            url: urlButton.url,
+                        },
+                    };
+                } else {
+                    formattedCard.action = {
+                        buttons: card.buttons.map(btn => ({
+                            type: "quick_reply",
+                            quick_reply: {
+                                id: btn.id,
+                                title: btn.title,
+                            },
+                        })),
+                    };
+                }
+
+                return formattedCard;
+            });
+
+            const payload = {
+                messaging_product: "whatsapp",
+                recipient_type: "individual",
+                to: phoneNumber.replace(/\D/g, ""),
+                type: "interactive",
+                interactive: {
+                    type: "carousel",
+                    body: {
+                        text: bodyText,
+                    },
+                    action: {
+                        cards: formattedCards,
+                    },
+                },
+            };
+
+            await this.client.post("", payload);
+            logger.debug(`Carousel sent to ${phoneNumber} with ${cards.length} cards`);
+        } catch (error) {
+            const errorMsg = error instanceof Error ? error.message : String(error);
+            if (axios.isAxiosError(error) && error.response) {
+                logger.error(`Meta API error response: ${JSON.stringify(error.response.data)}`);
+            }
+            logger.error(`Failed to send carousel to ${phoneNumber}: ${errorMsg}`);
+            throw error;
         }
     }
 
@@ -219,7 +321,7 @@ export class WhatsAppService {
                 headers: {
                     Authorization: `Bearer ${this.accessToken}`,
                 },
-                responseType: 'arraybuffer',
+                responseType: "arraybuffer",
             });
             return Buffer.from(response.data);
         } catch (error) {
@@ -254,9 +356,9 @@ export class WhatsAppService {
         appSecret: string,
     ): boolean {
         const hash = crypto
-            .createHmac('sha256', appSecret)
+            .createHmac("sha256", appSecret)
             .update(body)
-            .digest('hex');
+            .digest("hex");
         return hash === signature;
     }
 }

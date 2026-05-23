@@ -303,7 +303,8 @@ async function processIncomingMessage(msg: ConsumeMessage | null): Promise<void>
         const incomingButtonId =
             button?.payload ||
             interactive?.button_reply?.id ||
-            interactive?.list_reply?.id;
+            interactive?.list_reply?.id ||
+            interactive?.carousel_reply?.button_reply?.id;
 
         if (currentNode.id === "payment_pending_hold") {
             logger.warn(
@@ -312,7 +313,7 @@ async function processIncomingMessage(msg: ConsumeMessage | null): Promise<void>
             return;
         }
 
-        if (incomingButtonId && currentNode.type !== 'buttons' && currentNode.type !== 'list') {
+        if (incomingButtonId && currentNode.type !== 'buttons' && currentNode.type !== 'list' && currentNode.type !== "cards") {
             // Botão de mensagem antiga clicado enquanto usuário está em outro nó → ignorar
             logger.warn(
                 `Stale button click ignored: buttonId="${incomingButtonId}" currentNode="${currentNode.id}" (type=${currentNode.type})`,
@@ -320,8 +321,7 @@ async function processIncomingMessage(msg: ConsumeMessage | null): Promise<void>
             return;
         }
 
-        if (incomingButtonId && (currentNode.type === 'buttons' || currentNode.type === 'list')) {
-            // Verificar se o buttonId pertence ao nó atualFD
+        if (incomingButtonId && (currentNode.type === 'buttons' || currentNode.type === 'list' || currentNode.type === 'cards')) {
             const validIds = getValidButtonIds(currentNode);
             if (!validIds.includes(incomingButtonId)) {
                 logger.warn(
@@ -377,7 +377,7 @@ async function processIncomingMessage(msg: ConsumeMessage | null): Promise<void>
                     return;
                 }
             }
-        } else if (currentNode.type === 'buttons' || currentNode.type === 'list') {
+        } else if (currentNode.type === 'buttons' || currentNode.type === 'list' || currentNode.type === 'cards') {
             if (!incomingButtonId) {
                 // Usuário digitou texto livre em vez de clicar no botão — ignorar ou reenviar
                 logger.warn(`Free text received while waiting for button selection from ${phoneNumber}`);
@@ -388,7 +388,7 @@ async function processIncomingMessage(msg: ConsumeMessage | null): Promise<void>
             if (nextNodeId) {
                 const updates: Record<string, any> = { currentNodeId: nextNodeId };
 
-                if (currentNode.id === 'ask_style') {
+                if (currentNode.id === 'ask_style' || currentNode.id === 'ask_style_bonus') {
                     updates['collectedData.style'] = incomingButtonId;
                 }
 
@@ -415,6 +415,11 @@ function getValidButtonIds(node: any): string[] {
     }
     if (node.type === 'list') {
         return (node.sections ?? []).flatMap((s: any) => (s.rows ?? []).map((r: any) => r.id));
+    }
+    if (node.type === 'cards') {
+        return node.cards.flatMap((card: any) =>
+            card.buttons.map((b: any) => b.id)
+        );
     }
     return [];
 }
@@ -555,7 +560,7 @@ async function processPaymentEvent(msg: ConsumeMessage | null): Promise<void> {
 
             case 'PAYMENT_EXPIRED': {
                 logger.info(`Payment expired for ${whatsappId}`);
-                   await User.updateOne(
+                await User.updateOne(
                     { _id: user._id },
                     { currentNodeId: "interest_1", paymentStatus: "pending" },
                 );
