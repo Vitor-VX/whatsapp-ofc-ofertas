@@ -555,9 +555,13 @@ async function processPaymentEvent(msg: ConsumeMessage | null): Promise<void> {
 
             case 'PAYMENT_EXPIRED': {
                 logger.info(`Payment expired for ${whatsappId}`);
+                   await User.updateOne(
+                    { _id: user._id },
+                    { currentNodeId: "interest_1", paymentStatus: "pending" },
+                );
                 await whatsappService.sendMessage(whatsappId, {
                     type: "text",
-                    body: "Olá! Identificamos que o prazo para o pagamento anterior foi expirado.\n\nCaso ainda tenha interesse em continuar com o seu pedido, basta responder esta mensagem e geraremos automaticamente um novo pagamento para você.\n\nSe preferir não continuar, não é necessário fazer nada."
+                    body: "Olá! Identificamos que o prazo para o pagamento anterior foi expirado.\n\nSua sessão foi reiniciada, ok?"
                 });
                 break;
             }
