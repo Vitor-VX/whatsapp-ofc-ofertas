@@ -84,7 +84,7 @@
     "how_it_works": {
       "id": "how_it_works",
       "type": "text",
-      "content": "É bem simples 👇\n\n1️⃣ Você me envia uma foto do seu pet\n2️⃣ Nossa IA cria o retrato artístico\n3️⃣ Você vê uma *prévia* aqui mesmo\n4️⃣ Se gostar, paga *R$10,90 via PIX* — aprovação instantânea ✅\n5️⃣ Recebe o arquivo em *alta resolução* aqui no WhatsApp 🖼️\n6️⃣ Imprime onde quiser ou usa como papel de parede 🖼️✨\n\n_Não precisa instalar nada, não precisa ter conta em nenhum site._",
+      "content": "É bem simples 👇\n\n1️⃣ Você me envia uma foto do seu pet\n2️⃣ A gente cria o retrato artístico\n3️⃣ Você vê uma *prévia* aqui mesmo\n4️⃣ Se gostar, paga *R$10,90 via PIX* — aprovação instantânea ✅\n5️⃣ Recebe o arquivo em *alta resolução* aqui no WhatsApp 🖼️\n6️⃣ Imprime onde quiser ou usa como papel de parede 🖼️✨\n\n_Não precisa instalar nada, não precisa ter conta em nenhum site._",
       "nextNode": "delay_how"
     },
     "delay_how": {
