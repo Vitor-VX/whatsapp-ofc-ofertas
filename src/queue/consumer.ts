@@ -52,9 +52,9 @@ function initializeActionHandlers(): void {
             { _id: user._id },
             {
                 $set: {
-                    "collectedData.packagePrice": priceStr,  
+                    "collectedData.packagePrice": priceStr,
                     "collectedData.packagePriceValue": price,
-                    "collectedData.packagePriceCents": priceInCents 
+                    "collectedData.packagePriceCents": priceInCents
                 }
             }
         );
@@ -144,6 +144,73 @@ function initializeActionHandlers(): void {
             logger.info(`Payment link created for ${user.whatsappId}`);
         } catch (error) {
             logger.error(`Failed to create payment link: ${error instanceof Error ? error.message : String(error)}`);
+            throw error;
+        }
+    });
+
+    actionRegistry.register("generatePetImageBonus", async (node, user, ctx) => {
+        logger.info(`Generating BONUS pet image for ${user.whatsappId}`);
+
+        try {
+            const data = user.collectedData;
+            const photoMediaId = data.get("photoMediaId");
+            if (!photoMediaId) throw new Error("No photo provided");
+
+            const photoBuffer = await whatsappService.downloadMedia(photoMediaId);
+            const tmpDir = tmpdir();
+            const photoPath = path.join(tmpDir, `${user.whatsappId}_${Date.now()}_original.jpg`);
+            writeFileSync(photoPath, photoBuffer);
+
+            const style = (data.get("style") || "sky") as "sky" | "renaissance" | "rococo";
+            const petName = data.get("petName") || "Pet";
+
+            const generatedBuffer = await geminiService.generatePetImage({ petName, style, photoPath });
+
+            const finalPath = path.join(tmpDir, `${user.whatsappId}_${Date.now()}_bonus.jpg`);
+            writeFileSync(finalPath, generatedBuffer);
+
+            const finalUpload = await r2Cloudflare.uploadBuffer(readFileSync(finalPath), "quadros-whatsapp");
+
+            await User.updateOne(
+                { _id: user._id },
+                {
+                    $push: { generatedImages: finalUpload?.url },
+                    $set: { "collectedData.lastPreview": finalUpload?.url }
+                }
+            );
+
+            logger.info(`Bonus image generated for ${user.whatsappId}`);
+        } catch (error) {
+            logger.error(`Failed bonus generation: ${error instanceof Error ? error.message : String(error)}`);
+            throw error;
+        }
+    });
+
+    actionRegistry.register("deliverBonusImage", async (node, user, ctx) => {
+        logger.info(`Delivering BONUS image to ${user.whatsappId}`);
+
+        try {
+            const freshUser = await User.findById(user._id);
+            const images = freshUser?.generatedImages || [];
+            const deliveredCount = Number(freshUser?.collectedData.get("deliveredCount") || 0);
+
+            if (images.length === 0) throw new Error("No bonus image to deliver");
+            const latestImage = images[images.length - 1];
+
+            await whatsappService.sendMessage(user.whatsappId, {
+                type: "image",
+                image: { link: latestImage },
+                caption: "🎁 Aqui está sua arte bônus em alta resolução!",
+            });
+
+            await User.updateOne(
+                { _id: user._id },
+                { $set: { "collectedData.deliveredCount": deliveredCount + 1 } }
+            );
+
+            logger.info(`Bonus image delivered to ${user.whatsappId}`);
+        } catch (error) {
+            logger.error(`Bonus delivery error: ${error instanceof Error ? error.message : String(error)}`);
             throw error;
         }
     });

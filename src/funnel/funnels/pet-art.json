@@ -38,7 +38,7 @@
     "interest_1": {
       "id": "interest_1",
       "type": "text",
-      "content": "🎨 Quer ver seu pet como uma obra de arte?\n\nTransformamos a foto em estilo *Renascentista*, *Rococó* ou *Céu Épico* 🐶🐱\n\nEntrega instantânea *AQUI no WhatsApp*.\n\n🔥 De ~R$19,90~ por *R$10,90* e o melhor: caso queira fazer de outros pets depois, você ganha um *desconto especial*!\n\nEntrega em até 24h direto no WhatsApp.",
+      "content": "🎨 Quer ver seu pet como uma obra de arte?\n\nTransformamos a foto em estilo *Renascentista*, *Rococó* ou *Céu Épico* 🐶🐱\n\nEntrega instantânea *AQUI no WhatsApp*.\n\n🔥 De ~R$19,90~ por *R$10,90* e o melhor: caso queira fazer de outros pets depois, você ganha um *desconto especial*!\n\nE o melhor ainda, você ainda *GANHA UM BÔNUS ESPECIAL AO FINALIZAR SUA COMPRA 🎁*\n\nEntrega em poucos segundos direto no WhatsApp.",
       "nextNode": "delay_3"
     },
     "delay_3": {
@@ -202,18 +202,24 @@
       "id": "delay_5",
       "type": "delay",
       "ms": 1500,
-      "nextNode": "action_decision_tip"
+      "nextNode": "bonus_reveal"
     },
     "action_decision_tip": {
       "id": "action_decision_tip",
       "type": "text",
-      "content": "👇 Para garantir a arte original sem marca d'água, clique na *primeira opção* abaixo:\n\n *\"💳 Gerar Pix\"*",
+      "content": "👇 Para garantir a arte original sem marca d'água *(E GANHAR SEU BÔNUS 🎁)*, clique na *primeira opção* abaixo:\n\n *\"💳 Gerar Pix\"*",
       "nextNode": "action_decision"
+    },
+    "bonus_reveal": {
+      "id": "bonus_reveal",
+      "type": "text",
+      "content": "🎁 *BÔNUS EXCLUSIVO:*\n\nQuem finalizar a compra hoje recebe *+1 arte digital completamente grátis!*\n\nSim, você escolhe outro estilo ou manda a foto de outro pet — e a gente faz sem cobrar nada. 🐾\n\n_Esse bônus é válido apenas para quem pagar agora._",
+      "nextNode": "action_decision_tip"
     },
     "action_decision": {
       "id": "action_decision",
       "type": "buttons",
-      "body": "Por *{{packagePrice}} via PIX* você recebe o arquivo original em alta resolução — sem marca d'água — aqui mesmo no WhatsApp. Dá pra imprimir e emoldurar! 🖼️",
+      "body": "Por *{{packagePrice}} via PIX* você recebe:\n\n🖼️ Arte original em alta resolução sem marca d'água\n🎁 *+1 arte grátis* para usar quando quiser\n\nTudo entregue aqui no WhatsApp!",
       "buttons": [
         {
           "id": "pay",
@@ -281,11 +287,118 @@
     "final_message": {
       "id": "final_message",
       "type": "text",
-      "content": "🎉 Pronto! Aqui está a arte do seu pet em alta resolução e sem marca d'água!",
+      "content": "🎉 Pronto! Aqui está a arte do seu pet em alta resolução e sem marca d'água!\n\n🎁 *Seu bônus de +1 arte grátis está liberado!* É só escolher o estilo e mandar a próxima foto quando quiser.",
       "nextNode": "final_tip"
     },
     "final_tip": {
       "id": "final_tip",
+      "type": "text",
+      "content": "💡 *Dica:* Impressão 20x30 cm custa em torno de R$8 a R$13 em gráficas. Moldura simples no Mercado Livre a partir de R$15. Fica incrível na parede! 🤩",
+      "nextNode": "upsell_offer_bonus"
+    },
+    "upsell_offer_bonus": {
+      "id": "upsell_offer_bonus",
+      "type": "buttons",
+      "body": "🎁 *Seu bônus está esperando!*\n\nVocê ganhou *+1 arte digital completamente grátis*. Quer usar agora?\n\nEscolha outro estilo ou manda a foto de outro pet — sem custo nenhum! 🐾",
+      "buttons": [
+        {
+          "id": "yes_bonus",
+          "title": "Quero o Bônus!",
+          "nextNode": "ask_style_bonus"
+        },
+        {
+          "id": "no_bonus",
+          "title": "Não quero",
+          "nextNode": "end_node"
+        }
+      ]
+    },
+    "ask_style_bonus": {
+      "id": "ask_style_bonus",
+      "type": "buttons",
+      "body": "Perfeito! 🥰 Escolhe o estilo artístico para seu bônus:",
+      "buttons": [
+        {
+          "id": "sky",
+          "title": "🌩️ Céu Épico",
+          "nextNode": "style_selected_sky_bonus"
+        },
+        {
+          "id": "renaissance",
+          "title": "🎭 Renascentista",
+          "nextNode": "style_selected_renaissance_bonus"
+        },
+        {
+          "id": "rococo",
+          "title": "🌸 Rococó",
+          "nextNode": "style_selected_rococo_bonus"
+        }
+      ]
+    },
+    "style_selected_sky_bonus": {
+      "id": "style_selected_sky_bonus",
+      "type": "text",
+      "content": "Ótima escolha! 🌩️ Vamos criar sua arte bônus!",
+      "nextNode": "save_style_bonus"
+    },
+    "style_selected_renaissance_bonus": {
+      "id": "style_selected_renaissance_bonus",
+      "type": "text",
+      "content": "Magnífico! 🎭 Vamos criar sua arte bônus!",
+      "nextNode": "save_style_bonus"
+    },
+    "style_selected_rococo_bonus": {
+      "id": "style_selected_rococo_bonus",
+      "type": "text",
+      "content": "Elegante! 🌸 Vamos criar sua arte bônus!",
+      "nextNode": "save_style_bonus"
+    },
+    "save_style_bonus": {
+      "id": "save_style_bonus",
+      "type": "action",
+      "action": "saveStyle",
+      "nextNode": "ask_photo_bonus"
+    },
+    "ask_photo_bonus": {
+      "id": "ask_photo_bonus",
+      "type": "waitPhoto",
+      "saveAs": "photoMediaId",
+      "content": "📸 Me envia a foto do pet para o seu bônus!\n\n_Dica: quanto mais nítido o rostinho, mais bonita fica a arte_ 🐾",
+      "nextNode": "generating_image_bonus"
+    },
+    "generating_image_bonus": {
+      "id": "generating_image_bonus",
+      "type": "typing",
+      "durationMs": 3000,
+      "action": "typing",
+      "nextNode": "generating_image_msg_bonus"
+    },
+    "generating_image_msg_bonus": {
+      "id": "generating_image_msg_bonus",
+      "type": "text",
+      "content": "🎨 Criando sua arte bônus! Só um instante... ✨",
+      "nextNode": "action_generate_bonus"
+    },
+    "action_generate_bonus": {
+      "id": "action_generate_bonus",
+      "type": "action",
+      "action": "generatePetImageBonus",
+      "nextNode": "deliver_bonus_image"
+    },
+    "deliver_bonus_image": {
+      "id": "deliver_bonus_image",
+      "type": "action",
+      "action": "deliverBonusImage",
+      "nextNode": "final_message_bonus"
+    },
+    "final_message_bonus": {
+      "id": "final_message_bonus",
+      "type": "text",
+      "content": "🎉 Aqui está sua arte bônus em alta resolução e sem marca d'água!",
+      "nextNode": "final_tip_bonus"
+    },
+    "final_tip_bonus": {
+      "id": "final_tip_bonus",
       "type": "text",
       "content": "💡 *Dica:* Impressão 20x30 cm custa em torno de R$8 a R$13 em gráficas. Moldura simples no Mercado Livre a partir de R$15. Fica incrível na parede! 🤩",
       "nextNode": "upsell_offer"
