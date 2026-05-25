@@ -297,8 +297,8 @@ async function processIncomingMessage(msg: ConsumeMessage | null): Promise<void>
             console.log("FLOW DATA:", JSON.stringify(data, null, 2));
 
             const planMap: Record<string, { days: number; price: number; label: string }> = {
-                plan_30: { days: 30, price: 0.1, label: "30 dias" },
-                plan_90: { days: 90, price: 0.2, label: "90 dias" },
+                plan_30: { days: 30, price: 0.01, label: "30 dias" },
+                plan_90: { days: 90, price: 0.02, label: "90 dias" },
             };
 
             const plan = planMap[data.plan] ?? planMap["plan_30"];
@@ -579,7 +579,7 @@ async function processPaymentEvent(msg: ConsumeMessage | null): Promise<void> {
                 logger.info(`Payment success for ${whatsappId}`);
                 await User.updateOne(
                     { _id: user._id },
-                    { currentNodeId: 'deliver_image', paymentStatus: 'paid' },
+                    { currentNodeId: 'deliver_envelope', paymentStatus: 'paid' },
                 );
                 await executeNodeSequence(user, engine, "", true);
                 break;
