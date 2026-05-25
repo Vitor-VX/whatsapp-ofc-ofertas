@@ -7,10 +7,14 @@ import { logger } from './logger';
 import whatsappRoutes from './routes/webhook';
 import stripeRoutes from './routes/stripe';
 import mercadoRoutes from './routes/mercadopago';
+import productRoutes from './routes/products';
 import { errorHandler } from './middleware/errorHandler';
+import cors from "cors";
 
 const app: Express = express();
 const env = getEnv();
+
+app.use(cors());
 
 /**
  * Middleware to capture raw body for webhook signature verification
@@ -42,6 +46,7 @@ app.get('/health', (req: Request, res: Response) => {
 app.use(whatsappRoutes);
 app.use(stripeRoutes);
 app.use(mercadoRoutes);
+app.use(productRoutes);
 
 /**
  * 404 handler

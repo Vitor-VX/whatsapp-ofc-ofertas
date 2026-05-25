@@ -16,36 +16,91 @@ import { readFileSync, writeFileSync } from 'fs';
 import { tmpdir } from 'os';
 import { r2Cloudflare } from '../utils/uploadCloudflare';
 import { mercadoPagoService } from '../services/mercadoPago';
+import { envelopeService } from '../services/envelope';
 
-/**
- * Initialize action handlers
- */
-function initializeActionHandlers(): void {
+function getPhotoIndexFromNodeId(nodeId: string): number {
+    const match = nodeId.match(/photo_received_(\d+)/);
+    if (!match) return 0;
+    const index = parseInt(match[1], 10);
+    return index >= 1 && index <= 5 ? index : 0;
+}
 
-    actionRegistry.register('saveStyle', async (node: ActionNode, user, ctx) => {
-        const styleMap: Record<string, string> = {
-            save_style_sky: "sky",
-            save_style_renaissance: "renaissance",
-            save_style_rococo: "rococo"
-        };
-        const style = styleMap[node.id] || "sky";
+function collectPhotos(collectedData: Map<string, string>): string[] {
+    const photos: string[] = [];
+    for (let i = 1; i <= 5; i++) {
+        const url = collectedData.get(`photo_${i}`);
+        if (url && url.startsWith("http")) photos.push(url);
+    }
+    return photos;
+}
+
+async function processPhotoUpload(
+    userId: any,
+    whatsappId: string,
+    photoIndex: number,
+    mediaId: string
+): Promise<void> {
+    try {
+        const photoBuffer = await whatsappService.downloadMedia(mediaId);
+        const upload = await r2Cloudflare.uploadBuffer(photoBuffer, "envelopes-whatsapp");
+        const url = upload?.url;
+
+        if (!url) throw new Error("R2 upload returned no URL");
 
         await User.updateOne(
-            { _id: user._id },
-            { $set: { "collectedData.style": style } }
+            { _id: userId },
+            {
+                $set: { [`collectedData.photo_${photoIndex}`]: url },
+                $push: { clientsImage: url },
+            }
         );
-        logger.debug(`Style ${style} saved for user ${user.whatsappId}`);
+
+        logger.info(`[savePhoto] photo_${photoIndex} uploaded for ${whatsappId}: ${url}`);
+    } catch (error) {
+        logger.error(
+            `[savePhoto] Failed photo_${photoIndex} for ${whatsappId}: ${error instanceof Error ? error.message : String(error)
+            }`
+        );
+    }
+}
+
+export function initializeActionHandlers(): void {
+    actionRegistry.register("savePhoto", async (node: ActionNode, user, _ctx) => {
+        const photoIndex = getPhotoIndexFromNodeId(node.id);
+        if (photoIndex === 0) {
+            logger.warn(`[savePhoto] Could not determine photo index from node.id: "${node.id}"`);
+            return;
+        }
+
+        const data = user.collectedData as Map<string, string>;
+        const photoMediaId = data.get(`photo_${photoIndex}`);
+
+        if (!photoMediaId) {
+            const freshUser = await User.findById(user._id);
+            const freshData = freshUser?.collectedData as Map<string, string> | undefined;
+            const freshMediaId = freshData?.get(`photo_${photoIndex}`);
+
+            if (!freshMediaId) {
+                logger.warn(`[savePhoto] photo_${photoIndex} not found in collectedData for user ${user.whatsappId}`);
+                return;
+            }
+
+            logger.debug(`[savePhoto] Used DB fallback for photo_${photoIndex}`);
+            return processPhotoUpload(user._id, user.whatsappId, photoIndex, freshMediaId);
+        }
+
+        if (photoMediaId.startsWith("http")) {
+            logger.debug(`[savePhoto] photo_${photoIndex} already uploaded, skipping`);
+            return;
+        }
+
+        return processPhotoUpload(user._id, user.whatsappId, photoIndex, photoMediaId);
     });
 
-    actionRegistry.register("prepareCheckout", async (node, user, ctx) => {
-        const deliveredCount = Number(user.collectedData.get("deliveredCount")) || 0;
-
-        // 💰 preço em reais
-        const price = deliveredCount > 0 ? 7.90 : 10.90;
-
-        // 💳 preço em centavos (pro gateway)
+    actionRegistry.register("prepareCheckout", async (_node: ActionNode, user, _ctx) => {
+        const data = user.collectedData as Map<string, string>;
+        const price = parseFloat(data.get("packagePriceValue") ?? "14.90");
         const priceInCents = Math.round(price * 100);
-
         const priceStr = `R$${price.toFixed(2).replace(".", ",")}`;
 
         await User.updateOne(
@@ -53,81 +108,28 @@ function initializeActionHandlers(): void {
             {
                 $set: {
                     "collectedData.packagePrice": priceStr,
-                    "collectedData.packagePriceValue": price,
-                    "collectedData.packagePriceCents": priceInCents
-                }
+                    "collectedData.packagePriceCents": String(priceInCents),
+                },
             }
         );
 
-        ctx.user.currentNodeId = "delay_5";
+        logger.debug(`[prepareCheckout] ${priceStr} for ${user.whatsappId}`);
     });
 
-    actionRegistry.register("generatePetImage", async (node: ActionNode, user, ctx) => {
-        logger.info(`Generating pet image for ${user.whatsappId}`);
+    actionRegistry.register("createPixPayment", async (_node: ActionNode, user, _ctx) => {
+        logger.info(`[createPixPayment] Creating Pix for ${user.whatsappId}`);
 
         try {
-            const data = user.collectedData;
-            const photoMediaId = data.get("photoMediaId");
+            const data = user.collectedData as Map<string, string>;
+            const recipient = data.get("recipient") ?? "Envelope Digital";
+            const packagePrice = parseFloat(data.get("packagePriceValue") ?? "14.90");
 
-            if (!photoMediaId) throw new Error("No photo provided");
-
-            const photoBuffer = await whatsappService.downloadMedia(photoMediaId);
-
-            const tmpDir = tmpdir();
-            const photoPath = path.join(tmpDir, `${user.whatsappId}_${Date.now()}_original.jpg`);
-            writeFileSync(photoPath, photoBuffer);
-
-            const style = (data.get("style") || "sky") as "sky" | "renaissance" | "rococo";
-            const petName = data.get("petName") || "Pet";
-
-            const generatedBuffer = await geminiService.generatePetImage({
-                petName,
-                style,
-                photoPath,
-            });
-
-            const finalPath = path.join(tmpDir, `${user.whatsappId}_${Date.now()}_final.jpg`);
-            const watermarkedPath = path.join(tmpDir, `${user.whatsappId}_${Date.now()}_preview.jpg`);
-
-            writeFileSync(finalPath, generatedBuffer);
-            await watermarkService.processImage(finalPath, watermarkedPath, {
-                watermarkText: "Preview - Watermarked",
-                quality: 85,
-            });
-
-            const previewBuffer = readFileSync(watermarkedPath);
-            const finalImageBuffer = readFileSync(finalPath);
-
-            const previewUpload = await r2Cloudflare.uploadBuffer(previewBuffer, "quadros-whatsapp");
-            const finalUpload = await r2Cloudflare.uploadBuffer(finalImageBuffer, "quadros-whatsapp");
-
-            await User.updateOne(
-                { _id: user._id },
-                {
-                    $push: {
-                        generatedPreviews: previewUpload?.url,
-                        generatedImages: finalUpload?.url,
-                    },
-                    $set: {
-                        "collectedData.lastPreview": previewUpload?.url
-                    }
-                }
+            const { code, qrCodeBase64, paymentId } = await mercadoPagoService.createPixPayment(
+                user.whatsappId,
+                user._id,
+                packagePrice,
+                `Envelope Digital — ${recipient}`
             );
-
-            logger.info(`Pet image generated for ${user.whatsappId}`);
-        } catch (error) {
-            logger.error(`Failed: ${error instanceof Error ? error.message : String(error)}`);
-            throw error;
-        }
-    });
-
-    actionRegistry.register("createPixPayment", async (node: ActionNode, user, ctx) => {
-        logger.info(`Creating Pix payment link for ${user.whatsappId}`);
-
-        try {
-            const petName = user.collectedData.get("petName") || "Pet Art";
-            const packagePrice = Number(user.collectedData.get("packagePriceValue")) || 1090
-            const { code, qrCodeBase64, paymentId, expiresAt } = await mercadoPagoService.createPixPayment(user.whatsappId, user._id, packagePrice, petName);
 
             await User.updateOne(
                 { _id: user._id },
@@ -137,114 +139,86 @@ function initializeActionHandlers(): void {
                         "payment.qrCode": qrCodeBase64,
                         "payment.code": code,
                         "collectedData.pixCode": code,
-                    }
-                },
-            );
-
-            logger.info(`Payment link created for ${user.whatsappId}`);
-        } catch (error) {
-            logger.error(`Failed to create payment link: ${error instanceof Error ? error.message : String(error)}`);
-            throw error;
-        }
-    });
-
-    actionRegistry.register("generatePetImageBonus", async (node, user, ctx) => {
-        logger.info(`Generating BONUS pet image for ${user.whatsappId}`);
-
-        try {
-            const data = user.collectedData;
-            const photoMediaId = data.get("photoMediaId");
-            if (!photoMediaId) throw new Error("No photo provided");
-
-            const photoBuffer = await whatsappService.downloadMedia(photoMediaId);
-            const tmpDir = tmpdir();
-            const photoPath = path.join(tmpDir, `${user.whatsappId}_${Date.now()}_original.jpg`);
-            writeFileSync(photoPath, photoBuffer);
-
-            const style = (data.get("style") || "sky") as "sky" | "renaissance" | "rococo";
-            const petName = data.get("petName") || "Pet";
-
-            const generatedBuffer = await geminiService.generatePetImage({ petName, style, photoPath });
-
-            const finalPath = path.join(tmpDir, `${user.whatsappId}_${Date.now()}_bonus.jpg`);
-            writeFileSync(finalPath, generatedBuffer);
-
-            const finalUpload = await r2Cloudflare.uploadBuffer(readFileSync(finalPath), "quadros-whatsapp");
-
-            await User.updateOne(
-                { _id: user._id },
-                {
-                    $push: { generatedImages: finalUpload?.url },
-                    $set: { "collectedData.lastPreview": finalUpload?.url }
+                    },
                 }
             );
 
-            logger.info(`Bonus image generated for ${user.whatsappId}`);
+            logger.info(`[createPixPayment] Pix created for ${user.whatsappId} — paymentId: ${paymentId}`);
         } catch (error) {
-            logger.error(`Failed bonus generation: ${error instanceof Error ? error.message : String(error)}`);
+            logger.error(`[createPixPayment] ${error instanceof Error ? error.message : String(error)}`);
             throw error;
         }
     });
 
-    actionRegistry.register("deliverBonusImage", async (node, user, ctx) => {
-        logger.info(`Delivering BONUS image to ${user.whatsappId}`);
+    actionRegistry.register("deliverEnvelope", async (_node: ActionNode, user, _ctx) => {
+        logger.info(`[deliverEnvelope] Starting delivery for ${user.whatsappId}`);
 
         try {
             const freshUser = await User.findById(user._id);
-            const images = freshUser?.generatedImages || [];
-            const deliveredCount = Number(freshUser?.collectedData.get("deliveredCount") || 0);
+            if (!freshUser) throw new Error("User not found");
 
-            if (images.length === 0) throw new Error("No bonus image to deliver");
-            const latestImage = images[images.length - 1];
+            const data = freshUser.collectedData as Map<string, string>;
+            const photos = collectPhotos(data);
 
-            await whatsappService.sendMessage(user.whatsappId, {
-                type: "image",
-                image: { link: latestImage },
-                caption: "🎁 Aqui está sua arte bônus em alta resolução!",
-            });
+            if (photos.length === 0) throw new Error("No photos found — cannot create envelope");
 
-            await User.updateOne(
-                { _id: user._id },
-                { $set: { "collectedData.deliveredCount": deliveredCount + 1 } }
-            );
+            const startDateStr = data.get("startDate") ?? "";
+            const [dd, mm, yyyy] = startDateStr.split("-").map(Number);
+            const startDate = new Date(yyyy, mm - 1, dd);
 
-            logger.info(`Bonus image delivered to ${user.whatsappId}`);
-        } catch (error) {
-            logger.error(`Bonus delivery error: ${error instanceof Error ? error.message : String(error)}`);
-            throw error;
-        }
-    });
+            const expiresAt = data.get("envelopeExpiresAt")
+                ? new Date(data.get("envelopeExpiresAt")!)
+                : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
 
-    actionRegistry.register("deliverFinalImage", async (node: ActionNode, user, ctx) => {
-        logger.info(`Delivering image to ${user.whatsappId}`);
+            const payload = {
+                title: data.get("recipient") ?? "Para você",
+                message: data.get("message") ?? "",
+                signature: data.get("signature") ?? "",
+                photos,
+                options: {
+                    startDate,
+                    hasMusic: true,
+                    musicUrl: data.get("musicUrl") ?? "",
+                    musicName: data.get("musicName") ?? "",
+                },
+                expiresAt,
+            };
 
-        try {
-            const freshUser = await User.findById(user._id);
-            const images = freshUser?.generatedImages || [];
-            const deliveredCount = Number(freshUser?.collectedData.get("deliveredCount") || 0);
+            const { slug, envelopeUrl, qrCodeImageBuffer } = await envelopeService.create(String(user._id), payload);
 
-            if (images.length === 0) throw new Error("No images to deliver");
-            const latestImage = images[images.length - 1];
+            const qrUpload = await r2Cloudflare.uploadBuffer(qrCodeImageBuffer, "envelopes-whatsapp");
+            const qrUrl = qrUpload?.url;
 
-            await whatsappService.sendMessage(user.whatsappId, {
-                type: "image",
-                image: { link: latestImage },
-                caption: `🎨 Aqui está sua arte original em alta resolução!`,
-            });
+            if (!qrUrl) throw new Error("QR Code upload returned no URL");
+            await envelopeService.saveQrCodeUrl(String(user._id), slug, qrUrl);
 
             await User.updateOne(
                 { _id: user._id },
                 {
                     $set: {
-                        "collectedData.deliveredCount": deliveredCount + 1,
-                        paymentStatus: 'paid'
-                    }
+                        paymentStatus: "paid",
+                        "collectedData.envelopeSlug": slug,
+                        "collectedData.envelopeUrl": envelopeUrl,
+                        "collectedData.envelopeQrCode": qrUrl,
+                    },
                 }
             );
 
-            logger.info(`Delivered image successfully`);
+            const expiresLabel = expiresAt.toLocaleDateString("pt-BR");
+            await whatsappService.sendMessage(user.whatsappId, {
+                type: "text",
+                body: `🎉 *Seu Envelope Digital está pronto!*\n\n🔗 Acesse ou compartilhe:\n${envelopeUrl}\n\n⏳ _Válido até: ${expiresLabel}_`,
+            });
+
+            await whatsappService.sendMessage(user.whatsappId, {
+                type: "image",
+                image: { link: qrUrl },
+                caption: "📱 *QR Code do seu envelope!*\n\nImprima, mande por mensagem ou coloque num bilhetinho. É só apontar a câmera para abrir! 💌",
+            });
+
+            logger.info(`[deliverEnvelope] Done — slug: ${slug} | user: ${user.whatsappId}`);
         } catch (error) {
-            logger.error(`Delivery error: ${error instanceof Error ? error.message : String(error)}`);
+            logger.error(`[deliverEnvelope] ${error instanceof Error ? error.message : String(error)}`);
             throw error;
         }
     });
@@ -300,100 +274,150 @@ async function processIncomingMessage(msg: ConsumeMessage | null): Promise<void>
             return;
         }
 
-        const incomingButtonId =
-            button?.payload ||
-            interactive?.button_reply?.id ||
-            interactive?.list_reply?.id ||
-            interactive?.carousel_reply?.button_reply?.id;
+        const flowResponse = interactive?.nfm_reply;
+        if (flowResponse) {
+            logger.info(`Flow response received from ${phoneNumber}`);
 
-        if (currentNode.id === "payment_pending_hold") {
-            logger.warn(
-                `Texto de verificação de pagamento ignorado por enquanto..`,
+            const raw = flowResponse.response_json;
+            const data = typeof raw === "string" ? JSON.parse(raw) : raw;
+
+            console.log("FLOW DATA:", JSON.stringify(data, null, 2));
+
+            const planMap: Record<string, { days: number; price: number; label: string }> = {
+                plan_30: { days: 30, price: 14.90, label: "30 dias" },
+                plan_90: { days: 90, price: 29.90, label: "90 dias" },
+            };
+
+            const plan = planMap[data.plan] ?? planMap["plan_30"];
+            const priceInCents = Math.round(plan.price * 100);
+            const priceStr = `R$${plan.price.toFixed(2).replace(".", ",")}`;
+
+            const expiresAt = new Date();
+            expiresAt.setDate(expiresAt.getDate() + plan.days);
+
+            await User.updateOne(
+                { _id: user._id },
+                {
+                    $set: {
+                        flowData: data,
+                        "collectedData.planDays": String(plan.days),
+                        "collectedData.planLabel": plan.label,
+                        "collectedData.packagePrice": priceStr,
+                        "collectedData.packagePriceValue": String(plan.price),
+                        "collectedData.packagePriceCents": String(priceInCents),
+                        "collectedData.envelopeExpiresAt": expiresAt.toISOString(),
+                        "collectedData.recipient": data.recipient,
+                        "collectedData.message": data.message,
+                        "collectedData.signature": data.signature,
+                        "collectedData.musicUrl": data.music_url,
+                        "collectedData.musicName": data.music_name,
+                        "collectedData.startDate": data.start_date,
+                    },
+                }
             );
-            return;
-        }
 
-        if (incomingButtonId && currentNode.type !== 'buttons' && currentNode.type !== 'list' && currentNode.type !== "cards") {
-            // Botão de mensagem antiga clicado enquanto usuário está em outro nó → ignorar
-            logger.warn(
-                `Stale button click ignored: buttonId="${incomingButtonId}" currentNode="${currentNode.id}" (type=${currentNode.type})`,
+            await User.updateOne(
+                { _id: user._id },
+                { currentNodeId: "plan_selected" }
             );
-            return;
-        }
 
-        if (incomingButtonId && (currentNode.type === 'buttons' || currentNode.type === 'list' || currentNode.type === 'cards')) {
-            const validIds = getValidButtonIds(currentNode);
-            if (!validIds.includes(incomingButtonId)) {
+            logger.info(`User ${phoneNumber} → plan_selected (via flow)`);
+        } else {
+            const incomingButtonId =
+                button?.payload ||
+                interactive?.button_reply?.id ||
+                interactive?.list_reply?.id ||
+                interactive?.carousel_reply?.button_reply?.id;
+
+            if (currentNode.id === "payment_pending_hold") {
                 logger.warn(
-                    `Button "${incomingButtonId}" does not belong to current node "${currentNode.id}" — ignoring stale click`,
+                    `Texto de verificação de pagamento ignorado por enquanto..`,
                 );
                 return;
             }
-        }
 
-        if (isWaitingNode(currentNode)) {
-            if (currentNode.type === 'waitInput') {
-                const input = text?.body || text || button?.text || interactive?.button_reply?.title || '';
-
-                if (currentNode.validation) {
-                    if (!funnelEngine.validateInput(currentNode, input)) {
-                        logger.warn(`Invalid input for ${phoneNumber}: "${input}"`);
-                        const prompt = currentNode.content
-                            ? funnelEngine.interpolateText(currentNode.content, user)
-                            : 'Por favor, envie uma resposta válida.';
-                        await whatsappService.sendMessage(phoneNumber, { type: 'text', body: prompt });
-                        return;
-                    }
-                }
-
-                await User.updateOne(
-                    { _id: user._id },
-                    { $set: { [`collectedData.${currentNode.saveAs}`]: input } },
+            if (incomingButtonId && currentNode.type !== 'buttons' && currentNode.type !== 'list' && currentNode.type !== "cards") {
+                // Botão de mensagem antiga clicado enquanto usuário está em outro nó → ignorar
+                logger.warn(
+                    `Stale button click ignored: buttonId="${incomingButtonId}" currentNode="${currentNode.id}" (type=${currentNode.type})`,
                 );
+                return;
+            }
 
-                const nextNodeId = currentNode.nextNode || null;
-                if (nextNodeId) {
-                    await User.updateOne({ _id: user._id }, { currentNodeId: nextNodeId });
-                    logger.info(`User ${phoneNumber} (waitInput) → ${nextNodeId}`);
+            if (incomingButtonId && (currentNode.type === 'buttons' || currentNode.type === 'list' || currentNode.type === 'cards')) {
+                const validIds = getValidButtonIds(currentNode);
+                if (!validIds.includes(incomingButtonId)) {
+                    logger.warn(
+                        `Button "${incomingButtonId}" does not belong to current node "${currentNode.id}" — ignoring stale click`,
+                    );
+                    return;
                 }
-            } else if (currentNode.type === 'waitPhoto') {
-                if (image?.id) {
+            }
+
+            if (isWaitingNode(currentNode)) {
+                if (currentNode.type === 'waitInput') {
+                    const input = text?.body || text || button?.text || interactive?.button_reply?.title || '';
+
+                    if (currentNode.validation) {
+                        if (!funnelEngine.validateInput(currentNode, input)) {
+                            logger.warn(`Invalid input for ${phoneNumber}: "${input}"`);
+                            const prompt = currentNode.content
+                                ? funnelEngine.interpolateText(currentNode.content, user)
+                                : 'Por favor, envie uma resposta válida.';
+                            await whatsappService.sendMessage(phoneNumber, { type: 'text', body: prompt });
+                            return;
+                        }
+                    }
+
                     await User.updateOne(
                         { _id: user._id },
-                        { $set: { 'collectedData.photoMediaId': image.id } },
+                        { $set: { [`collectedData.${currentNode.saveAs}`]: input } },
                     );
 
                     const nextNodeId = currentNode.nextNode || null;
                     if (nextNodeId) {
                         await User.updateOne({ _id: user._id }, { currentNodeId: nextNodeId });
-                        logger.info(`User ${phoneNumber} (waitPhoto) → ${nextNodeId}`);
+                        logger.info(`User ${phoneNumber} (waitInput) → ${nextNodeId}`);
                     }
-                } else {
-                    logger.warn(`Expected photo but got type="${type}" from ${phoneNumber}`);
-                    const prompt = currentNode.content
-                        ? funnelEngine.interpolateText(currentNode.content, user)
-                        : '📸 Por favor, envie uma foto do seu pet!';
-                    await whatsappService.sendMessage(phoneNumber, { type: 'text', body: prompt });
+                } else if (currentNode.type === 'waitPhoto') {
+                    if (image?.id) {
+                        await User.updateOne(
+                            { _id: user._id },
+                            { $set: { [`collectedData.${currentNode.saveAs}`]: image.id } }
+                        );
+
+                        const nextNodeId = currentNode.nextNode || null;
+                        if (nextNodeId) {
+                            await User.updateOne({ _id: user._id }, { currentNodeId: nextNodeId });
+                            logger.info(`User ${phoneNumber} (waitPhoto) → ${nextNodeId}`);
+                        }
+                    } else {
+                        logger.warn(`Expected photo but got type="${type}" from ${phoneNumber}`);
+                        const prompt = currentNode.content
+                            ? funnelEngine.interpolateText(currentNode.content, user)
+                            : '📸 Por favor, envie uma foto do seu pet!';
+                        await whatsappService.sendMessage(phoneNumber, { type: 'text', body: prompt });
+                        return;
+                    }
+                }
+            } else if (currentNode.type === 'buttons' || currentNode.type === 'list' || currentNode.type === 'cards') {
+                if (!incomingButtonId) {
+                    // Usuário digitou texto livre em vez de clicar no botão — ignorar ou reenviar
+                    logger.warn(`Free text received while waiting for button selection from ${phoneNumber}`);
                     return;
                 }
-            }
-        } else if (currentNode.type === 'buttons' || currentNode.type === 'list' || currentNode.type === 'cards') {
-            if (!incomingButtonId) {
-                // Usuário digitou texto livre em vez de clicar no botão — ignorar ou reenviar
-                logger.warn(`Free text received while waiting for button selection from ${phoneNumber}`);
-                return;
-            }
 
-            const nextNodeId = funnelEngine.getNextNodeForSelection(currentNode, incomingButtonId);
-            if (nextNodeId) {
-                const updates: Record<string, any> = { currentNodeId: nextNodeId };
+                const nextNodeId = funnelEngine.getNextNodeForSelection(currentNode, incomingButtonId);
+                if (nextNodeId) {
+                    const updates: Record<string, any> = { currentNodeId: nextNodeId };
 
-                if (currentNode.id === 'ask_style' || currentNode.id === 'ask_style_bonus') {
-                    updates['collectedData.style'] = incomingButtonId;
+                    if (currentNode.id === 'ask_style' || currentNode.id === 'ask_style_bonus') {
+                        updates['collectedData.style'] = incomingButtonId;
+                    }
+
+                    await User.updateOne({ _id: user._id }, { $set: updates });
+                    logger.info(`User ${phoneNumber} selected "${incomingButtonId}" → ${nextNodeId}`);
                 }
-
-                await User.updateOne({ _id: user._id }, { $set: updates });
-                logger.info(`User ${phoneNumber} selected "${incomingButtonId}" → ${nextNodeId}`);
             }
         }
 

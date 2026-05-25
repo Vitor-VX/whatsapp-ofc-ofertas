@@ -1,6 +1,6 @@
 {
-  "id": "pet-art-br",
-  "name": "Arte Digital de Pet",
+  "id": "envelope-digital-br",
+  "name": "Envelope Digital",
   "startNode": "welcome",
   "nodes": {
     "welcome": {
@@ -13,7 +13,7 @@
     "attention_1": {
       "id": "attention_1",
       "type": "text",
-      "content": "Olá! 🐾 Você tem um pet que ama de todo o coração?",
+      "content": "Olá! 💌 Você quer surpreender alguém especial de um jeito único e inesquecível?",
       "nextNode": "delay_1"
     },
     "delay_1": {
@@ -25,8 +25,8 @@
     "attention_image": {
       "id": "attention_image",
       "type": "image",
-      "url": "https://files.botsync.site/quadros/img-sites/sky_theme.jpg",
-      "caption": "✨ Veja como transformamos pets em verdadeiras obras de arte clássica...",
+      "url": "https://files.botsync.site/envelope/img-site/envelope_preview.png",
+      "caption": "✨ Veja como criamos um envelope digital com suas fotos, uma mensagem especial e uma música só de vocês...",
       "nextNode": "delay_2"
     },
     "delay_2": {
@@ -38,36 +38,24 @@
     "interest_1": {
       "id": "interest_1",
       "type": "text",
-      "content": "🎨 Quer ver seu pet como uma obra de arte?\n\nTransformamos a foto em estilo *Renascentista*, *Rococó* ou *Céu Épico* 🐶🐱\n\nEntrega instantânea *AQUI no WhatsApp*.\n\n🔥 De ~R$19,90~ por *R$10,90* e o melhor: caso queira fazer de outros pets depois, você ganha um *desconto especial*!\n\nE o melhor ainda, você ainda *GANHA UM BÔNUS ESPECIAL AO FINALIZAR SUA COMPRA 🎁*\n\nEntrega em poucos segundos direto no WhatsApp.",
+      "content": "💌 Crie um *Envelope Digital* personalizado para quem você ama!\n\n🖼️ Suas fotos\n💬 Sua mensagem do coração\n🎵 A música de vocês\n📅 A data do começo de tudo\n\nEntregue como um *link + QR Code* direto aqui no WhatsApp.\n\n🔥 Por apenas *R$14,90* (30 dias no ar) ou *R$29,90* (90 dias no ar)!\n\nEntrega em poucos minutos.",
       "nextNode": "delay_3"
     },
     "delay_3": {
       "id": "delay_3",
       "type": "delay",
       "ms": 1000,
-      "nextNode": "interest_audio"
-    },
-    "interest_audio": {
-      "id": "interest_audio",
-      "type": "audio",
-      "url": "https://your-cdn.com/audio/explicacao.ogg",
-      "nextNode": "delay_4"
-    },
-    "delay_4": {
-      "id": "delay_4",
-      "type": "delay",
-      "ms": 1200,
       "nextNode": "desire_buttons"
     },
     "desire_buttons": {
       "id": "desire_buttons",
       "type": "buttons",
-      "body": "Quer ver como ficaria o seu pet? 😍\n\nEscolha uma opção:",
+      "body": "Quer criar um envelope especial para alguém? 💕\n\nEscolha uma opção:",
       "buttons": [
         {
           "id": "yes",
-          "title": "Sim, quero ver! 🎨",
-          "nextNode": "ask_style"
+          "title": "Sim, quero criar! 💌",
+          "nextNode": "start_flow_message"
         },
         {
           "id": "more_info",
@@ -84,7 +72,7 @@
     "how_it_works": {
       "id": "how_it_works",
       "type": "text",
-      "content": "É bem simples 👇\n\n1️⃣ Você me envia uma foto do seu pet\n2️⃣ A gente cria o retrato artístico\n3️⃣ Você vê uma *prévia* aqui mesmo\n4️⃣ Se gostar, paga *R$10,90 via PIX* — aprovação instantânea ✅\n5️⃣ Recebe o arquivo em *alta resolução* aqui no WhatsApp 🖼️\n6️⃣ Imprime onde quiser ou usa como papel de parede 🖼️✨\n\n_Não precisa instalar nada, não precisa ter conta em nenhum site._",
+      "content": "É bem simples 👇\n\n1️⃣ Você escolhe por quantos dias quer o envelope no ar\n2️⃣ Me envia até *5 fotos* especiais de vocês\n3️⃣ Me diz o nome do destinatário (ex: *Para meu grande amor*)\n4️⃣ Escreve uma mensagem do coração (até 1000 caracteres)\n5️⃣ Me diz como vai assinar (ex: *Com amor, Gabriel*)\n6️⃣ Me manda o link de uma música no YouTube de vocês\n7️⃣ Me informa a data de início do relacionamento\n8️⃣ Paga *via PIX* — aprovação instantânea ✅\n9️⃣ Recebe o *link + QR Code* aqui no WhatsApp 🎁\n\n_Quem receber vai poder abrir o envelope, ver a mensagem, as fotos e ouvir a música!_",
       "nextNode": "delay_how"
     },
     "delay_how": {
@@ -93,174 +81,277 @@
       "ms": 1000,
       "nextNode": "desire_buttons"
     },
-    "ask_style": {
-      "id": "ask_style",
-      "type": "cards",
-      "body": "Perfeito! 🥰 Escolhe o estilo artístico do seu pet:",
-      "cards": [
-        {
-          "headerType": "image",
-          "mediaUrl": "https://files.botsync.site/quadros/img-sites/sky_theme.jpg",
-          "body": "🌩️ Céu Épico\nO estilo mais popular!",
-          "buttons": [
-            {
-              "type": "quick_reply",
-              "id": "sky",
-              "title": "Escolher este",
-              "nextNode": "style_selected_sky"
-            }
-          ]
-        },
-        {
-          "headerType": "image",
-          "mediaUrl": "https://files.botsync.site/quadros/img-sites/renaissance.jpg",
-          "body": "🎭 Renascentista\nAr de nobreza clássica.",
-          "buttons": [
-            {
-              "type": "quick_reply",
-              "id": "renaissance",
-              "title": "Escolher este",
-              "nextNode": "style_selected_renaissance"
-            }
-          ]
-        },
-        {
-          "headerType": "image",
-          "mediaUrl": "https://files.botsync.site/quadros/img-sites/recoco.jpg",
-          "body": "🌸 Rococó\nElegante e sofisticado.",
-          "buttons": [
-            {
-              "type": "quick_reply",
-              "id": "rococo",
-              "title": "Escolher este",
-              "nextNode": "style_selected_rococo"
-            }
-          ]
-        }
-      ],
+    "start_flow_message": {
+      "id": "start_flow_message",
+      "type": "text",
+      "content": "💌 Perfeito! Agora você pode preencher as informações do seu envelope.\n\nBasta continuar e inserir os dados solicitados.",
+      "nextNode": "send_flow_template"
+    },
+    "plan_selected": {
+      "id": "plan_selected",
+      "type": "text",
+      "content": "Ótima escolha! 💛 Plano de *{{planLabel}}* selecionado por *R$14,90*.\n\nAgora vamos montar o seu envelope! É rapidinho 🚀",
+      "nextNode": "ask_photos"
+    },
+    "save_plan_30": {
+      "id": "save_plan_30",
+      "type": "action",
+      "action": "savePlan",
+      "nextNode": "ask_photos"
+    },
+    "plan_selected_90": {
+      "id": "plan_selected_90",
+      "type": "text",
+      "content": "Excelente escolha! 💎 Plano de *90 dias* selecionado por *R$29,90*.\n\nAgora vamos montar o seu envelope! É rapidinho 🚀",
+      "nextNode": "save_plan_90"
+    },
+    "save_plan_90": {
+      "id": "save_plan_90",
+      "type": "action",
+      "action": "savePlan",
+      "nextNode": "ask_photos"
+    },
+    "ask_photos": {
+      "id": "ask_photos",
+      "type": "waitPhoto",
+      "saveAs": "photo_1",
+      "content": "📸 *Passo 1 — Fotos*\n\nMe envia as fotos especiais de vocês!\n\n• Mínimo: *1 foto*\n• Máximo: *5 fotos*\n\nEnvie uma por uma. Quando terminar, clique em *\"Enviei todas!\"* 👇",
+      "nextNode": "photo_received_1"
+    },
+    "photo_received_1": {
+      "id": "photo_received_1",
+      "type": "action",
+      "action": "savePhoto",
+      "nextNode": "ask_more_photos_1"
+    },
+    "ask_more_photos_1": {
+      "id": "ask_more_photos_1",
+      "type": "buttons",
+      "body": "✅ Foto 1 recebida!\n\nQuer adicionar mais fotos? (você pode adicionar até 4 a mais)",
       "buttons": [
         {
-          "id": "sky",
-          "title": "🌩️ Céu Épico",
-          "nextNode": "style_selected_sky"
+          "id": "add_photo",
+          "title": "📷 Adicionar +1",
+          "nextNode": "ask_photo_2"
         },
         {
-          "id": "renaissance",
-          "title": "🎭 Renascentista",
-          "nextNode": "style_selected_renaissance"
-        },
-        {
-          "id": "rococo",
-          "title": "🌸 Rococó",
-          "nextNode": "style_selected_rococo"
+          "id": "done_photos",
+          "title": "✅ Enviei todas!",
+          "nextNode": "show_summary"
         }
       ]
     },
-    "style_selected_sky": {
-      "id": "style_selected_sky",
-      "type": "text",
-      "content": "Ótima escolha! 🌩️ *Céu Épico* é o estilo mais popular. Seu pet vai ficar incrível!",
-      "nextNode": "save_style_sky"
+    "send_flow_template": {
+      "id": "send_flow_template",
+      "type": "template",
+      "name": "envelope_form",
+      "language": "pt_BR",
+      "components": [
+        {
+          "type": "button",
+          "sub_type": "flow",
+          "index": "0",
+          "parameters": []
+        }
+      ],
+      "nextNode": "wait_flow_response"
     },
-    "save_style_sky": {
-      "id": "save_style_sky",
+    "wait_flow_response": {
+      "id": "wait_flow_response",
+      "type": "waitInput",
+      "saveAs": "flowResponse",
+      "content": "Aguardando preenchimento...",
+      "nextNode": "process_flow_data"
+    },
+    "process_flow_data": {
+      "id": "process_flow_data",
       "type": "action",
-      "action": "saveStyle",
-      "nextNode": "ask_photo"
+      "action": "processFlowEnvelope",
+      "nextNode": "summary_typing"
     },
-    "style_selected_renaissance": {
-      "id": "style_selected_renaissance",
-      "type": "text",
-      "content": "Magnífico! 🎭 O estilo *Renascentista* vai dar um ar de nobreza ao seu pet.",
-      "nextNode": "save_style_renaissance"
-    },
-    "save_style_renaissance": {
-      "id": "save_style_renaissance",
-      "type": "action",
-      "action": "saveStyle",
-      "nextNode": "ask_photo"
-    },
-    "style_selected_rococo": {
-      "id": "style_selected_rococo",
-      "type": "text",
-      "content": "Que gosto refinado! 🌸 O estilo *Rococó* é elegante e sofisticado. Vai cair muito bem!",
-      "nextNode": "save_style_rococo"
-    },
-    "save_style_rococo": {
-      "id": "save_style_rococo",
-      "type": "action",
-      "action": "saveStyle",
-      "nextNode": "ask_photo"
-    },
-    "ask_photo": {
-      "id": "ask_photo",
+    "ask_photo_2": {
+      "id": "ask_photo_2",
       "type": "waitPhoto",
-      "saveAs": "photoMediaId",
-      "content": "📸 Me envia *APENAS 1 foto* do seu pet!\nNão envie MAIS de 1 foto..\n\n_Dica: quanto mais nítido o rostinho, mais bonita fica a arte_ 🐾",
-      "timeoutMs": 300000,
-      "timeoutNode": "photo_timeout",
-      "nextNode": "generating_image"
+      "saveAs": "photo_2",
+      "content": "📸 Me envia a 2ª foto:",
+      "nextNode": "photo_received_2"
     },
-    "photo_timeout": {
-      "id": "photo_timeout",
-      "type": "text",
-      "content": "Parece que você sumiu 😅 Quando quiser continuar, é só me mandar a foto do seu pet 📸",
-      "nextNode": "ask_photo"
-    },
-    "generating_image": {
-      "id": "generating_image",
-      "type": "typing",
-      "durationMs": 3000,
-      "action": "typing",
-      "nextNode": "generating_image_msg"
-    },
-    "generating_image_msg": {
-      "id": "generating_image_msg",
-      "type": "text",
-      "content": "🎨 Estamos criando o retrato! Só um instante... ✨",
-      "nextNode": "action_generate"
-    },
-    "action_generate": {
-      "id": "action_generate",
+    "photo_received_2": {
+      "id": "photo_received_2",
       "type": "action",
-      "action": "generatePetImage",
-      "nextNode": "send_preview"
+      "action": "savePhoto",
+      "nextNode": "ask_more_photos_2"
     },
-    "send_preview": {
-      "id": "send_preview",
-      "type": "image",
-      "url": "{{lastPreview}}",
-      "caption": "🖼️ Olha como ficou! Essa é a *prévia com marca d'água*.\n\nO que achou? 😍",
+    "ask_more_photos_2": {
+      "id": "ask_more_photos_2",
+      "type": "buttons",
+      "body": "✅ Foto 2 recebida!\n\nQuer adicionar mais fotos? (ainda cabem mais 3)",
+      "buttons": [
+        {
+          "id": "add_photo",
+          "title": "📷 Adicionar +1",
+          "nextNode": "ask_photo_3"
+        },
+        {
+          "id": "done_photos",
+          "title": "✅ Enviei todas!",
+          "nextNode": "show_summary"
+        }
+      ]
+    },
+    "ask_photo_3": {
+      "id": "ask_photo_3",
+      "type": "waitPhoto",
+      "saveAs": "photo_3",
+      "content": "📸 Me envia a 3ª foto:",
+      "nextNode": "photo_received_3"
+    },
+    "photo_received_3": {
+      "id": "photo_received_3",
+      "type": "action",
+      "action": "savePhoto",
+      "nextNode": "ask_more_photos_3"
+    },
+    "ask_more_photos_3": {
+      "id": "ask_more_photos_3",
+      "type": "buttons",
+      "body": "✅ Foto 3 recebida!\n\nQuer adicionar mais fotos? (ainda cabem mais 2)",
+      "buttons": [
+        {
+          "id": "add_photo",
+          "title": "📷 Adicionar +1",
+          "nextNode": "ask_photo_4"
+        },
+        {
+          "id": "done_photos",
+          "title": "✅ Enviei todas!",
+          "nextNode": "show_summary"
+        }
+      ]
+    },
+    "ask_photo_4": {
+      "id": "ask_photo_4",
+      "type": "waitPhoto",
+      "saveAs": "photo_4",
+      "content": "📸 Me envia a 4ª foto:",
+      "nextNode": "photo_received_4"
+    },
+    "photo_received_4": {
+      "id": "photo_received_4",
+      "type": "action",
+      "action": "savePhoto",
+      "nextNode": "ask_more_photos_4"
+    },
+    "ask_more_photos_4": {
+      "id": "ask_more_photos_4",
+      "type": "buttons",
+      "body": "✅ Foto 4 recebida!\n\nQuer adicionar mais uma última foto? (máximo 5)",
+      "buttons": [
+        {
+          "id": "add_photo",
+          "title": "📷 Adicionar a última",
+          "nextNode": "ask_photo_5"
+        },
+        {
+          "id": "done_photos",
+          "title": "✅ Enviei todas!",
+          "nextNode": "show_summary"
+        }
+      ]
+    },
+    "ask_photo_5": {
+      "id": "ask_photo_5",
+      "type": "waitPhoto",
+      "saveAs": "photo_5",
+      "content": "📸 Me envia a 5ª e última foto:",
+      "nextNode": "photo_received_5"
+    },
+    "photo_received_5": {
+      "id": "photo_received_5",
+      "type": "action",
+      "action": "savePhoto",
+      "nextNode": "show_summary"
+    },
+    "ask_recipient": {
+      "id": "ask_recipient",
+      "type": "waitInput",
+      "saveAs": "recipient",
+      "content": "💌 *Passo 2 de 7 — Destinatário*\n\nPara quem é esse envelope? Me diga o nome ou apelido carinhoso.\n\n_Exemplos: \"Para meu grande amor\", \"Para a Ana\", \"Para minha pessoa favorita\"_",
+      "nextNode": "ask_message"
+    },
+    "ask_message": {
+      "id": "ask_message",
+      "type": "waitInput",
+      "saveAs": "message",
+      "content": "💬 *Passo 3 de 7 — Mensagem*\n\nEscreva a mensagem especial que vai aparecer no envelope! 💕\n\n_Pode ser uma declaração, uma lembrança, qualquer coisa do coração._\n_(Máximo: 1000 caracteres)_",
+      "validation": {
+        "maxLength": 1000
+      },
+      "nextNode": "ask_signature"
+    },
+    "ask_signature": {
+      "id": "ask_signature",
+      "type": "waitInput",
+      "saveAs": "signature",
+      "content": "✍️ *Passo 4 de 7 — Assinatura*\n\nComo você vai assinar a mensagem?\n\n_Exemplos: \"Com amor, Gabriel\", \"Seu grande amor\", \"Para sempre seu ❤️\"_",
+      "nextNode": "ask_music"
+    },
+    "ask_music": {
+      "id": "ask_music",
+      "type": "waitInput",
+      "saveAs": "musicUrl",
+      "content": "🎵 *Passo 5 de 7 — Música*\n\nMe manda o link de uma música no YouTube que representa vocês! 🎶\n\n_Exemplo: https://youtube.com/watch?v=..._",
+      "validation": {
+        "pattern": "youtube\\.com|youtu\\.be"
+      },
+      "nextNode": "ask_music_name"
+    },
+    "ask_music_name": {
+      "id": "ask_music_name",
+      "type": "waitInput",
+      "saveAs": "musicName",
+      "content": "🎵 Legal! Agora me diz o nome da música e o artista para aparecer no envelope.\n\n_Exemplo: \"Perfect — Ed Sheeran\"_",
+      "nextNode": "ask_start_date"
+    },
+    "ask_start_date": {
+      "id": "ask_start_date",
+      "type": "waitInput",
+      "saveAs": "startDate",
+      "content": "📅 *Passo 6 de 7 — Data especial*\n\nQual é a data de início do relacionamento de vocês?\n\n_Formato: DD/MM/AAAA_\n_Exemplo: 08/05/2023_",
+      "validation": {
+        "pattern": "^\\d{2}/\\d{2}/\\d{4}$"
+      },
+      "nextNode": "summary_typing"
+    },
+    "summary_typing": {
+      "id": "summary_typing",
+      "type": "typing",
+      "durationMs": 1500,
+      "action": "typing",
+      "nextNode": "show_summary"
+    },
+    "show_summary": {
+      "id": "show_summary",
+      "type": "text",
+      "content": "📋 *Passo 2 de 3 — Confirmação*\n\nVeja como ficou o seu envelope:\n\n💌 *Para:* {{recipient}}\n✍️ *Assinatura:* {{signature}}\n🎵 *Música:* {{musicName}}\n📅 *Data:* {{startDate}}\n⏳ *Plano:* {{planLabel}}\n💰 *Valor:* {{packagePrice}}\n\n_Sua mensagem e fotos foram recebidas com sucesso!_ ✅",
+      "nextNode": "delay_summary"
+    },
+    "delay_summary": {
+      "id": "delay_summary",
+      "type": "delay",
+      "ms": 1000,
       "nextNode": "action_prepare_checkout"
     },
     "action_prepare_checkout": {
       "id": "action_prepare_checkout",
       "type": "action",
       "action": "prepareCheckout",
-      "nextNode": "delay_5"
+      "nextNode": "confirm_buttons"
     },
-    "delay_5": {
-      "id": "delay_5",
-      "type": "delay",
-      "ms": 1500,
-      "nextNode": "bonus_reveal"
-    },
-    "action_decision_tip": {
-      "id": "action_decision_tip",
-      "type": "text",
-      "content": "👇 Para garantir a arte original sem marca d'água *(E GANHAR SEU BÔNUS 🎁)*, clique na *primeira opção* abaixo:\n\n *\"💳 Gerar Pix\"*",
-      "nextNode": "action_decision"
-    },
-    "bonus_reveal": {
-      "id": "bonus_reveal",
-      "type": "text",
-      "content": "🎁 *BÔNUS EXCLUSIVO:*\n\nQuem finalizar a compra hoje recebe *+1 arte digital completamente grátis!*\n\nSim, você escolhe outro estilo ou manda a foto de outro pet — e a gente faz sem cobrar nada. 🐾\n\n_Esse bônus é válido apenas para quem pagar agora._",
-      "nextNode": "action_decision_tip"
-    },
-    "action_decision": {
-      "id": "action_decision",
+    "confirm_buttons": {
+      "id": "confirm_buttons",
       "type": "buttons",
-      "body": "Por *{{packagePrice}} via PIX* você recebe:\n\n🖼️ Arte original em alta resolução sem marca d'água\n🎁 *+1 arte grátis* para usar quando quiser\n\nTudo entregue aqui no WhatsApp!",
+      "body": "✅ Tudo certo! Bora criar esse envelope?\n\nPor *{{packagePrice}} via PIX* você recebe:\n\n💌 Envelope digital personalizado\n🔗 Link exclusivo para compartilhar\n📱 QR Code para surpreender na hora\n⏳ Fica no ar por *{{planLabel}}*",
       "buttons": [
         {
           "id": "pay",
@@ -268,14 +359,58 @@
           "nextNode": "create_payment"
         },
         {
-          "id": "regenerate",
-          "title": "🔄 Fazer outra foto",
-          "nextNode": "ask_style"
+          "id": "edit",
+          "title": "✏️ Corrigir algo",
+          "nextNode": "ask_what_to_edit"
         },
         {
           "id": "cancel",
           "title": "❌ Agora não",
           "nextNode": "soft_cancel"
+        }
+      ]
+    },
+    "ask_what_to_edit": {
+      "id": "ask_what_to_edit",
+      "type": "buttons",
+      "body": "✏️ *O que você quer editar no seu envelope?*\n\n📷 *Fotos* → trocar ou adicionar imagens\n💌 *Outros* → mensagem, destinatário, plano, música e mais",
+      "buttons": [
+        {
+          "id": "edit_photos",
+          "title": "📷 Fotos",
+          "nextNode": "ask_photos"
+        },
+        {
+          "id": "edit_recipient",
+          "title": "💌 Outros",
+          "nextNode": "send_flow_template"
+        },
+        {
+          "id": "back_to_pix",
+          "title": "Voltar",
+          "nextNode": "show_summary"
+        }
+      ]
+    },
+    "ask_what_to_edit_2": {
+      "id": "ask_what_to_edit_2",
+      "type": "buttons",
+      "body": "O que você quer corrigir? (2/2)\n\nEscolha o que deseja alterar:",
+      "buttons": [
+        {
+          "id": "edit_message",
+          "title": "💬 Mensagem",
+          "nextNode": "ask_message"
+        },
+        {
+          "id": "edit_signature",
+          "title": "✍️ Assinatura",
+          "nextNode": "ask_signature"
+        },
+        {
+          "id": "edit_music_date",
+          "title": "🎵 Música / 📅 Data",
+          "nextNode": "ask_music"
         }
       ]
     },
@@ -288,7 +423,7 @@
     "send_payment_link": {
       "id": "send_payment_link",
       "type": "text",
-      "content": "💳 Ótimo! Vou te enviar o PIX agora:\n\n• Valor: *{{packagePrice}}*\n• Vencimento: ⏳ *30 minutos*\n• Após o pagamento: a arte original será enviada *automaticamente* aqui ✅\n\n👇 Clique no botão *Copiar código* abaixo!",
+      "content": "💳 Ótimo! Vou te enviar o PIX agora:\n\n• Valor: *{{packagePrice}}*\n• Vencimento: ⏳ *30 minutos*\n• Após o pagamento: o envelope será criado e entregue *automaticamente* aqui ✅\n\n👇 Clique em *Copiar código* abaixo!",
       "nextNode": "send_code_pix"
     },
     "send_code_pix": {
@@ -299,19 +434,13 @@
       "namePix": "João Victor Rocha Neto",
       "key": "69993161840",
       "keyType": "PHONE",
-      "nextNode": "pix_audio_tip"
-    },
-    "pix_audio_tip": {
-      "id": "pix_audio_tip",
-      "type": "audio",
-      "url": "https://files.botsync.site/quadros/audio_funil_01.opus",
       "nextNode": "wait_payment"
     },
     "wait_payment": {
       "id": "wait_payment",
       "type": "waitInput",
       "saveAs": "_paymentConfirmation",
-      "content": "⏳ Assim que o pagamento cair, a arte original chega aqui na hora! 🚀\n\n_Qualquer dúvida, é só me chamar aqui._",
+      "content": "⏳ Assim que o pagamento cair, o envelope é criado e entregue aqui na hora! 🚀\n\n_Qualquer dúvida, é só me chamar._",
       "nextNode": "payment_pending_hold"
     },
     "payment_pending_hold": {
@@ -319,181 +448,33 @@
       "type": "text",
       "content": "Me dá um segundinho que estou verificando o pagamento... 🔍"
     },
-    "deliver_image": {
-      "id": "deliver_image",
+    "deliver_envelope": {
+      "id": "deliver_envelope",
       "type": "action",
-      "action": "deliverFinalImage",
+      "action": "deliverEnvelope",
       "nextNode": "final_message"
     },
     "final_message": {
       "id": "final_message",
       "type": "text",
-      "content": "🎉 Pronto! Aqui está a arte do seu pet em alta resolução e sem marca d'água!\n\n🎁 *Seu bônus de +1 arte grátis está liberado!* É só escolher o estilo e mandar a próxima foto quando quiser.",
+      "content": "🎉 *Seu Envelope Digital está pronto!*\n\n💌 Acesse ou compartilhe pelo link acima!\n📱 O QR Code também foi enviado — é só apontar a câmera!\n\n_Quando a pessoa abrir, vai ver a mensagem, as fotos e ouvir a música de vocês._ 🥹",
       "nextNode": "final_tip"
     },
     "final_tip": {
       "id": "final_tip",
       "type": "text",
-      "content": "💡 *Dica:* Impressão 20x30 cm custa em torno de R$8 a R$13 em gráficas. Moldura simples no Mercado Livre a partir de R$15. Fica incrível na parede! 🤩",
-      "nextNode": "upsell_offer_bonus"
-    },
-    "upsell_offer_bonus": {
-      "id": "upsell_offer_bonus",
-      "type": "buttons",
-      "body": "🎁 *Seu bônus está esperando!*\n\nVocê ganhou *+1 arte digital completamente grátis*. Quer usar agora?\n\nEscolha outro estilo ou manda a foto de outro pet — sem custo nenhum! 🐾",
-      "buttons": [
-        {
-          "id": "yes_bonus",
-          "title": "Quero o Bônus!",
-          "nextNode": "ask_style_bonus"
-        },
-        {
-          "id": "no_bonus",
-          "title": "Não quero",
-          "nextNode": "end_node"
-        }
-      ]
-    },
-    "ask_style_bonus": {
-      "id": "ask_style_bonus",
-      "type": "cards",
-      "body": "Perfeito! 🥰 Escolhe o estilo artístico para seu bônus:",
-      "cards": [
-        {
-          "headerType": "image",
-          "mediaUrl": "https://files.botsync.site/quadros/img-sites/sky_theme.jpg",
-          "body": "🌩️ Céu Épico\nO estilo mais popular!",
-          "buttons": [
-            {
-              "type": "quick_reply",
-              "id": "sky",
-              "title": "Escolher este",
-              "nextNode": "style_selected_sky_bonus"
-            }
-          ]
-        },
-        {
-          "headerType": "image",
-          "mediaUrl": "https://files.botsync.site/quadros/img-sites/renaissance.jpg",
-          "body": "🎭 Renascentista\nAr de nobreza clássica.",
-          "buttons": [
-            {
-              "type": "quick_reply",
-              "id": "renaissance",
-              "title": "Escolher este",
-              "nextNode": "style_selected_renaissance_bonus"
-            }
-          ]
-        },
-        {
-          "headerType": "image",
-          "mediaUrl": "https://files.botsync.site/quadros/img-sites/recoco.jpg",
-          "body": "🌸 Rococó\nElegante e sofisticado.",
-          "buttons": [
-            {
-              "type": "quick_reply",
-              "id": "rococo",
-              "title": "Escolher este",
-              "nextNode": "style_selected_rococo_bonus"
-            }
-          ]
-        }
-      ],
-      "buttons": [
-        {
-          "id": "sky",
-          "title": "🌩️ Céu Épico",
-          "nextNode": "style_selected_sky_bonus"
-        },
-        {
-          "id": "renaissance",
-          "title": "🎭 Renascentista",
-          "nextNode": "style_selected_renaissance_bonus"
-        },
-        {
-          "id": "rococo",
-          "title": "🌸 Rococó",
-          "nextNode": "style_selected_rococo_bonus"
-        }
-      ]
-    },
-    "style_selected_sky_bonus": {
-      "id": "style_selected_sky_bonus",
-      "type": "text",
-      "content": "Ótima escolha! 🌩️ Vamos criar sua arte bônus!",
-      "nextNode": "save_style_bonus"
-    },
-    "style_selected_renaissance_bonus": {
-      "id": "style_selected_renaissance_bonus",
-      "type": "text",
-      "content": "Magnífico! 🎭 Vamos criar sua arte bônus!",
-      "nextNode": "save_style_bonus"
-    },
-    "style_selected_rococo_bonus": {
-      "id": "style_selected_rococo_bonus",
-      "type": "text",
-      "content": "Elegante! 🌸 Vamos criar sua arte bônus!",
-      "nextNode": "save_style_bonus"
-    },
-    "save_style_bonus": {
-      "id": "save_style_bonus",
-      "type": "action",
-      "action": "saveStyle",
-      "nextNode": "ask_photo_bonus"
-    },
-    "ask_photo_bonus": {
-      "id": "ask_photo_bonus",
-      "type": "waitPhoto",
-      "saveAs": "photoMediaId",
-      "content": "📸 Me envia a foto do pet para o seu bônus!\n\n_Dica: quanto mais nítido o rostinho, mais bonita fica a arte_ 🐾",
-      "nextNode": "generating_image_bonus"
-    },
-    "generating_image_bonus": {
-      "id": "generating_image_bonus",
-      "type": "typing",
-      "durationMs": 3000,
-      "action": "typing",
-      "nextNode": "generating_image_msg_bonus"
-    },
-    "generating_image_msg_bonus": {
-      "id": "generating_image_msg_bonus",
-      "type": "text",
-      "content": "🎨 Criando sua arte bônus! Só um instante... ✨",
-      "nextNode": "action_generate_bonus"
-    },
-    "action_generate_bonus": {
-      "id": "action_generate_bonus",
-      "type": "action",
-      "action": "generatePetImageBonus",
-      "nextNode": "deliver_bonus_image"
-    },
-    "deliver_bonus_image": {
-      "id": "deliver_bonus_image",
-      "type": "action",
-      "action": "deliverBonusImage",
-      "nextNode": "final_message_bonus"
-    },
-    "final_message_bonus": {
-      "id": "final_message_bonus",
-      "type": "text",
-      "content": "🎉 Aqui está sua arte bônus em alta resolução e sem marca d'água!",
-      "nextNode": "final_tip_bonus"
-    },
-    "final_tip_bonus": {
-      "id": "final_tip_bonus",
-      "type": "text",
-      "content": "💡 *Dica:* Impressão 20x30 cm custa em torno de R$8 a R$13 em gráficas. Moldura simples no Mercado Livre a partir de R$15. Fica incrível na parede! 🤩",
+      "content": "💡 *Dica:* Imprima o QR Code em um bilhetinho, coloque dentro de um cartão físico ou mande por mensagem. A surpresa vai ser inesquecível! 🎁",
       "nextNode": "upsell_offer"
     },
     "upsell_offer": {
       "id": "upsell_offer",
       "type": "buttons",
-      "body": "🎁 *Você desbloqueou nosso Desconto de Fidelidade!*\n\nQuer gerar mais uma arte para o seu pet (ou de um outro pet)?\nA partir de agora qualquer foto nova sai por apenas *R$ 7.90*! 😻",
+      "body": "💌 Quer criar outro envelope para uma ocasião diferente?\n\nAniversário, Dia dos Namorados, pedido de namoro... cada momento merece o seu! 🥰",
       "buttons": [
         {
           "id": "yes_more",
-          "title": "🐾 Sim, quero outra!",
-          "nextNode": "ask_style"
+          "title": "💌 Criar outro!",
+          "nextNode": "start_flow_message"
         },
         {
           "id": "no_thanks",
@@ -505,14 +486,14 @@
     "soft_cancel": {
       "id": "soft_cancel",
       "type": "text",
-      "content": "Sem problema! 😊 A arte do seu pet fica guardada aqui por um tempinho.\n\nQualquer dúvida, é só chamar! 🐾",
+      "content": "Sem problema! 😊 Suas informações ficam guardadas aqui por um tempinho.\n\nQualquer hora que quiser criar o envelope, é só me chamar! 💌",
       "nextNode": "remarketing_setup"
     },
     "remarketing_setup": {
       "id": "remarketing_setup",
       "type": "remarketing",
       "delayMs": 82800000,
-      "message": "Oi! 👋 Lembra do retrato do seu pet? Ainda está disponível — é só me responder aqui que gero o código na hora! 🎨",
+      "message": "Oi! 👋 Ainda dá tempo de surpreender alguém especial com um Envelope Digital. É só me responder aqui que continuo de onde paramos! 💌",
       "nextNodeAfterRemarketing": "end_node"
     },
     "end_node": {

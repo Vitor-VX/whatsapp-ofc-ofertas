@@ -1,0 +1,524 @@
+{
+  "id": "pet-art-br",
+  "name": "Arte Digital de Pet",
+  "startNode": "welcome",
+  "nodes": {
+    "welcome": {
+      "id": "welcome",
+      "type": "typing",
+      "durationMs": 1500,
+      "action": "typing",
+      "nextNode": "attention_1"
+    },
+    "attention_1": {
+      "id": "attention_1",
+      "type": "text",
+      "content": "Olá! 🐾 Você tem um pet que ama de todo o coração?",
+      "nextNode": "delay_1"
+    },
+    "delay_1": {
+      "id": "delay_1",
+      "type": "delay",
+      "ms": 1200,
+      "nextNode": "attention_image"
+    },
+    "attention_image": {
+      "id": "attention_image",
+      "type": "image",
+      "url": "https://files.botsync.site/quadros/img-sites/sky_theme.jpg",
+      "caption": "✨ Veja como transformamos pets em verdadeiras obras de arte clássica...",
+      "nextNode": "delay_2"
+    },
+    "delay_2": {
+      "id": "delay_2",
+      "type": "delay",
+      "ms": 1500,
+      "nextNode": "interest_1"
+    },
+    "interest_1": {
+      "id": "interest_1",
+      "type": "text",
+      "content": "🎨 Quer ver seu pet como uma obra de arte?\n\nTransformamos a foto em estilo *Renascentista*, *Rococó* ou *Céu Épico* 🐶🐱\n\nEntrega instantânea *AQUI no WhatsApp*.\n\n🔥 De ~R$19,90~ por *R$10,90* e o melhor: caso queira fazer de outros pets depois, você ganha um *desconto especial*!\n\nE o melhor ainda, você ainda *GANHA UM BÔNUS ESPECIAL AO FINALIZAR SUA COMPRA 🎁*\n\nEntrega em poucos segundos direto no WhatsApp.",
+      "nextNode": "delay_3"
+    },
+    "delay_3": {
+      "id": "delay_3",
+      "type": "delay",
+      "ms": 1000,
+      "nextNode": "interest_audio"
+    },
+    "interest_audio": {
+      "id": "interest_audio",
+      "type": "audio",
+      "url": "https://your-cdn.com/audio/explicacao.ogg",
+      "nextNode": "delay_4"
+    },
+    "delay_4": {
+      "id": "delay_4",
+      "type": "delay",
+      "ms": 1200,
+      "nextNode": "desire_buttons"
+    },
+    "desire_buttons": {
+      "id": "desire_buttons",
+      "type": "buttons",
+      "body": "Quer ver como ficaria o seu pet? 😍\n\nEscolha uma opção:",
+      "buttons": [
+        {
+          "id": "yes",
+          "title": "Sim, quero ver! 🎨",
+          "nextNode": "ask_style"
+        },
+        {
+          "id": "more_info",
+          "title": "Como funciona? 🤔",
+          "nextNode": "how_it_works"
+        },
+        {
+          "id": "no",
+          "title": "Agora não 👋",
+          "nextNode": "remarketing_setup"
+        }
+      ]
+    },
+    "how_it_works": {
+      "id": "how_it_works",
+      "type": "text",
+      "content": "É bem simples 👇\n\n1️⃣ Você me envia uma foto do seu pet\n2️⃣ A gente cria o retrato artístico\n3️⃣ Você vê uma *prévia* aqui mesmo\n4️⃣ Se gostar, paga *R$10,90 via PIX* — aprovação instantânea ✅\n5️⃣ Recebe o arquivo em *alta resolução* aqui no WhatsApp 🖼️\n6️⃣ Imprime onde quiser ou usa como papel de parede 🖼️✨\n\n_Não precisa instalar nada, não precisa ter conta em nenhum site._",
+      "nextNode": "delay_how"
+    },
+    "delay_how": {
+      "id": "delay_how",
+      "type": "delay",
+      "ms": 1000,
+      "nextNode": "desire_buttons"
+    },
+    "ask_style": {
+      "id": "ask_style",
+      "type": "cards",
+      "body": "Perfeito! 🥰 Escolhe o estilo artístico do seu pet:",
+      "cards": [
+        {
+          "headerType": "image",
+          "mediaUrl": "https://files.botsync.site/quadros/img-sites/sky_theme.jpg",
+          "body": "🌩️ Céu Épico\nO estilo mais popular!",
+          "buttons": [
+            {
+              "type": "quick_reply",
+              "id": "sky",
+              "title": "Escolher este",
+              "nextNode": "style_selected_sky"
+            }
+          ]
+        },
+        {
+          "headerType": "image",
+          "mediaUrl": "https://files.botsync.site/quadros/img-sites/renaissance.jpg",
+          "body": "🎭 Renascentista\nAr de nobreza clássica.",
+          "buttons": [
+            {
+              "type": "quick_reply",
+              "id": "renaissance",
+              "title": "Escolher este",
+              "nextNode": "style_selected_renaissance"
+            }
+          ]
+        },
+        {
+          "headerType": "image",
+          "mediaUrl": "https://files.botsync.site/quadros/img-sites/recoco.jpg",
+          "body": "🌸 Rococó\nElegante e sofisticado.",
+          "buttons": [
+            {
+              "type": "quick_reply",
+              "id": "rococo",
+              "title": "Escolher este",
+              "nextNode": "style_selected_rococo"
+            }
+          ]
+        }
+      ],
+      "buttons": [
+        {
+          "id": "sky",
+          "title": "🌩️ Céu Épico",
+          "nextNode": "style_selected_sky"
+        },
+        {
+          "id": "renaissance",
+          "title": "🎭 Renascentista",
+          "nextNode": "style_selected_renaissance"
+        },
+        {
+          "id": "rococo",
+          "title": "🌸 Rococó",
+          "nextNode": "style_selected_rococo"
+        }
+      ]
+    },
+    "style_selected_sky": {
+      "id": "style_selected_sky",
+      "type": "text",
+      "content": "Ótima escolha! 🌩️ *Céu Épico* é o estilo mais popular. Seu pet vai ficar incrível!",
+      "nextNode": "save_style_sky"
+    },
+    "save_style_sky": {
+      "id": "save_style_sky",
+      "type": "action",
+      "action": "saveStyle",
+      "nextNode": "ask_photo"
+    },
+    "style_selected_renaissance": {
+      "id": "style_selected_renaissance",
+      "type": "text",
+      "content": "Magnífico! 🎭 O estilo *Renascentista* vai dar um ar de nobreza ao seu pet.",
+      "nextNode": "save_style_renaissance"
+    },
+    "save_style_renaissance": {
+      "id": "save_style_renaissance",
+      "type": "action",
+      "action": "saveStyle",
+      "nextNode": "ask_photo"
+    },
+    "style_selected_rococo": {
+      "id": "style_selected_rococo",
+      "type": "text",
+      "content": "Que gosto refinado! 🌸 O estilo *Rococó* é elegante e sofisticado. Vai cair muito bem!",
+      "nextNode": "save_style_rococo"
+    },
+    "save_style_rococo": {
+      "id": "save_style_rococo",
+      "type": "action",
+      "action": "saveStyle",
+      "nextNode": "ask_photo"
+    },
+    "ask_photo": {
+      "id": "ask_photo",
+      "type": "waitPhoto",
+      "saveAs": "photoMediaId",
+      "content": "📸 Me envia *APENAS 1 foto* do seu pet!\nNão envie MAIS de 1 foto..\n\n_Dica: quanto mais nítido o rostinho, mais bonita fica a arte_ 🐾",
+      "timeoutMs": 300000,
+      "timeoutNode": "photo_timeout",
+      "nextNode": "generating_image"
+    },
+    "photo_timeout": {
+      "id": "photo_timeout",
+      "type": "text",
+      "content": "Parece que você sumiu 😅 Quando quiser continuar, é só me mandar a foto do seu pet 📸",
+      "nextNode": "ask_photo"
+    },
+    "generating_image": {
+      "id": "generating_image",
+      "type": "typing",
+      "durationMs": 3000,
+      "action": "typing",
+      "nextNode": "generating_image_msg"
+    },
+    "generating_image_msg": {
+      "id": "generating_image_msg",
+      "type": "text",
+      "content": "🎨 Estamos criando o retrato! Só um instante... ✨",
+      "nextNode": "action_generate"
+    },
+    "action_generate": {
+      "id": "action_generate",
+      "type": "action",
+      "action": "generatePetImage",
+      "nextNode": "send_preview"
+    },
+    "send_preview": {
+      "id": "send_preview",
+      "type": "image",
+      "url": "{{lastPreview}}",
+      "caption": "🖼️ Olha como ficou! Essa é a *prévia com marca d'água*.\n\nO que achou? 😍",
+      "nextNode": "action_prepare_checkout"
+    },
+    "action_prepare_checkout": {
+      "id": "action_prepare_checkout",
+      "type": "action",
+      "action": "prepareCheckout",
+      "nextNode": "delay_5"
+    },
+    "delay_5": {
+      "id": "delay_5",
+      "type": "delay",
+      "ms": 1500,
+      "nextNode": "bonus_reveal"
+    },
+    "action_decision_tip": {
+      "id": "action_decision_tip",
+      "type": "text",
+      "content": "👇 Para garantir a arte original sem marca d'água *(E GANHAR SEU BÔNUS 🎁)*, clique na *primeira opção* abaixo:\n\n *\"💳 Gerar Pix\"*",
+      "nextNode": "action_decision"
+    },
+    "bonus_reveal": {
+      "id": "bonus_reveal",
+      "type": "text",
+      "content": "🎁 *BÔNUS EXCLUSIVO:*\n\nQuem finalizar a compra hoje recebe *+1 arte digital completamente grátis!*\n\nSim, você escolhe outro estilo ou manda a foto de outro pet — e a gente faz sem cobrar nada. 🐾\n\n_Esse bônus é válido apenas para quem pagar agora._",
+      "nextNode": "action_decision_tip"
+    },
+    "action_decision": {
+      "id": "action_decision",
+      "type": "buttons",
+      "body": "Por *{{packagePrice}} via PIX* você recebe:\n\n🖼️ Arte original em alta resolução sem marca d'água\n🎁 *+1 arte grátis* para usar quando quiser\n\nTudo entregue aqui no WhatsApp!",
+      "buttons": [
+        {
+          "id": "pay",
+          "title": "💳 Gerar Pix",
+          "nextNode": "create_payment"
+        },
+        {
+          "id": "regenerate",
+          "title": "🔄 Fazer outra foto",
+          "nextNode": "ask_style"
+        },
+        {
+          "id": "cancel",
+          "title": "❌ Agora não",
+          "nextNode": "soft_cancel"
+        }
+      ]
+    },
+    "create_payment": {
+      "id": "create_payment",
+      "type": "action",
+      "action": "createPixPayment",
+      "nextNode": "send_payment_link"
+    },
+    "send_payment_link": {
+      "id": "send_payment_link",
+      "type": "text",
+      "content": "💳 Ótimo! Vou te enviar o PIX agora:\n\n• Valor: *{{packagePrice}}*\n• Vencimento: ⏳ *30 minutos*\n• Após o pagamento: a arte original será enviada *automaticamente* aqui ✅\n\n👇 Clique no botão *Copiar código* abaixo!",
+      "nextNode": "send_code_pix"
+    },
+    "send_code_pix": {
+      "id": "send_code_pix",
+      "type": "pix",
+      "content": "{{pixCode}}",
+      "price": "{{packagePriceCents}}",
+      "namePix": "João Victor Rocha Neto",
+      "key": "69993161840",
+      "keyType": "PHONE",
+      "nextNode": "pix_audio_tip"
+    },
+    "pix_audio_tip": {
+      "id": "pix_audio_tip",
+      "type": "audio",
+      "url": "https://files.botsync.site/quadros/audio_funil_01.opus",
+      "nextNode": "wait_payment"
+    },
+    "wait_payment": {
+      "id": "wait_payment",
+      "type": "waitInput",
+      "saveAs": "_paymentConfirmation",
+      "content": "⏳ Assim que o pagamento cair, a arte original chega aqui na hora! 🚀\n\n_Qualquer dúvida, é só me chamar aqui._",
+      "nextNode": "payment_pending_hold"
+    },
+    "payment_pending_hold": {
+      "id": "payment_pending_hold",
+      "type": "text",
+      "content": "Me dá um segundinho que estou verificando o pagamento... 🔍"
+    },
+    "deliver_image": {
+      "id": "deliver_image",
+      "type": "action",
+      "action": "deliverFinalImage",
+      "nextNode": "final_message"
+    },
+    "final_message": {
+      "id": "final_message",
+      "type": "text",
+      "content": "🎉 Pronto! Aqui está a arte do seu pet em alta resolução e sem marca d'água!\n\n🎁 *Seu bônus de +1 arte grátis está liberado!* É só escolher o estilo e mandar a próxima foto quando quiser.",
+      "nextNode": "final_tip"
+    },
+    "final_tip": {
+      "id": "final_tip",
+      "type": "text",
+      "content": "💡 *Dica:* Impressão 20x30 cm custa em torno de R$8 a R$13 em gráficas. Moldura simples no Mercado Livre a partir de R$15. Fica incrível na parede! 🤩",
+      "nextNode": "upsell_offer_bonus"
+    },
+    "upsell_offer_bonus": {
+      "id": "upsell_offer_bonus",
+      "type": "buttons",
+      "body": "🎁 *Seu bônus está esperando!*\n\nVocê ganhou *+1 arte digital completamente grátis*. Quer usar agora?\n\nEscolha outro estilo ou manda a foto de outro pet — sem custo nenhum! 🐾",
+      "buttons": [
+        {
+          "id": "yes_bonus",
+          "title": "Quero o Bônus!",
+          "nextNode": "ask_style_bonus"
+        },
+        {
+          "id": "no_bonus",
+          "title": "Não quero",
+          "nextNode": "end_node"
+        }
+      ]
+    },
+    "ask_style_bonus": {
+      "id": "ask_style_bonus",
+      "type": "cards",
+      "body": "Perfeito! 🥰 Escolhe o estilo artístico para seu bônus:",
+      "cards": [
+        {
+          "headerType": "image",
+          "mediaUrl": "https://files.botsync.site/quadros/img-sites/sky_theme.jpg",
+          "body": "🌩️ Céu Épico\nO estilo mais popular!",
+          "buttons": [
+            {
+              "type": "quick_reply",
+              "id": "sky",
+              "title": "Escolher este",
+              "nextNode": "style_selected_sky_bonus"
+            }
+          ]
+        },
+        {
+          "headerType": "image",
+          "mediaUrl": "https://files.botsync.site/quadros/img-sites/renaissance.jpg",
+          "body": "🎭 Renascentista\nAr de nobreza clássica.",
+          "buttons": [
+            {
+              "type": "quick_reply",
+              "id": "renaissance",
+              "title": "Escolher este",
+              "nextNode": "style_selected_renaissance_bonus"
+            }
+          ]
+        },
+        {
+          "headerType": "image",
+          "mediaUrl": "https://files.botsync.site/quadros/img-sites/recoco.jpg",
+          "body": "🌸 Rococó\nElegante e sofisticado.",
+          "buttons": [
+            {
+              "type": "quick_reply",
+              "id": "rococo",
+              "title": "Escolher este",
+              "nextNode": "style_selected_rococo_bonus"
+            }
+          ]
+        }
+      ],
+      "buttons": [
+        {
+          "id": "sky",
+          "title": "🌩️ Céu Épico",
+          "nextNode": "style_selected_sky_bonus"
+        },
+        {
+          "id": "renaissance",
+          "title": "🎭 Renascentista",
+          "nextNode": "style_selected_renaissance_bonus"
+        },
+        {
+          "id": "rococo",
+          "title": "🌸 Rococó",
+          "nextNode": "style_selected_rococo_bonus"
+        }
+      ]
+    },
+    "style_selected_sky_bonus": {
+      "id": "style_selected_sky_bonus",
+      "type": "text",
+      "content": "Ótima escolha! 🌩️ Vamos criar sua arte bônus!",
+      "nextNode": "save_style_bonus"
+    },
+    "style_selected_renaissance_bonus": {
+      "id": "style_selected_renaissance_bonus",
+      "type": "text",
+      "content": "Magnífico! 🎭 Vamos criar sua arte bônus!",
+      "nextNode": "save_style_bonus"
+    },
+    "style_selected_rococo_bonus": {
+      "id": "style_selected_rococo_bonus",
+      "type": "text",
+      "content": "Elegante! 🌸 Vamos criar sua arte bônus!",
+      "nextNode": "save_style_bonus"
+    },
+    "save_style_bonus": {
+      "id": "save_style_bonus",
+      "type": "action",
+      "action": "saveStyle",
+      "nextNode": "ask_photo_bonus"
+    },
+    "ask_photo_bonus": {
+      "id": "ask_photo_bonus",
+      "type": "waitPhoto",
+      "saveAs": "photoMediaId",
+      "content": "📸 Me envia a foto do pet para o seu bônus!\n\n_Dica: quanto mais nítido o rostinho, mais bonita fica a arte_ 🐾",
+      "nextNode": "generating_image_bonus"
+    },
+    "generating_image_bonus": {
+      "id": "generating_image_bonus",
+      "type": "typing",
+      "durationMs": 3000,
+      "action": "typing",
+      "nextNode": "generating_image_msg_bonus"
+    },
+    "generating_image_msg_bonus": {
+      "id": "generating_image_msg_bonus",
+      "type": "text",
+      "content": "🎨 Criando sua arte bônus! Só um instante... ✨",
+      "nextNode": "action_generate_bonus"
+    },
+    "action_generate_bonus": {
+      "id": "action_generate_bonus",
+      "type": "action",
+      "action": "generatePetImageBonus",
+      "nextNode": "deliver_bonus_image"
+    },
+    "deliver_bonus_image": {
+      "id": "deliver_bonus_image",
+      "type": "action",
+      "action": "deliverBonusImage",
+      "nextNode": "final_message_bonus"
+    },
+    "final_message_bonus": {
+      "id": "final_message_bonus",
+      "type": "text",
+      "content": "🎉 Aqui está sua arte bônus em alta resolução e sem marca d'água!",
+      "nextNode": "final_tip_bonus"
+    },
+    "final_tip_bonus": {
+      "id": "final_tip_bonus",
+      "type": "text",
+      "content": "💡 *Dica:* Impressão 20x30 cm custa em torno de R$8 a R$13 em gráficas. Moldura simples no Mercado Livre a partir de R$15. Fica incrível na parede! 🤩",
+      "nextNode": "upsell_offer"
+    },
+    "upsell_offer": {
+      "id": "upsell_offer",
+      "type": "buttons",
+      "body": "🎁 *Você desbloqueou nosso Desconto de Fidelidade!*\n\nQuer gerar mais uma arte para o seu pet (ou de um outro pet)?\nA partir de agora qualquer foto nova sai por apenas *R$ 7.90*! 😻",
+      "buttons": [
+        {
+          "id": "yes_more",
+          "title": "🐾 Sim, quero outra!",
+          "nextNode": "ask_style"
+        },
+        {
+          "id": "no_thanks",
+          "title": "✅ Por hoje deu!",
+          "nextNode": "end_node"
+        }
+      ]
+    },
+    "soft_cancel": {
+      "id": "soft_cancel",
+      "type": "text",
+      "content": "Sem problema! 😊 A arte do seu pet fica guardada aqui por um tempinho.\n\nQualquer dúvida, é só chamar! 🐾",
+      "nextNode": "remarketing_setup"
+    },
+    "remarketing_setup": {
+      "id": "remarketing_setup",
+      "type": "remarketing",
+      "delayMs": 82800000,
+      "message": "Oi! 👋 Lembra do retrato do seu pet? Ainda está disponível — é só me responder aqui que gero o código na hora! 🎨",
+      "nextNodeAfterRemarketing": "end_node"
+    },
+    "end_node": {
+      "id": "end_node",
+      "type": "end",
+      "message": null
+    }
+  }
+}

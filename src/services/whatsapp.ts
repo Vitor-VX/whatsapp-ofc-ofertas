@@ -233,7 +233,7 @@ export class WhatsAppService {
      * Send carousel message (2-10 cards with image/video header)
      * All cards must have the same button types and quantity
     */
-    async sendCarousel(phoneNumber:string, options: CarouselOptions): Promise<void> {
+    async sendCarousel(phoneNumber: string, options: CarouselOptions): Promise<void> {
         const { bodyText, cards } = options;
 
         if (cards.length < 2 || cards.length > 10) {
@@ -343,6 +343,41 @@ export class WhatsAppService {
             return response.data.url;
         } catch (error) {
             logger.error(`Failed to get media URL: ${error instanceof Error ? error.message : String(error)}`);
+            throw error;
+        }
+    }
+
+    async sendTemplate(
+        phoneNumber: string,
+        templateName: string,
+        components: any[] = [],
+        language = "pt_BR"
+    ): Promise<void> {
+        try {
+            const payload = {
+                messaging_product: "whatsapp",
+                to: phoneNumber.replace(/\D/g, ""),
+                type: "template",
+                template: {
+                    name: templateName,
+                    language: {
+                        code: language,
+                    },
+                    components,
+                },
+            };
+
+            await this.client.post("", payload);
+
+            logger.debug(`Template sent to ${phoneNumber}: ${templateName}`);
+        } catch (error) {
+            const errorMsg = error instanceof Error ? error.message : String(error);
+
+            if (axios.isAxiosError(error) && error.response) {
+                logger.error(`Meta API error: ${JSON.stringify(error.response.data)}`);
+            }
+
+            logger.error(`Failed to send template: ${errorMsg}`);
             throw error;
         }
     }

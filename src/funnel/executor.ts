@@ -76,6 +76,8 @@ export class FunnelExecutor {
                 return await this.executeAudio(node);
             case 'cards':
                 return await this.executeCards(node);
+            case 'template':
+                return await this.executeTemplates(node);
             case 'pix':
                 return await this.executePix(node);
             case 'video':
@@ -159,10 +161,34 @@ export class FunnelExecutor {
             await this.context.whatsappService.sendCarousel(this.context.user.whatsappId, {
                 bodyText: body,
                 cards: cards
-           });
+            });
             logger.botMessage(this.context.user.phone, `[CARDS] ${body}`);
         } catch (error) {
             logger.error(`Failed to send image: ${error instanceof Error ? error.message : String(error)}`);
+            throw error;
+        }
+
+        return null;
+    }
+
+    private async executeTemplates(node: any): Promise<string | null> {
+        const templateName = node.name;
+        const components = node.components || []; 
+        const language = node.language || "pt_BR";
+
+        console.log(components);
+        console.log(templateName);
+        
+
+        try {
+            await this.context.whatsappService.sendTemplate(
+                this.context.user.whatsappId,
+                templateName,
+                components
+            );
+            logger.botMessage(this.context.user.phone, `[FLOW] ${templateName}`);
+        } catch (error) {
+            logger.error(`Failed to send FLOW: ${error instanceof Error ? error.message : String(error)}`);
             throw error;
         }
 

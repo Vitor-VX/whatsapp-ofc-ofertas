@@ -55,13 +55,6 @@ export class FunnelEngine {
         if (user.name) {
             result = result.replace(/{{name}}/g, user.name);
         }
-        const lastPreview =
-            data.lastPreview ||
-            user.generatedPreviews?.slice(-1)[0] ||
-            user.generatedImages?.slice(-1)[0] ||
-            "";
-
-        result = result.replace(/{{lastPreview}}/g, lastPreview);
 
         return result;
     }

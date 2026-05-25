@@ -28,6 +28,13 @@ export interface CardsNode extends BaseNode {
     cards: any[];
 }
 
+export interface TemplateNode extends BaseNode {
+    type: 'template';
+    name: string;
+    language: string;
+    components: any[]
+}
+
 // Imagem
 export interface ImageNode extends BaseNode {
     type: 'image';
@@ -102,6 +109,7 @@ export interface WaitInputNode extends BaseNode {
 export interface WaitPhotoNode extends BaseNode {
     type: 'waitPhoto';
     content?: string; // optional prompt message
+    saveAs?: string;
     timeoutMs?: number;
     timeoutNode?: string;
 }
@@ -145,6 +153,7 @@ export type FunnelNode =
     | ActionNode
     | RemarketingNode
     | PixNode
+    | TemplateNode
     | CardsNode
     | EndNode;
 
