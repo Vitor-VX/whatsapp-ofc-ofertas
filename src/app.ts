@@ -10,7 +10,6 @@ import mercadoRoutes from './routes/mercadopago';
 import productRoutes from './routes/products';
 import { errorHandler } from './middleware/errorHandler';
 import cors from "cors";
-import { whatsappService } from './services/whatsapp';
 
 const app: Express = express();
 const env = getEnv();
@@ -25,19 +24,6 @@ app.use(express.json({
         req.rawBody = buf;
     }
 }));
-
-whatsappService.sendTemplate(
-    "5569993161840",
-    "envelope_form",
-    [
-        {
-            "type": "button",
-            "sub_type": "flow",
-            "index": "0",
-            "parameters": []
-        }
-    ],
-)
 
 /**
  * Request logging middleware
