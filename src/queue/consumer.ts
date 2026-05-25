@@ -17,6 +17,7 @@ import { tmpdir } from 'os';
 import { r2Cloudflare } from '../utils/uploadCloudflare';
 import { mercadoPagoService } from '../services/mercadoPago';
 import { envelopeService } from '../services/envelope';
+import { isYouTubeUrl } from '../utils/isValidYoutube';
 
 function getPhotoIndexFromNodeId(nodeId: string): number {
     const match = nodeId.match(/photo_received_(\d+)/);
@@ -170,6 +171,18 @@ export function initializeActionHandlers(): void {
                 ? new Date(data.get("envelopeExpiresAt")!)
                 : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
 
+            const rawMusicUrl = data.get("musicUrl") ?? "";
+
+            const DEFAULT_MUSIC_URL = "https://www.youtube.com/watch?v=cNGjD0VG4R8";
+            const DEFAULT_MUSIC_NAME = "Ed Sheeran - Perfeita";
+            const validMusicUrl = isYouTubeUrl(rawMusicUrl)
+                ? rawMusicUrl
+                : DEFAULT_MUSIC_URL;
+
+            const musicName = isYouTubeUrl(rawMusicUrl)
+                ? data.get("musicName") ?? "Sua música"
+                : DEFAULT_MUSIC_NAME;
+
             const payload = {
                 title: data.get("recipient") ?? "Para você",
                 message: data.get("message") ?? "",
@@ -178,8 +191,8 @@ export function initializeActionHandlers(): void {
                 options: {
                     startDate,
                     hasMusic: true,
-                    musicUrl: data.get("musicUrl") ?? "",
-                    musicName: data.get("musicName") ?? "",
+                    musicUrl: validMusicUrl,
+                    musicName: musicName,
                 },
                 expiresAt,
             };
@@ -284,8 +297,8 @@ async function processIncomingMessage(msg: ConsumeMessage | null): Promise<void>
             console.log("FLOW DATA:", JSON.stringify(data, null, 2));
 
             const planMap: Record<string, { days: number; price: number; label: string }> = {
-                plan_30: { days: 30, price: 14.90, label: "30 dias" },
-                plan_90: { days: 90, price: 29.90, label: "90 dias" },
+                plan_30: { days: 30, price: 0.1, label: "30 dias" },
+                plan_90: { days: 90, price: 0.2, label: "90 dias" },
             };
 
             const plan = planMap[data.plan] ?? planMap["plan_30"];
