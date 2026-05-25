@@ -20,13 +20,12 @@
       "id": "delay_1",
       "type": "delay",
       "ms": 1200,
-      "nextNode": "attention_image"
+      "nextNode": "attention_preview"
     },
-    "attention_image": {
-      "id": "attention_image",
-      "type": "image",
-      "url": "https://files.botsync.site/envelope/img-site/envelope_preview.png",
-      "caption": "✨ Veja como criamos um envelope digital com suas fotos, uma mensagem especial e uma música só de vocês...",
+    "attention_preview": {
+      "id": "attention_preview",
+      "type": "text",
+      "content": "✨ Olha como fica um *Envelope Digital na prática*:\n\n👉 https://envelopedoamor.shop/envelope/75ad8bcb-cb7a-4a6f-816b-a35c1bc10461\n\n💡 Toque no link acima para ver o site funcionando com fotos, música e mensagem 💖",
       "nextNode": "delay_2"
     },
     "delay_2": {
@@ -113,9 +112,16 @@
     },
     "ask_photos": {
       "id": "ask_photos",
+      "type": "text",
+      "saveAs": "photo_1",
+      "content": "📸 *Passo 1 de 3 — Fotos*\n\nMe envia as fotos especiais de vocês!\n\n• Mínimo: *1 foto*\n• Máximo: *5 fotos*",
+      "nextNode": "info_photos"
+    },
+    "info_photos": {
+      "id": "info_photos",
       "type": "waitPhoto",
       "saveAs": "photo_1",
-      "content": "📸 *Passo 1 — Fotos*\n\nMe envia as fotos especiais de vocês!\n\n• Mínimo: *1 foto*\n• Máximo: *5 fotos*\n\nEnvie uma por uma. Quando terminar, clique em *\"Enviei todas!\"* 👇",
+      "content": "Envie uma por uma (não envie várias fotos de uma vez, ok?). Quando terminar, clique em *\"Enviei todas!\"* 👇",
       "nextNode": "photo_received_1"
     },
     "photo_received_1": {
