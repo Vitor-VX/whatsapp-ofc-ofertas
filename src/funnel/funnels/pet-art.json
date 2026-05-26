@@ -25,7 +25,7 @@
     "attention_preview": {
       "id": "attention_preview",
       "type": "text",
-      "content": "✨ Olha como fica um *Envelope Digital na prática*:\n\n👉 https://envelopedoamor.shop/envelope/75ad8bcb-cb7a-4a6f-816b-a35c1bc10461\n\n💡 Toque no link acima para ver o site funcionando com fotos, música e mensagem 💖",
+      "content": "💖 *Veja um exemplo real de como ficaria seu presente pronto:*\n\n👉 https://envelopedoamor.shop/envelope/75ad8bcb-cb7a-4a6f-816b-a35c1bc10461\n\n✨ Com fotos, música e uma mensagem especial...\n\n(Toque no link para abrir 👆)",
       "nextNode": "delay_2"
     },
     "delay_2": {
@@ -121,7 +121,7 @@
       "id": "info_photos",
       "type": "waitPhoto",
       "saveAs": "photo_1",
-      "content": "Envie uma por uma (não envie várias fotos de uma vez, ok?). Quando terminar, clique em *\"Enviei todas!\"* 👇",
+      "content": "📷 *Lembrando*: envie 1 foto por vez.\n⚠️ Várias fotos = só a primeira conta.\n\nClique em *\"Enviei todas!\"* quando acabar 👇",
       "nextNode": "photo_received_1"
     },
     "photo_received_1": {
