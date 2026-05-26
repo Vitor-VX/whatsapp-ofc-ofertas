@@ -158,13 +158,22 @@ export function initializeActionHandlers(): void {
             const freshUser = await User.findById(user._id);
             if (!freshUser) throw new Error("User not found");
 
+            const paymentId = freshUser.payment?.id;
+            const alreadyExists = freshUser.envelope.some(
+                (env) => env.paymentId === paymentId
+            );
+            if (alreadyExists) {
+                logger.warn(`[deliverEnvelope] Já existe envelope para payment ${paymentId}`);
+                return;
+            }
+
             const data = freshUser.collectedData as Map<string, string>;
             const photos = collectPhotos(data);
 
             if (photos.length === 0) throw new Error("No photos found — cannot create envelope");
 
             const startDateStr = data.get("startDate") ?? "";
-            const [dd, mm, yyyy] = startDateStr.split("-").map(Number);
+            const [yyyy, mm, dd] = startDateStr.split("-").map(Number);
             const startDate = new Date(yyyy, mm - 1, dd);
 
             const expiresAt = data.get("envelopeExpiresAt")
@@ -188,6 +197,7 @@ export function initializeActionHandlers(): void {
                 message: data.get("message") ?? "",
                 signature: data.get("signature") ?? "",
                 photos,
+                paymentId: paymentId,
                 options: {
                     startDate,
                     hasMusic: true,

@@ -14,6 +14,7 @@ export interface IEnvelope {
     message: string;
     signature: string;
     photos: string[];
+    paymentId: string | null;
     options: {
         startDate?: Date;
         hasMusic: boolean;
@@ -62,6 +63,7 @@ const envelopeSchema = new Schema<IEnvelope>(
         message: { type: String, required: true },
         signature: { type: String, required: true },
         photos: { type: [String], default: [] },
+        paymentId: { type: String, index: true },
         options: { type: envelopeOptionsSchema, default: () => ({}) },
         lastAccessAt: { type: Date, default: () => new Date() },
         expiresAt: { type: Date, default: null },

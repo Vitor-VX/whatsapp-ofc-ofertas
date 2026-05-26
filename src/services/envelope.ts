@@ -8,6 +8,7 @@ export interface EnvelopePayload {
     message: string;
     signature: string;
     photos: string[];
+    paymentId: string | null;
     options: {
         startDate: Date;
         hasMusic: boolean;
@@ -72,6 +73,7 @@ export const envelopeService = {
             message: payload.message,
             signature: payload.signature,
             photos: payload.photos,
+            paymentId: payload.paymentId,
             options: {
                 startDate: payload.options.startDate,
                 hasMusic: payload.options.hasMusic,

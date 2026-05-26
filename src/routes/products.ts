@@ -9,52 +9,30 @@ router.get('/product/envelope/:slug', async (req: Request, res: Response) => {
         const slug = req.params.slug;
 
         const user = await User.findOne({
-            "collectedData.envelopeSlug": slug
+            "envelope.slug": slug
         });
         if (!user) {
             return res.status(404).json({ error: 'Envelope not found' });
         }
 
-        const data = user.collectedData as Map<string, string>;
-        function extractPhotos(data: Map<string, string>): string[] {
-            return Array.from(data.entries())
-                .filter(([key]) => key.startsWith("photo_"))
-                .sort((a, b) => {
-                    const aIndex = Number(a[0].split("_")[1]);
-                    const bIndex = Number(b[0].split("_")[1]);
-                    return aIndex - bIndex;
-                })
-                .map(([, value]) => value)
-                .filter(Boolean);
-        }
-        const photos = extractPhotos(data);
+        const envelope = user.envelope.find(el => el.slug === slug);
+        const photos = envelope?.photos;
 
         const response = {
-            slug: data.get("envelopeSlug"),
-            url: data.get("envelopeUrl"),
-            qrCode: data.get("envelopeQrCode"),
-
-            recipient: data.get("recipient"),
-            message: data.get("message"),
-            signature: data.get("signature"),
+            slug: envelope?.slug,
+            recipient: envelope?.title,
+            message: envelope?.message,
+            signature: envelope?.signature,
 
             photos,
 
             music: {
-                name: data.get("musicName"),
-                url: data.get("musicUrl"),
+                name: envelope?.options.musicName,
+                url: envelope?.options.musicUrl,
             },
 
-            plan: {
-                days: data.get("planDays"),
-                label: data.get("planLabel"),
-                price: data.get("packagePrice"),
-                priceValue: data.get("packagePriceValue"),
-                priceCents: data.get("packagePriceCents"),
-            },
-
-            startDate: data.get("startDate"),
-            expiresAt: data.get("envelopeExpiresAt"),
+            startDate: envelope?.options.startDate,
+            expiresAt: envelope?.expiresAt,
         };
 
         return res.json(response);
