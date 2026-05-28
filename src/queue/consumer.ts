@@ -66,6 +66,67 @@ async function processPhotoUpload(
 }
 
 export function initializeActionHandlers(): void {
+    actionRegistry.register("sendPhotoList", async (_node: ActionNode, user, _ctx) => {
+        const freshUser = await User.findById(user._id);
+        if (!freshUser) return;
+
+        const data = freshUser.collectedData as Map<string, string>;
+
+        const lines: string[] = ["📷 *Suas fotos enviadas:*\n"];
+        for (let i = 1; i <= 3; i++) {
+            const url = data.get(`photo_${i}`);
+            if (url && url.startsWith("http")) {
+                lines.push(`*${i}* — Foto ${i} ✅`);
+            }
+        }
+
+        if (lines.length === 1) {
+            await whatsappService.sendMessage(user.whatsappId, {
+                type: "text",
+                body: "📸 Você ainda não enviou nenhuma foto.",
+            });
+            await User.updateOne({ _id: user._id }, { $set: { currentNodeId: "info_photos" } });
+            return;
+        }
+
+        await whatsappService.sendMessage(user.whatsappId, {
+            type: "text",
+            body: lines.join("\n"),
+        });
+    });
+
+    // ─────────────────────────────────────────────────────────────────────────────
+    // Action: routePhotoEdit
+    // Lê o número digitado (editPhotoIndex) e avança para o nó replace_photo_N
+    // ─────────────────────────────────────────────────────────────────────────────
+    actionRegistry.register("routePhotoEdit", async (_node: ActionNode, user, _ctx) => {
+        const data = user.collectedData as Map<string, string>;
+        const index = parseInt(data.get("editPhotoIndex") ?? "0", 10);
+
+        if (index < 1 || index > 5) {
+            logger.warn(`[routePhotoEdit] Invalid index ${index} for user ${user.whatsappId}`);
+            await User.updateOne({ _id: user._id }, { $set: { currentNodeId: "ask_which_photo" } });
+            return;
+        }
+
+        // Verifica se a foto existe (não faz sentido trocar um slot vazio)
+        const freshUser = await User.findById(user._id);
+        const photoUrl = (freshUser?.collectedData as Map<string, string>)?.get(`photo_${index}`);
+
+        if (!photoUrl || !photoUrl.startsWith("http")) {
+            await whatsappService.sendMessage(user.whatsappId, {
+                type: "text",
+                body: `⚠️ Você não tem essa foto especificada. Digite o número de uma foto existente.`,
+            });
+            await User.updateOne({ _id: user._id }, { $set: { currentNodeId: "wait_which_photo" } });
+            return;
+        }
+
+        const targetNode = `replace_photo_${index}`;
+        await User.updateOne({ _id: user._id }, { $set: { currentNodeId: targetNode } });
+        logger.info(`[routePhotoEdit] Routing user ${user.whatsappId} → ${targetNode}`);
+    });
+
     actionRegistry.register("savePhoto", async (node: ActionNode, user, _ctx) => {
         const photoIndex = getPhotoIndexFromNodeId(node.id);
         if (photoIndex === 0) {
@@ -100,7 +161,7 @@ export function initializeActionHandlers(): void {
 
     actionRegistry.register("prepareCheckout", async (_node: ActionNode, user, _ctx) => {
         const data = user.collectedData as Map<string, string>;
-        const price = parseFloat(data.get("packagePriceValue") ?? "14.90");
+        const price = parseFloat("19.90");
         const priceInCents = Math.round(price * 100);
         const priceStr = `R$${price.toFixed(2).replace(".", ",")}`;
 
@@ -123,7 +184,7 @@ export function initializeActionHandlers(): void {
         try {
             const data = user.collectedData as Map<string, string>;
             const recipient = data.get("recipient") ?? "Envelope Digital";
-            const packagePrice = parseFloat(data.get("packagePriceValue") ?? "14.90");
+            const packagePrice = parseFloat("19.90");
 
             const { code, qrCodeBase64, paymentId } = await mercadoPagoService.createPixPayment(
                 user.whatsappId,
@@ -176,9 +237,7 @@ export function initializeActionHandlers(): void {
             const [yyyy, mm, dd] = startDateStr.split("-").map(Number);
             const startDate = new Date(yyyy, mm - 1, dd);
 
-            const expiresAt = data.get("envelopeExpiresAt")
-                ? new Date(data.get("envelopeExpiresAt")!)
-                : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+            const expiresAt = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000);
 
             const rawMusicUrl = data.get("musicUrl") ?? "";
 
@@ -520,7 +579,13 @@ async function executeNodeSequence(
                 if (freshUser) {
                     user = freshUser;
                     context.user = freshUser;
+
+                    const previousNodeId = currentNodeId;
                     currentNodeId = freshUser.currentNodeId;
+
+                    if (!nextNodeId && freshUser.currentNodeId !== previousNodeId) {
+                        continue;
+                    }
                 }
             }
 
@@ -589,7 +654,7 @@ async function processPaymentEvent(msg: ConsumeMessage | null): Promise<void> {
                 logger.info(`Payment success for ${whatsappId}`);
                 await User.updateOne(
                     { _id: user._id },
-                    { currentNodeId: 'deliver_envelope', paymentStatus: 'paid' },
+                    { currentNodeId: 'payment_confirmed', paymentStatus: 'paid' },
                 );
                 await executeNodeSequence(user, engine, "", true);
                 break;

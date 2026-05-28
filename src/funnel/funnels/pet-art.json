@@ -8,40 +8,100 @@
       "type": "typing",
       "durationMs": 1500,
       "action": "typing",
-      "nextNode": "attention_1"
+      "nextNode": "msg_1"
     },
-    "attention_1": {
-      "id": "attention_1",
+    "msg_1": {
+      "id": "msg_1",
       "type": "text",
-      "content": "Olá! 💌 Você quer surpreender alguém especial de um jeito único e inesquecível?",
+      "content": "Oi! 👋",
       "nextNode": "delay_1"
     },
     "delay_1": {
       "id": "delay_1",
       "type": "delay",
-      "ms": 1200,
-      "nextNode": "attention_preview"
+      "ms": 800,
+      "nextNode": "msg_2"
     },
-    "attention_preview": {
-      "id": "attention_preview",
+    "msg_2": {
+      "id": "msg_2",
       "type": "text",
-      "content": "💖 *Veja um exemplo real de como ficaria seu presente pronto:*\n\n👉 https://envelopedoamor.shop/envelope/75ad8bcb-cb7a-4a6f-816b-a35c1bc10461\n\n✨ Com fotos, música e uma mensagem especial...\n\n(Toque no link para abrir 👆)",
+      "content": "Você quer surpreender alguém especial? 💌",
       "nextNode": "delay_2"
     },
     "delay_2": {
       "id": "delay_2",
       "type": "delay",
-      "ms": 1500,
-      "nextNode": "interest_1"
+      "ms": 1000,
+      "nextNode": "msg_3"
     },
-    "interest_1": {
-      "id": "interest_1",
+    "msg_3": {
+      "id": "msg_3",
       "type": "text",
-      "content": "💌 Crie um *Envelope Digital* personalizado para quem você ama!\n\n🖼️ Suas fotos\n💬 Sua mensagem do coração\n🎵 A música de vocês\n📅 A data do começo de tudo\n\nEntregue como um *link + QR Code* direto aqui no WhatsApp.\n\n🔥 Por apenas *R$14,90* (30 dias no ar) ou *R$29,90* (90 dias no ar)!\n\nEntrega em poucos minutos.",
+      "content": "A gente cria um *Envelope Digital* com as fotos de vocês, uma mensagem especial e a música que representa a história de vocês 🎵",
       "nextNode": "delay_3"
     },
     "delay_3": {
       "id": "delay_3",
+      "type": "delay",
+      "ms": 1200,
+      "nextNode": "msg_4"
+    },
+    "msg_4": {
+      "id": "msg_4",
+      "type": "text",
+      "content": "Fica assim 👇\n\nhttps://envelopedoamor.shop/envelope/75ad8bcb-cb7a-4a6f-816b-a35c1bc10461",
+      "nextNode": "delay_4"
+    },
+    "delay_4": {
+      "id": "delay_4",
+      "type": "delay",
+      "ms": 2000,
+      "nextNode": "msg_5"
+    },
+    "msg_5": {
+      "id": "msg_5",
+      "type": "text",
+      "content": "A melhor parte? 👀",
+      "nextNode": "delay_5"
+    },
+    "delay_5": {
+      "id": "delay_5",
+      "type": "delay",
+      "ms": 800,
+      "nextNode": "msg_6"
+    },
+    "msg_6": {
+      "id": "msg_6",
+      "type": "text",
+      "content": "A gente entrega o envelope pra você *antes* 🎁",
+      "nextNode": "delay_6"
+    },
+    "delay_6": {
+      "id": "delay_6",
+      "type": "delay",
+      "ms": 800,
+      "nextNode": "msg_7"
+    },
+    "msg_7": {
+      "id": "msg_7",
+      "type": "text",
+      "content": "Você vê como ficou, manda pra pessoa... e só depois faz o pagamento de *R$19,90* 😊",
+      "nextNode": "delay_7"
+    },
+    "delay_7": {
+      "id": "delay_7",
+      "type": "delay",
+      "ms": 1000,
+      "nextNode": "msg_8"
+    },
+    "msg_8": {
+      "id": "msg_8",
+      "type": "text",
+      "content": "O envelope fica no ar por *14 dias* — tempo de sobra pra surpreender 💕",
+      "nextNode": "delay_8"
+    },
+    "delay_8": {
+      "id": "delay_8",
       "type": "delay",
       "ms": 1000,
       "nextNode": "desire_buttons"
@@ -49,7 +109,7 @@
     "desire_buttons": {
       "id": "desire_buttons",
       "type": "buttons",
-      "body": "Quer criar um envelope especial para alguém? 💕\n\nEscolha uma opção:",
+      "body": "Topa criar o seu? 👇",
       "buttons": [
         {
           "id": "yes",
@@ -71,81 +131,20 @@
     "how_it_works": {
       "id": "how_it_works",
       "type": "text",
-      "content": "É bem simples 👇\n\n1️⃣ Você escolhe por quantos dias quer o envelope no ar\n2️⃣ Me envia até *5 fotos* especiais de vocês\n3️⃣ Me diz o nome do destinatário (ex: *Para meu grande amor*)\n4️⃣ Escreve uma mensagem do coração (até 1000 caracteres)\n5️⃣ Me diz como vai assinar (ex: *Com amor, Gabriel*)\n6️⃣ Me manda o link de uma música no YouTube de vocês\n7️⃣ Me informa a data de início do relacionamento\n8️⃣ Paga *via PIX* — aprovação instantânea ✅\n9️⃣ Recebe o *link + QR Code* aqui no WhatsApp 🎁\n\n_Quem receber vai poder abrir o envelope, ver a mensagem, as fotos e ouvir a música!_",
+      "content": "Simples assim 👇\n\n1️⃣ Você preenche as infos do envelope\n2️⃣ Envia até *3 fotos* de vocês\n3️⃣ Recebe o link + QR Code na hora 🎁\n4️⃣ Manda pra quem você ama 💌\n5️⃣ Depois é só pagar *R$19,90* — sem pressa!\n\n⏳ O envelope fica no ar por *14 dias*.",
       "nextNode": "delay_how"
     },
     "delay_how": {
       "id": "delay_how",
       "type": "delay",
-      "ms": 1000,
+      "ms": 800,
       "nextNode": "desire_buttons"
     },
     "start_flow_message": {
       "id": "start_flow_message",
       "type": "text",
-      "content": "💌 Perfeito! Agora você pode preencher as informações do seu envelope.\n\nBasta continuar e inserir os dados solicitados.",
+      "content": "Boa! 🥳 Agora é só preencher as informações do envelope 👇",
       "nextNode": "send_flow_template"
-    },
-    "plan_selected": {
-      "id": "plan_selected",
-      "type": "text",
-      "content": "Ótima escolha! 💛 Plano de *{{planLabel}}* selecionado por *R$14,90*.\n\nAgora vamos montar o seu envelope! É rapidinho 🚀",
-      "nextNode": "ask_photos"
-    },
-    "save_plan_30": {
-      "id": "save_plan_30",
-      "type": "action",
-      "action": "savePlan",
-      "nextNode": "ask_photos"
-    },
-    "plan_selected_90": {
-      "id": "plan_selected_90",
-      "type": "text",
-      "content": "Excelente escolha! 💎 Plano de *90 dias* selecionado por *R$29,90*.\n\nAgora vamos montar o seu envelope! É rapidinho 🚀",
-      "nextNode": "save_plan_90"
-    },
-    "save_plan_90": {
-      "id": "save_plan_90",
-      "type": "action",
-      "action": "savePlan",
-      "nextNode": "ask_photos"
-    },
-    "ask_photos": {
-      "id": "ask_photos",
-      "type": "text",
-      "saveAs": "photo_1",
-      "content": "📸 *Passo 1 de 3 — Fotos*\n\nMe envia as fotos especiais de vocês!\n\n• Mínimo: *1 foto*\n• Máximo: *5 fotos*",
-      "nextNode": "info_photos"
-    },
-    "info_photos": {
-      "id": "info_photos",
-      "type": "waitPhoto",
-      "saveAs": "photo_1",
-      "content": "📷 *Lembrando*: envie 1 foto por vez.\n⚠️ Várias fotos = só a primeira conta.\n\nClique em *\"Enviei todas!\"* quando acabar 👇",
-      "nextNode": "photo_received_1"
-    },
-    "photo_received_1": {
-      "id": "photo_received_1",
-      "type": "action",
-      "action": "savePhoto",
-      "nextNode": "ask_more_photos_1"
-    },
-    "ask_more_photos_1": {
-      "id": "ask_more_photos_1",
-      "type": "buttons",
-      "body": "✅ Foto 1 recebida!\n\nQuer adicionar mais fotos? (você pode adicionar até 4 a mais)",
-      "buttons": [
-        {
-          "id": "add_photo",
-          "title": "📷 Adicionar +1",
-          "nextNode": "ask_photo_2"
-        },
-        {
-          "id": "done_photos",
-          "title": "✅ Enviei todas!",
-          "nextNode": "show_summary"
-        }
-      ]
     },
     "send_flow_template": {
       "id": "send_flow_template",
@@ -166,20 +165,63 @@
       "id": "wait_flow_response",
       "type": "waitInput",
       "saveAs": "flowResponse",
-      "content": "Aguardando preenchimento...",
-      "nextNode": "process_flow_data"
+      "content": "Aguardando preenchimento do formulário...",
+      "nextNode": "plan_selected"
     },
-    "process_flow_data": {
-      "id": "process_flow_data",
+    "plan_selected": {
+      "id": "plan_selected",
+      "type": "text",
+      "content": "Perfeito! ✅ Agora me manda as fotos 📸",
+      "nextNode": "delay_plan"
+    },
+    "delay_plan": {
+      "id": "delay_plan",
+      "type": "delay",
+      "ms": 800,
+      "nextNode": "ask_photos"
+    },
+    "ask_photos": {
+      "id": "ask_photos",
+      "type": "text",
+      "saveAs": "photo_1",
+      "content": "📸 *Passo 1 de 3 — Fotos*\n\nMe envia as fotos especiais de vocês!\n\n• Mínimo: *1 foto*\n• Máximo: *3 fotos*",
+      "nextNode": "info_photos"
+    },
+    "info_photos": {
+      "id": "info_photos",
+      "type": "waitPhoto",
+      "saveAs": "photo_1",
+      "content": "📷 *Lembrando*: envie 1 foto por vez.\n⚠️ Várias fotos = só a primeira conta.\n\nClique em *\"Enviei todas!\"* quando acabar 👇",
+      "nextNode": "photo_received_1"
+    },
+    "photo_received_1": {
+      "id": "photo_received_1",
       "type": "action",
-      "action": "processFlowEnvelope",
-      "nextNode": "summary_typing"
+      "action": "savePhoto",
+      "nextNode": "ask_more_photos_1"
+    },
+    "ask_more_photos_1": {
+      "id": "ask_more_photos_1",
+      "type": "buttons",
+      "body": "✅ Foto 1 recebida!\n\nQuer adicionar mais fotos? (você pode adicionar até 2 a mais)",
+      "buttons": [
+        {
+          "id": "add_photo",
+          "title": "📷 Adicionar +1",
+          "nextNode": "ask_photo_2"
+        },
+        {
+          "id": "done_photos",
+          "title": "✅ Enviei todas!",
+          "nextNode": "show_summary"
+        }
+      ]
     },
     "ask_photo_2": {
       "id": "ask_photo_2",
       "type": "waitPhoto",
       "saveAs": "photo_2",
-      "content": "📸 Me envia a 2ª foto:",
+      "content": "📸 Manda a 2ª foto:",
       "nextNode": "photo_received_2"
     },
     "photo_received_2": {
@@ -191,11 +233,11 @@
     "ask_more_photos_2": {
       "id": "ask_more_photos_2",
       "type": "buttons",
-      "body": "✅ Foto 2 recebida!\n\nQuer adicionar mais fotos? (ainda cabem mais 3)",
+      "body": "✅ Foto 2 recebida!\n\nQuer adicionar mais fotos? (você pode adicionar mais 1 foto)",
       "buttons": [
         {
           "id": "add_photo",
-          "title": "📷 Adicionar +1",
+          "title": "📷 Adicionar a última",
           "nextNode": "ask_photo_3"
         },
         {
@@ -209,160 +251,36 @@
       "id": "ask_photo_3",
       "type": "waitPhoto",
       "saveAs": "photo_3",
-      "content": "📸 Me envia a 3ª foto:",
+      "content": "📸 Manda a 3ª e última foto:",
       "nextNode": "photo_received_3"
     },
     "photo_received_3": {
       "id": "photo_received_3",
       "type": "action",
       "action": "savePhoto",
-      "nextNode": "ask_more_photos_3"
-    },
-    "ask_more_photos_3": {
-      "id": "ask_more_photos_3",
-      "type": "buttons",
-      "body": "✅ Foto 3 recebida!\n\nQuer adicionar mais fotos? (ainda cabem mais 2)",
-      "buttons": [
-        {
-          "id": "add_photo",
-          "title": "📷 Adicionar +1",
-          "nextNode": "ask_photo_4"
-        },
-        {
-          "id": "done_photos",
-          "title": "✅ Enviei todas!",
-          "nextNode": "show_summary"
-        }
-      ]
-    },
-    "ask_photo_4": {
-      "id": "ask_photo_4",
-      "type": "waitPhoto",
-      "saveAs": "photo_4",
-      "content": "📸 Me envia a 4ª foto:",
-      "nextNode": "photo_received_4"
-    },
-    "photo_received_4": {
-      "id": "photo_received_4",
-      "type": "action",
-      "action": "savePhoto",
-      "nextNode": "ask_more_photos_4"
-    },
-    "ask_more_photos_4": {
-      "id": "ask_more_photos_4",
-      "type": "buttons",
-      "body": "✅ Foto 4 recebida!\n\nQuer adicionar mais uma última foto? (máximo 5)",
-      "buttons": [
-        {
-          "id": "add_photo",
-          "title": "📷 Adicionar a última",
-          "nextNode": "ask_photo_5"
-        },
-        {
-          "id": "done_photos",
-          "title": "✅ Enviei todas!",
-          "nextNode": "show_summary"
-        }
-      ]
-    },
-    "ask_photo_5": {
-      "id": "ask_photo_5",
-      "type": "waitPhoto",
-      "saveAs": "photo_5",
-      "content": "📸 Me envia a 5ª e última foto:",
-      "nextNode": "photo_received_5"
-    },
-    "photo_received_5": {
-      "id": "photo_received_5",
-      "type": "action",
-      "action": "savePhoto",
-      "nextNode": "show_summary"
-    },
-    "ask_recipient": {
-      "id": "ask_recipient",
-      "type": "waitInput",
-      "saveAs": "recipient",
-      "content": "💌 *Passo 2 de 7 — Destinatário*\n\nPara quem é esse envelope? Me diga o nome ou apelido carinhoso.\n\n_Exemplos: \"Para meu grande amor\", \"Para a Ana\", \"Para minha pessoa favorita\"_",
-      "nextNode": "ask_message"
-    },
-    "ask_message": {
-      "id": "ask_message",
-      "type": "waitInput",
-      "saveAs": "message",
-      "content": "💬 *Passo 3 de 7 — Mensagem*\n\nEscreva a mensagem especial que vai aparecer no envelope! 💕\n\n_Pode ser uma declaração, uma lembrança, qualquer coisa do coração._\n_(Máximo: 1000 caracteres)_",
-      "validation": {
-        "maxLength": 1000
-      },
-      "nextNode": "ask_signature"
-    },
-    "ask_signature": {
-      "id": "ask_signature",
-      "type": "waitInput",
-      "saveAs": "signature",
-      "content": "✍️ *Passo 4 de 7 — Assinatura*\n\nComo você vai assinar a mensagem?\n\n_Exemplos: \"Com amor, Gabriel\", \"Seu grande amor\", \"Para sempre seu ❤️\"_",
-      "nextNode": "ask_music"
-    },
-    "ask_music": {
-      "id": "ask_music",
-      "type": "waitInput",
-      "saveAs": "musicUrl",
-      "content": "🎵 *Passo 5 de 7 — Música*\n\nMe manda o link de uma música no YouTube que representa vocês! 🎶\n\n_Exemplo: https://youtube.com/watch?v=..._",
-      "validation": {
-        "pattern": "youtube\\.com|youtu\\.be"
-      },
-      "nextNode": "ask_music_name"
-    },
-    "ask_music_name": {
-      "id": "ask_music_name",
-      "type": "waitInput",
-      "saveAs": "musicName",
-      "content": "🎵 Legal! Agora me diz o nome da música e o artista para aparecer no envelope.\n\n_Exemplo: \"Perfect — Ed Sheeran\"_",
-      "nextNode": "ask_start_date"
-    },
-    "ask_start_date": {
-      "id": "ask_start_date",
-      "type": "waitInput",
-      "saveAs": "startDate",
-      "content": "📅 *Passo 6 de 7 — Data especial*\n\nQual é a data de início do relacionamento de vocês?\n\n_Formato: DD/MM/AAAA_\n_Exemplo: 08/05/2023_",
-      "validation": {
-        "pattern": "^\\d{2}/\\d{2}/\\d{4}$"
-      },
-      "nextNode": "summary_typing"
-    },
-    "summary_typing": {
-      "id": "summary_typing",
-      "type": "typing",
-      "durationMs": 1500,
-      "action": "typing",
       "nextNode": "show_summary"
     },
     "show_summary": {
       "id": "show_summary",
       "type": "text",
-      "content": "📋 *Passo 2 de 3 — Confirmação*\n\nVeja como ficou o seu envelope:\n\n💌 *Para:* {{recipient}}\n✍️ *Assinatura:* {{signature}}\n🎵 *Música:* {{musicName}}\n📅 *Data:* {{startDate}}\n⏳ *Plano:* {{planLabel}}\n💰 *Valor:* {{packagePrice}}\n\n_Sua mensagem e fotos foram recebidas com sucesso!_ ✅",
+      "content": "📋 *Resumo do envelope:*\n\n💌 *Para:* {{recipient}}\n✍️ *Assinatura:* {{signature}}\n🎵 *Música:* {{musicName}}\n📅 *Data:* {{startDate}}",
       "nextNode": "delay_summary"
     },
     "delay_summary": {
       "id": "delay_summary",
       "type": "delay",
-      "ms": 1000,
-      "nextNode": "action_prepare_checkout"
-    },
-    "action_prepare_checkout": {
-      "id": "action_prepare_checkout",
-      "type": "action",
-      "action": "prepareCheckout",
+      "ms": 800,
       "nextNode": "confirm_buttons"
     },
     "confirm_buttons": {
       "id": "confirm_buttons",
       "type": "buttons",
-      "body": "✅ Tudo certo! Bora criar esse envelope?\n\nPor *{{packagePrice}} via PIX* você recebe:\n\n💌 Envelope digital personalizado\n🔗 Link exclusivo para compartilhar\n📱 QR Code para surpreender na hora\n⏳ Fica no ar por *{{planLabel}}*",
+      "body": "Tá tudo certo? Posso criar agora! 🚀",
       "buttons": [
         {
-          "id": "pay",
-          "title": "💳 Gerar Pix",
-          "nextNode": "create_payment"
+          "id": "confirm",
+          "title": "Criar envelope",
+          "nextNode": "generating_envelope"
         },
         {
           "id": "edit",
@@ -376,49 +294,102 @@
         }
       ]
     },
-    "ask_what_to_edit": {
-      "id": "ask_what_to_edit",
+    "generating_envelope": {
+      "id": "generating_envelope",
+      "type": "typing",
+      "durationMs": 2000,
+      "action": "typing",
+      "nextNode": "generating_msg"
+    },
+    "generating_msg": {
+      "id": "generating_msg",
+      "type": "text",
+      "content": "Criando o seu envelope... ✨",
+      "nextNode": "deliver_envelope"
+    },
+    "deliver_envelope": {
+      "id": "deliver_envelope",
+      "type": "action",
+      "action": "deliverEnvelope",
+      "nextNode": "final_message"
+    },
+    "final_message": {
+      "id": "final_message",
+      "type": "text",
+      "content": "🎉 Pronto! Seu envelope está no ar!\n\nManda o link ou o QR Code pra pessoa — ela vai se surpreender! 🥹",
+      "nextNode": "delay_payment"
+    },
+    "delay_payment": {
+      "id": "delay_payment",
+      "type": "delay",
+      "ms": 4000,
+      "nextNode": "payment_pitch_1"
+    },
+    "payment_pitch_1": {
+      "id": "payment_pitch_1",
+      "type": "text",
+      "content": "Ah, uma coisinha antes de ir... 😊",
+      "nextNode": "delay_pitch_1"
+    },
+    "delay_pitch_1": {
+      "id": "delay_pitch_1",
+      "type": "delay",
+      "ms": 1000,
+      "nextNode": "payment_pitch_2"
+    },
+    "payment_pitch_2": {
+      "id": "payment_pitch_2",
+      "type": "text",
+      "content": "A gente entregou o envelope pra você ver antes porque acredita que quando algo é feito com carinho, a pessoa reconhece o valor 💌",
+      "nextNode": "delay_pitch_2"
+    },
+    "delay_pitch_2": {
+      "id": "delay_pitch_2",
+      "type": "delay",
+      "ms": 1200,
+      "nextNode": "payment_pitch_3_new"
+    },
+    "payment_buttons": {
+      "id": "payment_buttons",
       "type": "buttons",
-      "body": "✏️ *O que você quer editar no seu envelope?*\n\n📷 *Fotos* → trocar ou adicionar imagens\n💌 *Outros* → mensagem, destinatário, plano, música e mais",
+      "body": "Quando quiser confirmar, é só clicar aqui 👇",
       "buttons": [
         {
-          "id": "edit_photos",
-          "title": "📷 Fotos",
-          "nextNode": "ask_photos"
+          "id": "pay",
+          "title": "💳 Pagar R$19,90",
+          "nextNode": "create_payment"
         },
         {
-          "id": "edit_recipient",
-          "title": "💌 Outros",
-          "nextNode": "send_flow_template"
-        },
-        {
-          "id": "back_to_pix",
-          "title": "Voltar",
-          "nextNode": "show_summary"
+          "id": "skip",
+          "title": "Depois eu pago",
+          "nextNode": "skip_payment"
         }
       ]
     },
-    "ask_what_to_edit_2": {
-      "id": "ask_what_to_edit_2",
-      "type": "buttons",
-      "body": "O que você quer corrigir? (2/2)\n\nEscolha o que deseja alterar:",
-      "buttons": [
-        {
-          "id": "edit_message",
-          "title": "💬 Mensagem",
-          "nextNode": "ask_message"
-        },
-        {
-          "id": "edit_signature",
-          "title": "✍️ Assinatura",
-          "nextNode": "ask_signature"
-        },
-        {
-          "id": "edit_music_date",
-          "title": "🎵 Música / 📅 Data",
-          "nextNode": "ask_music"
-        }
-      ]
+    "skip_payment": {
+      "id": "skip_payment",
+      "type": "text",
+      "content": "Tudo bem! 😊 Seu envelope fica no ar por 14 dias.\n\nQualquer hora que quiser confirmar é só me chamar aqui! 💌",
+      "nextNode": "remarketing_payment"
+    },
+    "remarketing_payment": {
+      "id": "remarketing_payment",
+      "type": "remarketing",
+      "delayMs": 43200000,
+      "message": "Oi! 💌 Seu envelope ainda tá no ar esperando por você. Quando quiser confirmar os R$19,90 é só clicar aqui!",
+      "nextNodeAfterRemarketing": "payment_buttons"
+    },
+    "payment_pitch_3_new": {
+      "id": "payment_pitch_3_new",
+      "type": "text",
+      "content": "São só *R$19,90* — menos que um lanche — por uma memória que a pessoa vai guardar pra sempre 🥹",
+      "nextNode": "delay_pitch_3_new"
+    },
+    "delay_pitch_3_new": {
+      "id": "delay_pitch_3_new",
+      "type": "delay",
+      "ms": 1000,
+      "nextNode": "payment_buttons"
     },
     "create_payment": {
       "id": "create_payment",
@@ -429,7 +400,7 @@
     "send_payment_link": {
       "id": "send_payment_link",
       "type": "text",
-      "content": "💳 Ótimo! Vou te enviar o PIX agora:\n\n• Valor: *{{packagePrice}}*\n• Vencimento: ⏳ *30 minutos*\n• Após o pagamento: o envelope será criado e entregue *automaticamente* aqui ✅\n\n👇 Clique em *Copiar código* abaixo!",
+      "content": "Aqui está o PIX 👇\n\nValor: *R$19,90*\nVencimento: *30 minutos* ⏳",
       "nextNode": "send_code_pix"
     },
     "send_code_pix": {
@@ -446,36 +417,24 @@
       "id": "wait_payment",
       "type": "waitInput",
       "saveAs": "_paymentConfirmation",
-      "content": "⏳ Assim que o pagamento cair, o envelope é criado e entregue aqui na hora! 🚀\n\n_Qualquer dúvida, é só me chamar._",
+      "content": "⏳ Assim que cair eu te aviso! 🚀",
       "nextNode": "payment_pending_hold"
     },
     "payment_pending_hold": {
       "id": "payment_pending_hold",
       "type": "text",
-      "content": "Me dá um segundinho que estou verificando o pagamento... 🔍"
+      "content": "Verificando o pagamento... 🔍"
     },
-    "deliver_envelope": {
-      "id": "deliver_envelope",
-      "type": "action",
-      "action": "deliverEnvelope",
-      "nextNode": "final_message"
-    },
-    "final_message": {
-      "id": "final_message",
+    "payment_confirmed": {
+      "id": "payment_confirmed",
       "type": "text",
-      "content": "🎉 *Seu Envelope Digital está pronto!*\n\n💌 Acesse ou compartilhe pelo link acima!\n📱 O QR Code também foi enviado — é só apontar a câmera!\n\n_Quando a pessoa abrir, vai ver a mensagem, as fotos e ouvir a música de vocês._ 🥹",
-      "nextNode": "final_tip"
-    },
-    "final_tip": {
-      "id": "final_tip",
-      "type": "text",
-      "content": "💡 *Dica:* Imprima o QR Code em um bilhetinho, coloque dentro de um cartão físico ou mande por mensagem. A surpresa vai ser inesquecível! 🎁",
+      "content": "✅ Pagamento confirmado! Obrigado 💛\n\nSeu envelope vai ficar ativo por 14 dias. 🎉",
       "nextNode": "upsell_offer"
     },
     "upsell_offer": {
       "id": "upsell_offer",
       "type": "buttons",
-      "body": "💌 Quer criar outro envelope para uma ocasião diferente?\n\nAniversário, Dia dos Namorados, pedido de namoro... cada momento merece o seu! 🥰",
+      "body": "Quer criar outro envelope? 💌\n\nAniversário, namoro, pedido... cada momento merece o seu!",
       "buttons": [
         {
           "id": "yes_more",
@@ -489,17 +448,117 @@
         }
       ]
     },
+    "ask_what_to_edit": {
+      "id": "ask_what_to_edit",
+      "type": "buttons",
+      "body": "O que você quer editar?",
+      "buttons": [
+        {
+          "id": "edit_photos",
+          "title": "📷 Fotos",
+          "nextNode": "ask_which_photo"
+        },
+        {
+          "id": "edit_other",
+          "title": "💌 Outros dados",
+          "nextNode": "send_flow_template"
+        },
+        {
+          "id": "back_to_summary",
+          "title": "← Voltar",
+          "nextNode": "show_summary"
+        }
+      ]
+    },
+    "ask_which_photo": {
+      "id": "ask_which_photo",
+      "type": "action",
+      "action": "sendPhotoList",
+      "nextNode": "wait_which_photo"
+    },
+    "wait_which_photo": {
+      "id": "wait_which_photo",
+      "type": "waitInput",
+      "saveAs": "editPhotoIndex",
+      "content": "Digite o número da foto que quer trocar (1, 2 ou 3):",
+      "validation": {
+        "pattern": "^[1-3]$"
+      },
+      "nextNode": "route_photo_edit"
+    },
+    "route_photo_edit": {
+      "id": "route_photo_edit",
+      "type": "action",
+      "action": "routePhotoEdit",
+      "nextNode": null
+    },
+    "replace_photo_1": {
+      "id": "replace_photo_1",
+      "type": "waitPhoto",
+      "saveAs": "photo_1",
+      "content": "📸 Manda a nova foto 1:",
+      "nextNode": "photo_replace_received_1"
+    },
+    "photo_replace_received_1": {
+      "id": "photo_replace_received_1",
+      "type": "action",
+      "action": "savePhoto",
+      "nextNode": "photo_replaced_success"
+    },
+    "replace_photo_2": {
+      "id": "replace_photo_2",
+      "type": "waitPhoto",
+      "saveAs": "photo_2",
+      "content": "📸 Manda a nova foto 2:",
+      "nextNode": "photo_replace_received_2"
+    },
+    "photo_replace_received_2": {
+      "id": "photo_replace_received_2",
+      "type": "action",
+      "action": "savePhoto",
+      "nextNode": "photo_replaced_success"
+    },
+    "replace_photo_3": {
+      "id": "replace_photo_3",
+      "type": "waitPhoto",
+      "saveAs": "photo_3",
+      "content": "📸 Manda a nova foto 3:",
+      "nextNode": "photo_replace_received_3"
+    },
+    "photo_replace_received_3": {
+      "id": "photo_replace_received_3",
+      "type": "action",
+      "action": "savePhoto",
+      "nextNode": "photo_replaced_success"
+    },
+    "photo_replaced_success": {
+      "id": "photo_replaced_success",
+      "type": "buttons",
+      "body": "✅ Foto atualizada!",
+      "buttons": [
+        {
+          "id": "edit_more_photos",
+          "title": "📷 Trocar outra",
+          "nextNode": "ask_which_photo"
+        },
+        {
+          "id": "back_to_summary",
+          "title": "✅ Continuar",
+          "nextNode": "show_summary"
+        }
+      ]
+    },
     "soft_cancel": {
       "id": "soft_cancel",
       "type": "text",
-      "content": "Sem problema! 😊 Suas informações ficam guardadas aqui por um tempinho.\n\nQualquer hora que quiser criar o envelope, é só me chamar! 💌",
+      "content": "Tudo bem! 😊 Quando quiser criar, é só me chamar! 💌",
       "nextNode": "remarketing_setup"
     },
     "remarketing_setup": {
       "id": "remarketing_setup",
       "type": "remarketing",
       "delayMs": 82800000,
-      "message": "Oi! 👋 Ainda dá tempo de surpreender alguém especial com um Envelope Digital. É só me responder aqui que continuo de onde paramos! 💌",
+      "message": "Oi! 👋 Ainda dá tempo de surpreender alguém com um Envelope Digital. É só me responder aqui! 💌",
       "nextNodeAfterRemarketing": "end_node"
     },
     "end_node": {
