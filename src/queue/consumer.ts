@@ -366,7 +366,7 @@ async function processIncomingMessage(msg: ConsumeMessage | null): Promise<void>
             console.log("FLOW DATA:", JSON.stringify(data, null, 2));
 
             const planMap: Record<string, { days: number; price: number; label: string }> = {
-                plan_30: { days: 30, price: 14.90, label: "30 dias" },
+                plan_30: { days: 30, price: 19.90, label: "30 dias" },
                 plan_90: { days: 90, price: 29.90, label: "90 dias" },
             };
 

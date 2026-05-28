@@ -149,7 +149,7 @@
     "send_flow_template": {
       "id": "send_flow_template",
       "type": "template",
-      "name": "envelope_form",
+      "name": "envelope",
       "language": "pt_BR",
       "components": [
         {
