@@ -131,7 +131,7 @@
     "how_it_works": {
       "id": "how_it_works",
       "type": "text",
-      "content": "Simples assim 👇\n\n1️⃣ Você preenche as infos do envelope\n2️⃣ Envia até *3 fotos* de vocês\n3️⃣ Recebe o link + QR Code na hora 🎁\n4️⃣ Manda pra quem você ama 💌\n5️⃣ Depois é só pagar *R$19,90* — sem pressa!\n\n⏳ O envelope fica no ar por *14 dias*.",
+      "content": "Simples assim 👇\n\n1️⃣ Você preenche as infos do envelope\n2️⃣ Envia até *3 fotos* de vocês\n3️⃣ Recebe o link + QR Code na hora 🎁\n4️⃣ Manda pra quem você ama 💌\n5️⃣ Depois é só pagar *R$19,90* (enviamos antes, você paga depois que receber o envelope) — sem pressa!\n\n⏳ O envelope fica no ar por *14 dias*.",
       "nextNode": "delay_how"
     },
     "delay_how": {
@@ -182,10 +182,33 @@
     },
     "ask_photos": {
       "id": "ask_photos",
-      "type": "text",
-      "saveAs": "photo_1",
-      "content": "📸 *Passo 1 de 3 — Fotos*\n\nMe envia as fotos especiais de vocês!\n\n• Mínimo: *1 foto*\n• Máximo: *3 fotos*",
-      "nextNode": "info_photos"
+      "type": "waitPhotos",
+      "maxPhotos": 3,
+      "debounceMs": 10000,
+      "content": "📸 Me manda as fotos de vocês! (até 3 fotos)\n\nMande todas e depois clique em *Enviei todas!* 👇",
+      "nextNode": "photos_confirm"
+    },
+    "photos_confirm": {
+      "id": "photos_confirm",
+      "type": "buttons",
+      "body": "Muito bem! Quer adicionar mais foto? Ou talvez editar? \n\n*É só escolher alguma opção abaixo:*",
+      "buttons": [
+        {
+          "id": "done_photos",
+          "title": "✅ Enviei todas!",
+          "nextNode": "show_summary"
+        },
+        {
+          "id": "add_more_photos",
+          "title": "Adicionar mais",
+          "nextNode": "ask_photos"
+        },
+        {
+          "id": "fix_photos",
+          "title": "Mudar Fotos",
+          "nextNode": "ask_which_photo"
+        }
+      ]
     },
     "info_photos": {
       "id": "info_photos",
@@ -544,7 +567,7 @@
         {
           "id": "back_to_summary",
           "title": "✅ Continuar",
-          "nextNode": "show_summary"
+          "nextNode": "photos_confirm"
         }
       ]
     },

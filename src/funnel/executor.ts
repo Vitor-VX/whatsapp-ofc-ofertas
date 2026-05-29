@@ -92,6 +92,7 @@ export class FunnelExecutor {
                 return await this.executeList(node);
             case 'waitInput':
                 return await this.executeWaitInput(node);
+            case 'waitPhotos':
             case 'waitPhoto':
                 return await this.executeWaitPhoto(node);
             case 'action':
@@ -173,12 +174,12 @@ export class FunnelExecutor {
 
     private async executeTemplates(node: any): Promise<string | null> {
         const templateName = node.name;
-        const components = node.components || []; 
+        const components = node.components || [];
         const language = node.language || "pt_BR";
 
         console.log(components);
         console.log(templateName);
-        
+
 
         try {
             await this.context.whatsappService.sendTemplate(

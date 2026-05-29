@@ -22,6 +22,13 @@ export interface PixNode extends BaseNode {
     code: string;
 }
 
+export interface WaitPhotosNode extends BaseNode {
+    type: 'waitPhotos';
+    content: string;
+    maxPhotos: number;
+    debounceMs: number;
+}
+
 export interface CardsNode extends BaseNode {
     type: 'cards';
     content: string;
@@ -155,6 +162,7 @@ export type FunnelNode =
     | PixNode
     | TemplateNode
     | CardsNode
+    | WaitPhotosNode
     | EndNode;
 
 export interface Funnel {
@@ -205,6 +213,10 @@ export function isWaitPhotoNode(node: FunnelNode): node is WaitPhotoNode {
     return node.type === 'waitPhoto';
 }
 
+export function isWaitPhotosNode(node: FunnelNode): node is WaitPhotoNode {
+    return node.type === 'waitPhotos';
+}
+
 export function isActionNode(node: FunnelNode): node is ActionNode {
     return node.type === 'action';
 }
@@ -218,7 +230,7 @@ export function isEndNode(node: FunnelNode): node is EndNode {
 }
 
 export function isWaitingNode(node: FunnelNode): node is WaitInputNode | WaitPhotoNode {
-    return isWaitInputNode(node) || isWaitPhotoNode(node);
+    return isWaitInputNode(node) || isWaitPhotoNode(node) || isWaitPhotosNode(node);
 }
 
 export function isSequentialNode(node: FunnelNode): boolean {

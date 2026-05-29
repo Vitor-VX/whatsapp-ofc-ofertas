@@ -19,8 +19,10 @@ import { mercadoPagoService } from '../services/mercadoPago';
 import { envelopeService } from '../services/envelope';
 import { isYouTubeUrl } from '../utils/isValidYoutube';
 
+const photoDebounceMap = new Map<string, NodeJS.Timeout>();
+
 function getPhotoIndexFromNodeId(nodeId: string): number {
-    const match = nodeId.match(/photo_received_(\d+)/);
+    const match = nodeId.match(/photo_(?:replace_)?received_(\d+)/);
     if (!match) return 0;
     const index = parseInt(match[1], 10);
     return index >= 1 && index <= 5 ? index : 0;
@@ -71,28 +73,35 @@ export function initializeActionHandlers(): void {
         if (!freshUser) return;
 
         const data = freshUser.collectedData as Map<string, string>;
+        let sentAny = false;
 
-        const lines: string[] = ["📷 *Suas fotos enviadas:*\n"];
         for (let i = 1; i <= 3; i++) {
             const url = data.get(`photo_${i}`);
+
             if (url && url.startsWith("http")) {
-                lines.push(`*${i}* — Foto ${i} ✅`);
+                sentAny = true;
+
+                await whatsappService.sendMessage(user.whatsappId, {
+                    type: "image",
+                    image: {
+                        link: url
+                    },
+                    caption: `📷 Foto ${i} recebida ✅`
+                });
             }
         }
 
-        if (lines.length === 1) {
+        if (!sentAny) {
             await whatsappService.sendMessage(user.whatsappId, {
                 type: "text",
                 body: "📸 Você ainda não enviou nenhuma foto.",
             });
-            await User.updateOne({ _id: user._id }, { $set: { currentNodeId: "info_photos" } });
-            return;
-        }
 
-        await whatsappService.sendMessage(user.whatsappId, {
-            type: "text",
-            body: lines.join("\n"),
-        });
+            await User.updateOne(
+                { _id: user._id },
+                { $set: { currentNodeId: "info_photos" } }
+            );
+        }
     });
 
     // ─────────────────────────────────────────────────────────────────────────────
@@ -434,6 +443,78 @@ async function processIncomingMessage(msg: ConsumeMessage | null): Promise<void>
                     );
                     return;
                 }
+            }
+
+            if (currentNode.type === 'waitPhotos') {
+                if (image?.id) {
+                    const freshUser = await User.findById(user._id);
+                    const data = freshUser?.collectedData as Map<string, string>;
+
+                    let nextSlot = 1;
+                    for (let i = 1; i <= (currentNode.maxPhotos ?? 3); i++) {
+                        if (data?.get(`photo_${i}`)?.startsWith('http')) {
+                            nextSlot = i + 1;
+                        }
+                    }
+
+                    const max = currentNode.maxPhotos ?? 3;
+                    if (nextSlot > max) {
+                        await whatsappService.sendMessage(phoneNumber, {
+                            type: 'text',
+                            body: `Todas as fotos já foram recebidas..`,
+                        });
+
+                        await User.updateOne({ _id: user._id }, { currentNodeId: currentNode.nextNode });
+                        await executeNodeSequence(freshUser!, funnelEngine, messageId, true);
+                        return;
+                    }
+
+                    // Faz upload e salva
+                    await processPhotoUpload(user._id, phoneNumber, nextSlot, image.id);
+
+                    if (nextSlot === max) {
+                        // Atingiu o limite — avança automaticamente pro confirm
+                        const pending = photoDebounceMap.get(phoneNumber);
+                        if (pending) { clearTimeout(pending); photoDebounceMap.delete(phoneNumber); }
+
+                        await whatsappService.sendMessage(phoneNumber, {
+                            type: 'text',
+                            body: `✅ ${max} fotos recebidas!`,
+                        });
+                        await User.updateOne({ _id: user._id }, { currentNodeId: currentNode.nextNode });
+                        const u = await User.findById(user._id);
+                        await executeNodeSequence(u!, funnelEngine, messageId, true);
+                    } else {
+                        // Ainda pode receber mais — confirma recebimento e (re)inicia debounce
+                        await whatsappService.sendMessage(phoneNumber, {
+                            type: 'text',
+                            body: `✅ Foto ${nextSlot} recebida! Manda mais ou aguarde para confirmar.`,
+                        });
+
+                        const pending = photoDebounceMap.get(phoneNumber);
+                        if (pending) clearTimeout(pending);
+
+                        const timeout = setTimeout(async () => {
+                            photoDebounceMap.delete(phoneNumber);
+                            const u = await User.findOne({ whatsappId: phoneNumber });
+                            if (u && u.currentNodeId === currentNode.id) {
+                                await User.updateOne({ _id: u._id }, { currentNodeId: currentNode.nextNode });
+                                const fresh = await User.findById(u._id);
+                                await executeNodeSequence(fresh!, funnelEngine, messageId, true);
+                            }
+                        }, currentNode.debounceMs ?? 5000);
+
+                        photoDebounceMap.set(phoneNumber, timeout);
+                    }
+                } else {
+                    // Mandou texto/outro — relembra o que espera
+                    await whatsappService.sendMessage(phoneNumber, {
+                        type: 'text',
+                        body: currentNode.content ?? '📸 Por favor, envie as fotos!',
+                    });
+                }
+
+                return;
             }
 
             if (isWaitingNode(currentNode)) {
