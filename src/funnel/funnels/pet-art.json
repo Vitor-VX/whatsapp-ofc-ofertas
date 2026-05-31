@@ -73,7 +73,7 @@
     "msg_6": {
       "id": "msg_6",
       "type": "text",
-      "content": "A gente entrega o envelope pra você *antes* 🎁",
+      "content": "A gente entrega o envelope pra você *antes* 🎁\n\nE só depois você fazer uma *contribuição* de R$19,90 via PIX 🙏",
       "nextNode": "delay_6"
     },
     "delay_6": {
@@ -84,8 +84,8 @@
     },
     "msg_7": {
       "id": "msg_7",
-      "type": "text",
-      "content": "Você vê como ficou, manda pra pessoa... e só depois faz o pagamento de *R$19,90* 😊",
+      "type": "audio",
+      "url": "https://files.botsync.site/mkt-guerrilha/audio_dalva_01.opus",
       "nextNode": "delay_7"
     },
     "delay_7": {
@@ -114,7 +114,7 @@
         {
           "id": "yes",
           "title": "Sim, quero criar! 💌",
-          "nextNode": "start_flow_message"
+          "nextNode": "confirm_payment_button"
         },
         {
           "id": "more_info",
@@ -128,10 +128,27 @@
         }
       ]
     },
+    "confirm_payment_button": {
+      "id": "desire_buttons",
+      "type": "buttons",
+      "body": "Perfeito 🙌\nComo eu te falei, eu te envio tudo antes…\nE depois você faz só a *contribuição de R$19,90 no PIX* pra apoiar meu trabalho 😊\nFechado assim?",
+      "buttons": [
+        {
+          "id": "yes",
+          "title": "Pode enviar! 💌",
+          "nextNode": "start_flow_message"
+        },
+        {
+          "id": "no",
+          "title": "É melhor não 👍",
+          "nextNode": "remarketing_setup"
+        }
+      ]
+    },
     "how_it_works": {
       "id": "how_it_works",
       "type": "text",
-      "content": "Simples assim 👇\n\n1️⃣ Você preenche as infos do envelope\n2️⃣ Envia até *3 fotos* de vocês\n3️⃣ Recebe o link + QR Code na hora 🎁\n4️⃣ Manda pra quem você ama 💌\n5️⃣ Depois é só pagar *R$19,90* (enviamos antes, você paga depois que receber o envelope) — sem pressa!\n\n⏳ O envelope fica no ar por *14 dias*.",
+      "content": "Simples assim 👇\n\n1️⃣ Você preenche as infos do envelope\n2️⃣ Envia até *3 fotos* de vocês\n3️⃣ Recebe o link + QR Code na hora 🎁\n4️⃣ Manda pra quem você ama 💌\n5️⃣ Depois é só pagar *R$19,90* (enviamos antes, você paga depois que receber o envelope)!\n\n⏳ O envelope fica no ar por *14 dias*.",
       "nextNode": "delay_how"
     },
     "delay_how": {

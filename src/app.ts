@@ -10,6 +10,8 @@ import mercadoRoutes from './routes/mercadopago';
 import productRoutes from './routes/products';
 import { errorHandler } from './middleware/errorHandler';
 import cors from "cors";
+import { envelopeService } from './services/envelope';
+import { r2Cloudflare } from './utils/uploadCloudflare';
 
 const app: Express = express();
 const env = getEnv();
