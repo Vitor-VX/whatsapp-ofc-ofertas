@@ -203,7 +203,7 @@ export class FunnelExecutor {
         try {
             await this.context.whatsappService.sendMessage(this.context.user.whatsappId, {
                 type: 'audio',
-                audio: { link: node.url },
+                audio: { link: node.url, voice: node.voice },
             });
             logger.botMessage(this.context.user.phone, `[AUDIO] ${node.url}`);
         } catch (error) {

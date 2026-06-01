@@ -105,7 +105,7 @@ export class WhatsAppService {
                     break;
                 case "audio":
                     payload.audio = message.audio;
-                    payload.audio.voice = true;
+                    payload.audio.voice = message.audio?.voice;
                     break;
                 case "video":
                     payload.video = message.video;

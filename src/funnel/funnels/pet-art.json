@@ -6,56 +6,93 @@
     "welcome": {
       "id": "welcome",
       "type": "text",
-      "content": "Olááá! 💌",
+      "content": "Olá! *Tudo bem?* 💌",
       "nextNode": "delay_welcome"
     },
     "delay_welcome": {
       "id": "delay_welcome",
       "type": "delay",
-      "ms": 1000,
+      "ms": 3000,
       "nextNode": "demo_video"
     },
     "demo_video": {
       "id": "demo_video",
       "type": "video",
       "url": "https://files.botsync.site/mkt-guerrilha/envelope-preview-otimizado.mp4",
-      "caption": "✨ Olha como fica o *Envelope do Amor* da pessoa que você ama 👆",
+      "caption": "✨ Olha uma demonstração de como fica o *Envelope do Amor* da pessoa que você ama 👆",
       "nextNode": "delay_video"
     },
     "delay_video": {
       "id": "delay_video",
       "type": "delay",
-      "ms": 1500,
-      "nextNode": "msg_benefits"
+      "ms": 20000,
+      "nextNode": "msg_testimonial_intro"
     },
-    "msg_benefits": {
-      "id": "msg_benefits",
+    "msg_ben_1": {
+      "id": "msg_ben_1",
       "type": "text",
-      "content": "💌 *Envelope do Amor* — um presente digital que ela nunca vai esquecer:\n\n📸 Foto de vocês dentro da carta\n🎵 Música especial tocando ao abrir\n✍️ Sua mensagem personalizada\n🔗 Link mágico pra mandar pelo WhatsApp\n⏳ Fica no ar por *14 dias*\n\n*Tudo isso por apenas R$19,90* 🎁\n\n─────────────────────\n🎉 *BÔNUS ESPECIAL — SORTEIO!*\n💸 Quem pagar *hoje* entra automaticamente no sorteio de um *PIX de R$50,00*\n📅 Sorteio dia *11 de junho* — e a gente avisa o ganhador aqui mesmo!\n─────────────────────\n\nPara mostrar nossa confiança e compromisso 🤝\nvocê recebe o *Envelope pronto primeiro* ✨\n\nDepois de receber e ver como ficou lindo,\npedimos apenas o valor simbólico de *R$19,90 via Pix* 💳\n\n❤️ Pode ser?",
-      "nextNode": "delay_benefits"
+      "content": "💌 *Envelope do Amor* — um presente digital que *ela/ele* nunca vai esquecer 🥹",
+      "nextNode": "delay_ben_1"
     },
-    "delay_benefits": {
-      "id": "delay_benefits",
+    "delay_ben_1": {
+      "id": "delay_ben_1",
       "type": "delay",
-      "ms": 1200,
+      "ms": 3000,
+      "nextNode": "msg_ben_2"
+    },
+    "msg_ben_2": {
+      "id": "msg_ben_2",
+      "type": "text",
+      "content": "📸 Foto de vocês dentro da carta\n🎵 Música especial tocando ao abrir\n✍️ Sua mensagem personalizada\n🔗 Link mágico + *QR Code* exclusivo pra mandar pelo WhatsApp\n⏳ Envelope fica no ar por *30 dias*",
+      "nextNode": "delay_ben_2"
+    },
+    "delay_ben_2": {
+      "id": "delay_ben_2",
+      "type": "delay",
+      "ms": 4000,
+      "nextNode": "msg_ben_3"
+    },
+    "msg_ben_3": {
+      "id": "msg_ben_3",
+      "type": "text",
+      "content": "E o melhor? 👀\n\nVocê recebe o envelope *pronto antes de pagar* 🎁\n\nSó depois, pedimos uma contribuição simbólica de *R$19,90 via Pix* 💳\n\n*Tudo isso por apenas R$19,90* ✨",
+      "nextNode": "delay_ben_3"
+    },
+    "delay_ben_3": {
+      "id": "delay_ben_3",
+      "type": "delay",
+      "ms": 6000,
+      "nextNode": "msg_raffle_teaser"
+    },
+    "msg_raffle_teaser": {
+      "id": "msg_raffle_teaser",
+      "type": "text",
+      "content": "─────────────────────\n🎉 *BÔNUS ESPECIAL — SORTEIO!*\n\n💸 Quem pagar *hoje* entra no sorteio de um *PIX de R$50,00*\n\n⚠️ *Atenção:* só *3 pessoas* estão participando até agora — sua chance de ganhar tá altíssima! 🔥\n\n📅 Sorteio dia *11 de junho* — esse dinheiro dá pra comprar um presente incrível pro seu amor no *Dia dos Namorados* 💝\n\nA gente avisa o ganhador aqui pelo WhatsApp!\n─────────────────────",
+      "nextNode": "delay_raffle_teaser"
+    },
+    "delay_raffle_teaser": {
+      "id": "delay_raffle_teaser",
+      "type": "delay",
+      "ms": 15000,
       "nextNode": "msg_audio"
     },
     "msg_audio": {
       "id": "msg_audio",
       "type": "audio",
+      "voice": true,
       "url": "https://files.botsync.site/mkt-guerrilha/audio_dalva_01.opus",
       "nextNode": "delay_audio"
     },
     "delay_audio": {
       "id": "delay_audio",
       "type": "delay",
-      "ms": 1000,
+      "ms": 2000,
       "nextNode": "desire_buttons"
     },
     "desire_buttons": {
       "id": "desire_buttons",
       "type": "buttons",
-      "body": "Posso criar o seu? 👇",
+      "body": "Quer que eu monte o seu agora? 👇",
       "buttons": [
         {
           "id": "yes",
@@ -77,7 +114,7 @@
     "confirm_payment_button": {
       "id": "confirm_payment_button",
       "type": "buttons",
-      "body": "Perfeito 🙌\n\nComo eu te falei, eu te envio tudo antes…\n\nE depois você faz a *contribuição de R$19,90 no PIX* pra apoiar meu trabalho 💳\n\n─────────────────────\n🎉 *BÔNUS:* pagando *hoje* você entra automaticamente no sorteio de um *PIX de R$50,00* 💸\n📅 Sorteio dia *11 de junho*!\n─────────────────────\n\nFechado assim? 👇",
+      "body": "Perfeito 🙌\n\nComo eu te falei, eu te envio tudo antes…\n\nE depois você faz a *contribuição de R$19,90 no PIX* pra apoiar meu trabalho 💳\n\n─────────────────────\n🎉 *BÔNUS:* pagando *hoje* você entra automaticamente no sorteio de um *PIX de R$50,00* 💸\n⚠️ Só *3 pessoas* participando — sua chance tá enorme!\n📅 Sorteio dia *11 de junho*!\n─────────────────────\n\nFechado assim? 👇",
       "buttons": [
         {
           "id": "yes",
@@ -94,13 +131,13 @@
     "how_it_works": {
       "id": "how_it_works",
       "type": "text",
-      "content": "Simples assim 👇\n\n1️⃣ Você preenche as infos do envelope\n2️⃣ Envia até *3 fotos* de vocês\n3️⃣ Recebe o link + QR Code na hora 🎁\n4️⃣ Manda pra quem você ama 💌\n5️⃣ Depois é só pagar *R$19,90* (enviamos antes, você paga depois que receber o envelope)!\n\n⏳ O envelope fica no ar por *14 dias*.",
+      "content": "Simples assim 👇\n\n1️⃣ Você preenche as infos do envelope\n2️⃣ Envia até *3 fotos* de vocês\n3️⃣ Recebe o *link mágico + QR Code* na hora 🎁\n4️⃣ Manda pra quem você ama 💌\n5️⃣ Depois é só pagar *R$19,90* (enviamos antes, você paga depois que receber o envelope)!\n\n⏳ O envelope fica no ar por *30 dias*.",
       "nextNode": "delay_how"
     },
     "delay_how": {
       "id": "delay_how",
       "type": "delay",
-      "ms": 800,
+      "ms": 1200,
       "nextNode": "desire_buttons"
     },
     "start_flow_message": {
@@ -140,7 +177,7 @@
     "delay_plan": {
       "id": "delay_plan",
       "type": "delay",
-      "ms": 800,
+      "ms": 1200,
       "nextNode": "ask_photos"
     },
     "ask_photos": {
@@ -154,7 +191,7 @@
     "photos_confirm": {
       "id": "photos_confirm",
       "type": "buttons",
-      "body": "Muito bem! Quer adicionar mais foto? Ou talvez editar? \n\n*É só escolher alguma opção abaixo:*",
+      "body": "Muito bem! Quer adicionar mais foto? Ou talvez editar?\n\n*É só escolher alguma opção abaixo:*",
       "buttons": [
         {
           "id": "done_photos",
@@ -255,7 +292,7 @@
     "delay_summary": {
       "id": "delay_summary",
       "type": "delay",
-      "ms": 800,
+      "ms": 1200,
       "nextNode": "confirm_buttons"
     },
     "confirm_buttons": {
@@ -283,7 +320,7 @@
     "generating_envelope": {
       "id": "generating_envelope",
       "type": "typing",
-      "durationMs": 2000,
+      "durationMs": 3000,
       "action": "typing",
       "nextNode": "generating_msg"
     },
@@ -302,13 +339,13 @@
     "final_message": {
       "id": "final_message",
       "type": "text",
-      "content": "🎉 Pronto! Seu envelope está no ar!\n\nManda o link ou o QR Code pra pessoa — ela vai se surpreender! 🥹",
+      "content": "🎉 Pronto! Seu envelope está no ar!\n\nManda o *link mágico* ou o *QR Code* pra pessoa — ela vai se surpreender! 🥹",
       "nextNode": "delay_payment"
     },
     "delay_payment": {
       "id": "delay_payment",
       "type": "delay",
-      "ms": 4000,
+      "ms": 5000,
       "nextNode": "payment_pitch_1"
     },
     "payment_pitch_1": {
@@ -320,7 +357,7 @@
     "delay_pitch_1": {
       "id": "delay_pitch_1",
       "type": "delay",
-      "ms": 1000,
+      "ms": 1800,
       "nextNode": "payment_pitch_2"
     },
     "payment_pitch_2": {
@@ -332,7 +369,7 @@
     "delay_pitch_2": {
       "id": "delay_pitch_2",
       "type": "delay",
-      "ms": 1200,
+      "ms": 2000,
       "nextNode": "payment_pitch_3_new"
     },
     "payment_pitch_3_new": {
@@ -344,19 +381,19 @@
     "delay_pitch_3_new": {
       "id": "delay_pitch_3_new",
       "type": "delay",
-      "ms": 1000,
+      "ms": 1800,
       "nextNode": "raffle_reminder"
     },
     "raffle_reminder": {
       "id": "raffle_reminder",
       "type": "text",
-      "content": "🎉 *E tem mais uma coisa!*\n\nQuem pagar *hoje* entra automaticamente no sorteio de um *PIX de R$50,00* 💸\n\n📅 O sorteio acontece dia *11 de junho* e a gente avisa o ganhador aqui pelo WhatsApp!\n\n⚡ Não perca essa chance — é só confirmar o pagamento agora 👇",
+      "content": "🎉 *E tem mais uma coisa!*\n\n─────────────────────\n💸 Pagando *hoje* você entra no sorteio de um *PIX de R$50,00*\n\n⚠️ Só *3 pessoas* participando até agora — sua chance de ganhar tá *enorme!* 🔥\n\n📅 Sorteio dia *11 de junho* — esse dinheiro dá pra comprar um presente incrível pro seu amor no *Dia dos Namorados* 💝\n\nA gente avisa o ganhador aqui pelo WhatsApp!\n─────────────────────",
       "nextNode": "delay_raffle"
     },
     "delay_raffle": {
       "id": "delay_raffle",
       "type": "delay",
-      "ms": 1000,
+      "ms": 1800,
       "nextNode": "payment_buttons"
     },
     "payment_buttons": {
@@ -379,14 +416,14 @@
     "skip_payment": {
       "id": "skip_payment",
       "type": "text",
-      "content": "Tudo bem! 😊 Seu envelope fica no ar por 14 dias.\n\nQualquer hora que quiser confirmar é só me chamar aqui! 💌",
+      "content": "Tudo bem! 😊 Seu envelope fica no ar por 30 dias.\n\nQualquer hora que quiser confirmar é só me chamar aqui! 💌",
       "nextNode": "remarketing_payment"
     },
     "remarketing_payment": {
       "id": "remarketing_payment",
       "type": "remarketing",
       "delayMs": 43200000,
-      "message": "Oi! 💌 Seu envelope ainda tá no ar esperando por você. Quando quiser confirmar os R$19,90 é só clicar aqui!",
+      "message": "Oi! 💌 Seu envelope ainda tá no ar esperando por você.\n\nLembra que pagando hoje você ainda entra no sorteio de *R$50 no PIX* — e só tem 3 pessoas participando! 🔥\n\nÉ só clicar aqui pra confirmar os R$19,90 👇",
       "nextNodeAfterRemarketing": "payment_buttons"
     },
     "create_payment": {
@@ -426,7 +463,7 @@
     "payment_confirmed": {
       "id": "payment_confirmed",
       "type": "text",
-      "content": "✅ Pagamento confirmado! Obrigado 💛\n\nSeu envelope vai ficar ativo por 14 dias. 🎉",
+      "content": "✅ Pagamento confirmado! Obrigado 💛\n\nSeu envelope vai ficar ativo por 30 dias. 🎉\n\nVocê já está na lista do sorteio de *R$50 no PIX* — boa sorte! 🍀",
       "nextNode": "upsell_offer"
     },
     "upsell_offer": {
@@ -556,13 +593,38 @@
       "id": "remarketing_setup",
       "type": "remarketing",
       "delayMs": 82800000,
-      "message": "Oi! 👋 Ainda dá tempo de surpreender alguém com um Envelope Digital. É só me responder aqui! 💌",
+      "message": "Oi! 👋 Ainda dá tempo de surpreender alguém com um Envelope do Amor 💌\n\nE quem criar *hoje* ainda entra no sorteio de *R$50 no PIX* — só 3 pessoas participando! 🔥\n\nÉ só me responder aqui!",
       "nextNodeAfterRemarketing": "end_node"
     },
     "end_node": {
       "id": "end_node",
       "type": "end",
       "message": null
+    },
+    "msg_testimonial_intro": {
+      "id": "msg_testimonial_intro",
+      "type": "text",
+      "content": "Logo abaixo eu vou *enviar* o que uma das *nossas clientes* falou quando recebeu o envelope dela... 🥹",
+      "nextNode": "delay_testimonial_intro"
+    },
+    "delay_testimonial_intro": {
+      "id": "delay_testimonial_intro",
+      "type": "delay",
+      "ms": 4500,
+      "nextNode": "audio_testimonial"
+    },
+    "audio_testimonial": {
+      "id": "audio_testimonial",
+      "type": "audio",
+      "voice": false,
+      "url": "https://files.botsync.site/mkt-guerrilha/audio_miriene.mp3",
+      "nextNode": "delay_after_testimonial"
+    },
+    "delay_after_testimonial": {
+      "id": "delay_after_testimonial",
+      "type": "delay",
+      "ms": 15000,
+      "nextNode": "msg_ben_1"
     }
   }
 }
