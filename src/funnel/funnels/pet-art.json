@@ -1,155 +1,48 @@
 {
-  "id": "envelope-digital-br",
-  "name": "Envelope Digital",
+  "id": "musica-personalizada-br",
+  "name": "Música Personalizada",
   "startNode": "welcome",
   "nodes": {
     "welcome": {
       "id": "welcome",
       "type": "text",
-      "content": "Olá! *Tudo bem?* 💌",
+      "content": "Oi! 😊 Tudo bem?",
       "nextNode": "delay_welcome"
     },
     "delay_welcome": {
       "id": "delay_welcome",
       "type": "delay",
-      "ms": 3000,
-      "nextNode": "demo_video"
-    },
-    "demo_video": {
-      "id": "demo_video",
-      "type": "video",
-      "url": "https://files.botsync.site/mkt-guerrilha/envelope-preview-otimizado.mp4",
-      "caption": "✨ Olha uma demonstração de como fica o *Envelope do Amor* da pessoa que você ama 👆",
-      "nextNode": "delay_video"
-    },
-    "delay_video": {
-      "id": "delay_video",
-      "type": "delay",
-      "ms": 20000,
-      "nextNode": "msg_testimonial_intro"
-    },
-    "msg_ben_1": {
-      "id": "msg_ben_1",
-      "type": "text",
-      "content": "💌 *Envelope do Amor* — um presente digital que *ela/ele* nunca vai esquecer 🥹",
-      "nextNode": "delay_ben_1"
-    },
-    "delay_ben_1": {
-      "id": "delay_ben_1",
-      "type": "delay",
-      "ms": 3000,
-      "nextNode": "msg_ben_2"
-    },
-    "msg_ben_2": {
-      "id": "msg_ben_2",
-      "type": "text",
-      "content": "📸 Foto de vocês dentro da carta\n🎵 Música especial tocando ao abrir\n✍️ Sua mensagem personalizada\n🔗 Link mágico + *QR Code* exclusivo pra mandar pelo WhatsApp\n⏳ Envelope fica no ar por *30 dias*",
-      "nextNode": "delay_ben_2"
-    },
-    "delay_ben_2": {
-      "id": "delay_ben_2",
-      "type": "delay",
-      "ms": 4000,
-      "nextNode": "msg_ben_3"
-    },
-    "msg_ben_3": {
-      "id": "msg_ben_3",
-      "type": "text",
-      "content": "E o melhor? 👀\n\nVocê recebe o envelope *pronto antes de pagar* 🎁\n\nSó depois, pedimos uma contribuição simbólica de *R$19,90 via Pix* 💳\n\n*Tudo isso por apenas R$19,90* ✨",
-      "nextNode": "delay_ben_3"
-    },
-    "delay_ben_3": {
-      "id": "delay_ben_3",
-      "type": "delay",
-      "ms": 6000,
-      "nextNode": "msg_raffle_teaser"
-    },
-    "msg_raffle_teaser": {
-      "id": "msg_raffle_teaser",
-      "type": "text",
-      "content": "─────────────────────\n🎉 *BÔNUS ESPECIAL — SORTEIO!*\n\n💸 Quem pagar *hoje* entra no sorteio de um *PIX de R$50,00*\n\n⚠️ *Atenção:* só *3 pessoas* estão participando até agora — sua chance de ganhar tá altíssima! 🔥\n\n📅 Sorteio dia *11 de junho* — esse dinheiro dá pra comprar um presente incrível pro seu amor no *Dia dos Namorados* 💝\n\nA gente avisa o ganhador aqui pelo WhatsApp!\n─────────────────────",
-      "nextNode": "delay_raffle_teaser"
-    },
-    "delay_raffle_teaser": {
-      "id": "delay_raffle_teaser",
-      "type": "delay",
-      "ms": 15000,
-      "nextNode": "msg_audio"
-    },
-    "msg_audio": {
-      "id": "msg_audio",
-      "type": "audio",
-      "voice": true,
-      "url": "https://files.botsync.site/mkt-guerrilha/audio_dalva_01.opus",
-      "nextNode": "delay_audio"
-    },
-    "delay_audio": {
-      "id": "delay_audio",
-      "type": "delay",
       "ms": 2000,
-      "nextNode": "desire_buttons"
+      "nextNode": "intro_message"
     },
-    "desire_buttons": {
-      "id": "desire_buttons",
-      "type": "buttons",
-      "body": "Quer que eu monte o seu agora? 👇",
-      "buttons": [
-        {
-          "id": "yes",
-          "title": "Sim, criar! 💌",
-          "nextNode": "confirm_payment_button"
-        },
-        {
-          "id": "more_info",
-          "title": "Como funciona? 🤔",
-          "nextNode": "how_it_works"
-        },
-        {
-          "id": "no",
-          "title": "Agora não 👋",
-          "nextNode": "remarketing_setup"
-        }
-      ]
-    },
-    "confirm_payment_button": {
-      "id": "confirm_payment_button",
-      "type": "buttons",
-      "body": "Perfeito 🙌\n\nComo eu te falei, eu te envio tudo antes…\n\nE depois você faz a *contribuição de R$19,90 no PIX* pra apoiar meu trabalho 💳\n\n─────────────────────\n🎉 *BÔNUS:* pagando *hoje* você entra automaticamente no sorteio de um *PIX de R$50,00* 💸\n⚠️ Só *3 pessoas* participando — sua chance tá enorme!\n📅 Sorteio dia *11 de junho*!\n─────────────────────\n\nFechado assim? 👇",
-      "buttons": [
-        {
-          "id": "yes",
-          "title": "Pode enviar! 💌",
-          "nextNode": "start_flow_message"
-        },
-        {
-          "id": "no",
-          "title": "É melhor não 👍",
-          "nextNode": "remarketing_setup"
-        }
-      ]
-    },
-    "how_it_works": {
-      "id": "how_it_works",
+    "intro_message": {
+      "id": "intro_message",
       "type": "text",
-      "content": "Simples assim 👇\n\n1️⃣ Você preenche as infos do envelope\n2️⃣ Envia até *3 fotos* de vocês\n3️⃣ Recebe o *link mágico + QR Code* na hora 🎁\n4️⃣ Manda pra quem você ama 💌\n5️⃣ Depois é só pagar *R$19,90* (enviamos antes, você paga depois que receber o envelope)!\n\n⏳ O envelope fica no ar por *30 dias*.",
-      "nextNode": "delay_how"
+      "content": "🎵 Aqui a gente cria uma *música personalizada* pra você homenagear alguém especial — namorada(o), esposa(o), amigo, mãe, quem for! 🥹",
+      "nextNode": "delay_intro"
     },
-    "delay_how": {
-      "id": "delay_how",
+    "delay_intro": {
+      "id": "delay_intro",
       "type": "delay",
-      "ms": 1200,
-      "nextNode": "desire_buttons"
+      "ms": 3000,
+      "nextNode": "explain_flow"
     },
-    "start_flow_message": {
-      "id": "start_flow_message",
+    "explain_flow": {
+      "id": "explain_flow",
       "type": "text",
-      "content": "Boa! 🥳 Agora é só preencher as informações do envelope 👇",
+      "content": "Pra criar a sua música, preciso que você preencha algumas informações rapidinho 👇\n\nVou te mandar um formulário aqui mesmo no WhatsApp, é só clicar e preencher! ✍️",
+      "nextNode": "delay_explain"
+    },
+    "delay_explain": {
+      "id": "delay_explain",
+      "type": "delay",
+      "ms": 1500,
       "nextNode": "send_flow_template"
     },
     "send_flow_template": {
       "id": "send_flow_template",
       "type": "template",
-      "name": "envelope",
+      "name": "send_flow_template",
       "language": "pt_BR",
       "components": [
         {
@@ -166,265 +59,102 @@
       "type": "waitInput",
       "saveAs": "flowResponse",
       "content": "Aguardando preenchimento do formulário...",
-      "nextNode": "plan_selected"
+      "nextNode": "flow_received"
     },
-    "plan_selected": {
-      "id": "plan_selected",
+    "flow_received": {
+      "id": "flow_received",
       "type": "text",
-      "content": "Perfeito! ✅ Agora me manda as fotos 📸",
-      "nextNode": "delay_plan"
-    },
-    "delay_plan": {
-      "id": "delay_plan",
-      "type": "delay",
-      "ms": 1200,
-      "nextNode": "ask_photos"
-    },
-    "ask_photos": {
-      "id": "ask_photos",
-      "type": "waitPhotos",
-      "maxPhotos": 3,
-      "debounceMs": 10000,
-      "content": "📸 Me manda as fotos de vocês! (até 3 fotos)\n\nMande todas e depois clique em *Enviei todas!* 👇",
-      "nextNode": "photos_confirm"
-    },
-    "photos_confirm": {
-      "id": "photos_confirm",
-      "type": "buttons",
-      "body": "Muito bem! Quer adicionar mais foto? Ou talvez editar?\n\n*É só escolher alguma opção abaixo:*",
-      "buttons": [
-        {
-          "id": "done_photos",
-          "title": "✅ Enviei todas!",
-          "nextNode": "show_summary"
-        },
-        {
-          "id": "add_more_photos",
-          "title": "Adicionar mais",
-          "nextNode": "ask_photos"
-        },
-        {
-          "id": "fix_photos",
-          "title": "Mudar Fotos",
-          "nextNode": "ask_which_photo"
-        }
-      ]
-    },
-    "info_photos": {
-      "id": "info_photos",
-      "type": "waitPhoto",
-      "saveAs": "photo_1",
-      "content": "📷 *Lembrando*: envie 1 foto por vez.\n⚠️ Várias fotos = só a primeira conta.\n\nClique em *\"Enviei todas!\"* quando acabar 👇",
-      "nextNode": "photo_received_1"
-    },
-    "photo_received_1": {
-      "id": "photo_received_1",
-      "type": "action",
-      "action": "savePhoto",
-      "nextNode": "ask_more_photos_1"
-    },
-    "ask_more_photos_1": {
-      "id": "ask_more_photos_1",
-      "type": "buttons",
-      "body": "✅ Foto 1 recebida!\n\nQuer adicionar mais fotos? (você pode adicionar até 2 a mais)",
-      "buttons": [
-        {
-          "id": "add_photo",
-          "title": "📷 Adicionar +1",
-          "nextNode": "ask_photo_2"
-        },
-        {
-          "id": "done_photos",
-          "title": "✅ Enviei todas!",
-          "nextNode": "show_summary"
-        }
-      ]
-    },
-    "ask_photo_2": {
-      "id": "ask_photo_2",
-      "type": "waitPhoto",
-      "saveAs": "photo_2",
-      "content": "📸 Manda a 2ª foto:",
-      "nextNode": "photo_received_2"
-    },
-    "photo_received_2": {
-      "id": "photo_received_2",
-      "type": "action",
-      "action": "savePhoto",
-      "nextNode": "ask_more_photos_2"
-    },
-    "ask_more_photos_2": {
-      "id": "ask_more_photos_2",
-      "type": "buttons",
-      "body": "✅ Foto 2 recebida!\n\nQuer adicionar mais fotos? (você pode adicionar mais 1 foto)",
-      "buttons": [
-        {
-          "id": "add_photo",
-          "title": "📷 Adicionar a última",
-          "nextNode": "ask_photo_3"
-        },
-        {
-          "id": "done_photos",
-          "title": "✅ Enviei todas!",
-          "nextNode": "show_summary"
-        }
-      ]
-    },
-    "ask_photo_3": {
-      "id": "ask_photo_3",
-      "type": "waitPhoto",
-      "saveAs": "photo_3",
-      "content": "📸 Manda a 3ª e última foto:",
-      "nextNode": "photo_replace_received_3"
-    },
-    "photo_received_3": {
-      "id": "photo_received_3",
-      "type": "action",
-      "action": "savePhoto",
-      "nextNode": "show_summary"
-    },
-    "show_summary": {
-      "id": "show_summary",
-      "type": "text",
-      "content": "📋 *Resumo do envelope:*\n\n💌 *Para:* {{recipient}}\n✍️ *Assinatura:* {{signature}}\n🎵 *Música:* {{musicName}}\n📅 *Data:* {{startDate}}",
+      "content": "Perfeito! ✅ Recebi tudo aqui.\n\n📋 *Resumo:*\n\n💌 *Para:* {{honoreeName}}\n💞 *Relação:* {{relationship}}\n📝 *Detalhes:* {{specialMessage}}",
       "nextNode": "delay_summary"
     },
     "delay_summary": {
       "id": "delay_summary",
       "type": "delay",
-      "ms": 1200,
-      "nextNode": "confirm_buttons"
-    },
-    "confirm_buttons": {
-      "id": "confirm_buttons",
-      "type": "buttons",
-      "body": "Tá tudo certo? Posso criar agora! 🚀",
-      "buttons": [
-        {
-          "id": "confirm",
-          "title": "Criar envelope",
-          "nextNode": "generating_envelope"
-        },
-        {
-          "id": "edit",
-          "title": "✏️ Corrigir algo",
-          "nextNode": "ask_what_to_edit"
-        },
-        {
-          "id": "cancel",
-          "title": "❌ Agora não",
-          "nextNode": "soft_cancel"
-        }
-      ]
-    },
-    "generating_envelope": {
-      "id": "generating_envelope",
-      "type": "typing",
-      "durationMs": 3000,
-      "action": "typing",
+      "ms": 1500,
       "nextNode": "generating_msg"
     },
     "generating_msg": {
       "id": "generating_msg",
       "type": "text",
-      "content": "Criando o seu envelope... ✨",
-      "nextNode": "deliver_envelope"
+      "content": "Criando a sua música... 🎶✨",
+      "nextNode": "generate_song_action"
     },
-    "deliver_envelope": {
-      "id": "deliver_envelope",
+    "generate_song_action": {
+      "id": "generate_song_action",
       "type": "action",
-      "action": "deliverEnvelope",
-      "nextNode": "final_message"
+      "action": "generateSong",
+      "nextNode": "delay_generation"
     },
-    "final_message": {
-      "id": "final_message",
-      "type": "text",
-      "content": "🎉 Pronto! Seu envelope está no ar!\n\nManda o *link mágico* ou o *QR Code* pra pessoa — ela vai se surpreender! 🥹",
-      "nextNode": "delay_payment"
-    },
-    "delay_payment": {
-      "id": "delay_payment",
+    "delay_generation": {
+      "id": "delay_generation",
       "type": "delay",
       "ms": 5000,
-      "nextNode": "payment_pitch_1"
+      "nextNode": "send_preview_intro"
     },
-    "payment_pitch_1": {
-      "id": "payment_pitch_1",
+    "send_preview_intro": {
+      "id": "send_preview_intro",
       "type": "text",
-      "content": "Ah, uma coisinha antes de ir... 😊",
-      "nextNode": "delay_pitch_1"
+      "content": "Prontinho! 🎉 Aqui vai uma *prévia de 1 minuto* da sua música 👇",
+      "nextNode": "delay_preview_intro"
     },
-    "delay_pitch_1": {
-      "id": "delay_pitch_1",
+    "delay_preview_intro": {
+      "id": "delay_preview_intro",
       "type": "delay",
-      "ms": 1800,
-      "nextNode": "payment_pitch_2"
+      "ms": 4500,
+      "nextNode": "send_song_preview"
     },
-    "payment_pitch_2": {
-      "id": "payment_pitch_2",
+    "send_song_preview": {
+      "id": "send_song_preview",
+      "type": "audio",
+      "voice": false,
+      "url": "{{songPreviewUrl}}",
+      "nextNode": "delay_preview"
+    },
+    "delay_preview": {
+      "id": "delay_preview",
+      "type": "delay",
+      "ms": 4000,
+      "nextNode": "generate_checkout_action"
+    },
+    "generate_checkout_action": {
+      "id": "generate_checkout_action",
+      "type": "action",
+      "action": "createComboCheckout",
+      "nextNode": "combo_offer_message"
+    },
+    "combo_offer_message": {
+      "id": "combo_offer_message",
       "type": "text",
-      "content": "A gente entregou o envelope pra você ver antes porque acredita que quando algo é feito com carinho, a pessoa reconhece o valor 💌",
-      "nextNode": "delay_pitch_2"
+      "content": "🎁 *Promoção de hoje!*\n\nLeve *2 músicas personalizadas completas* por apenas *R$19,90* 💸\n\n💳 *Formas de pagamento:*\n▪️ Pix\n▪️ Cartão de crédito em até *5x*\n▪️ Boleto bancário\n\n✨ Garanta suas *2 versões completas*, com até *3 minutos* cada, por um valor único!",
+      "nextNode": "delay_combo_offer"
     },
-    "delay_pitch_2": {
-      "id": "delay_pitch_2",
+    "delay_combo_offer": {
+      "id": "delay_combo_offer",
       "type": "delay",
       "ms": 2000,
-      "nextNode": "payment_pitch_3_new"
+      "nextNode": "combo_cta"
     },
-    "payment_pitch_3_new": {
-      "id": "payment_pitch_3_new",
-      "type": "text",
-      "content": "São só *R$19,90* — menos que um lanche — por uma memória que a pessoa vai guardar pra sempre 🥹",
-      "nextNode": "delay_pitch_3_new"
-    },
-    "delay_pitch_3_new": {
-      "id": "delay_pitch_3_new",
-      "type": "delay",
-      "ms": 1800,
-      "nextNode": "raffle_reminder"
-    },
-    "raffle_reminder": {
-      "id": "raffle_reminder",
-      "type": "text",
-      "content": "🎉 *E tem mais uma coisa!*\n\n─────────────────────\n💸 Pagando *hoje* você entra no sorteio de um *PIX de R$50,00*\n\n⚠️ Só *3 pessoas* participando até agora — sua chance de ganhar tá *enorme!* 🔥\n\n📅 Sorteio dia *11 de junho* — esse dinheiro dá pra comprar um presente incrível pro seu amor no *Dia dos Namorados* 💝\n\nA gente avisa o ganhador aqui pelo WhatsApp!\n─────────────────────",
-      "nextNode": "delay_raffle"
-    },
-    "delay_raffle": {
-      "id": "delay_raffle",
-      "type": "delay",
-      "ms": 1800,
-      "nextNode": "payment_buttons"
-    },
-    "payment_buttons": {
-      "id": "payment_buttons",
-      "type": "buttons",
-      "body": "Quando quiser confirmar, é só clicar aqui 👇",
-      "buttons": [
-        {
-          "id": "pay",
-          "title": "💳 Pagar R$19,90",
-          "nextNode": "create_payment"
-        },
-        {
-          "id": "skip",
-          "title": "Depois eu pago",
-          "nextNode": "skip_payment"
-        }
-      ]
-    },
-    "skip_payment": {
-      "id": "skip_payment",
-      "type": "text",
-      "content": "Tudo bem! 😊 Seu envelope fica no ar por 30 dias.\n\nQualquer hora que quiser confirmar é só me chamar aqui! 💌",
+    "combo_cta": {
+      "id": "combo_cta",
+      "type": "ctaUrl",
+      "body": "Clique no botão abaixo pra garantir suas 2 músicas completas 👇",
+      "buttonText": "🎁 Garantir agora",
+      "url": "{{checkoutUrl}}",
+      "footerText": "Pagamento seguro via Mercado Pago",
       "nextNode": "remarketing_payment"
     },
     "remarketing_payment": {
       "id": "remarketing_payment",
       "type": "remarketing",
       "delayMs": 43200000,
-      "message": "Oi! 💌 Seu envelope ainda tá no ar esperando por você.\n\nLembra que pagando hoje você ainda entra no sorteio de *R$50 no PIX* — e só tem 3 pessoas participando! 🔥\n\nÉ só clicar aqui pra confirmar os R$19,90 👇",
-      "nextNodeAfterRemarketing": "payment_buttons"
+      "message": "Oi! 🎵 Suas 2 músicas personalizadas completas ainda estão esperando por você.\n\nÉ só clicar aqui pra garantir por *R$19,90* 👇\n\n{{checkoutUrl}}",
+      "nextNodeAfterRemarketing": "end_node"
+    },
+    "skip_payment": {
+      "id": "skip_payment",
+      "type": "text",
+      "content": "Tudo bem! 😊 Sua prévia continua aqui.\n\nQualquer hora que quiser garantir a versão completa é só me chamar! 🎶",
+      "nextNode": "remarketing_payment"
     },
     "create_payment": {
       "id": "create_payment",
@@ -435,7 +165,7 @@
     "send_payment_link": {
       "id": "send_payment_link",
       "type": "text",
-      "content": "Aqui está o PIX 👇\n\nValor: *R$19,90*\nVencimento: *30 minutos* ⏳",
+      "content": "Aqui está o PIX 👇\n\nValor: *R$27,00*\nVencimento: *30 minutos* ⏳",
       "nextNode": "send_code_pix"
     },
     "send_code_pix": {
@@ -463,18 +193,30 @@
     "payment_confirmed": {
       "id": "payment_confirmed",
       "type": "text",
-      "content": "✅ Pagamento confirmado! Obrigado 💛\n\nSeu envelope vai ficar ativo por 30 dias. 🎉\n\nVocê já está na lista do sorteio de *R$50 no PIX* — boa sorte! 🍀",
+      "content": "✅ Pagamento confirmado! Obrigado 💛\n\nJá estou finalizando a versão completa da sua música — em breve te envio! 🎶",
+      "nextNode": "deliver_full_song"
+    },
+    "deliver_full_song": {
+      "id": "deliver_full_song",
+      "type": "action",
+      "action": "deliverFullSong",
+      "nextNode": "delay_send_uppseel"
+    },
+    "delay_send_uppseel": {
+      "id": "delay_combo_offer",
+      "type": "delay",
+      "ms": 10000,
       "nextNode": "upsell_offer"
     },
     "upsell_offer": {
       "id": "upsell_offer",
       "type": "buttons",
-      "body": "Quer criar outro envelope? 💌\n\nAniversário, namoro, pedido... cada momento merece o seu!",
+      "body": "Quer criar outra música personalizada? 🎵\n\nAniversário, namoro, pedido, homenagem... cada momento merece a sua trilha!",
       "buttons": [
         {
           "id": "yes_more",
-          "title": "💌 Criar outro!",
-          "nextNode": "start_flow_message"
+          "title": "🎶 Criar outra!",
+          "nextNode": "explain_flow"
         },
         {
           "id": "no_thanks",
@@ -483,148 +225,10 @@
         }
       ]
     },
-    "ask_what_to_edit": {
-      "id": "ask_what_to_edit",
-      "type": "buttons",
-      "body": "O que você quer editar?",
-      "buttons": [
-        {
-          "id": "edit_photos",
-          "title": "📷 Fotos",
-          "nextNode": "ask_which_photo"
-        },
-        {
-          "id": "edit_other",
-          "title": "💌 Outros dados",
-          "nextNode": "send_flow_template"
-        },
-        {
-          "id": "back_to_summary",
-          "title": "← Voltar",
-          "nextNode": "show_summary"
-        }
-      ]
-    },
-    "ask_which_photo": {
-      "id": "ask_which_photo",
-      "type": "action",
-      "action": "sendPhotoList",
-      "nextNode": "wait_which_photo"
-    },
-    "wait_which_photo": {
-      "id": "wait_which_photo",
-      "type": "waitInput",
-      "saveAs": "editPhotoIndex",
-      "content": "Digite o número da foto que quer trocar (1, 2 ou 3):",
-      "validation": {
-        "pattern": "^[1-3]$"
-      },
-      "nextNode": "route_photo_edit"
-    },
-    "route_photo_edit": {
-      "id": "route_photo_edit",
-      "type": "action",
-      "action": "routePhotoEdit",
-      "nextNode": null
-    },
-    "replace_photo_1": {
-      "id": "replace_photo_1",
-      "type": "waitPhoto",
-      "saveAs": "photo_1",
-      "content": "📸 Manda a nova foto 1:",
-      "nextNode": "photo_replace_received_1"
-    },
-    "photo_replace_received_1": {
-      "id": "photo_replace_received_1",
-      "type": "action",
-      "action": "savePhoto",
-      "nextNode": "photo_replaced_success"
-    },
-    "replace_photo_2": {
-      "id": "replace_photo_2",
-      "type": "waitPhoto",
-      "saveAs": "photo_2",
-      "content": "📸 Manda a nova foto 2:",
-      "nextNode": "photo_replace_received_2"
-    },
-    "photo_replace_received_2": {
-      "id": "photo_replace_received_2",
-      "type": "action",
-      "action": "savePhoto",
-      "nextNode": "photo_replaced_success"
-    },
-    "replace_photo_3": {
-      "id": "replace_photo_3",
-      "type": "waitPhoto",
-      "saveAs": "photo_3",
-      "content": "📸 Manda a nova foto 3:",
-      "nextNode": "photo_replace_received_3"
-    },
-    "photo_replace_received_3": {
-      "id": "photo_replace_received_3",
-      "type": "action",
-      "action": "savePhoto",
-      "nextNode": "photo_replaced_success"
-    },
-    "photo_replaced_success": {
-      "id": "photo_replaced_success",
-      "type": "buttons",
-      "body": "✅ Foto atualizada!",
-      "buttons": [
-        {
-          "id": "edit_more_photos",
-          "title": "📷 Trocar outra",
-          "nextNode": "ask_which_photo"
-        },
-        {
-          "id": "back_to_summary",
-          "title": "✅ Continuar",
-          "nextNode": "photos_confirm"
-        }
-      ]
-    },
-    "soft_cancel": {
-      "id": "soft_cancel",
-      "type": "text",
-      "content": "Tudo bem! 😊 Quando quiser criar, é só me chamar! 💌",
-      "nextNode": "remarketing_setup"
-    },
-    "remarketing_setup": {
-      "id": "remarketing_setup",
-      "type": "remarketing",
-      "delayMs": 82800000,
-      "message": "Oi! 👋 Ainda dá tempo de surpreender alguém com um Envelope do Amor 💌\n\nE quem criar *hoje* ainda entra no sorteio de *R$50 no PIX* — só 3 pessoas participando! 🔥\n\nÉ só me responder aqui!",
-      "nextNodeAfterRemarketing": "end_node"
-    },
     "end_node": {
       "id": "end_node",
       "type": "end",
       "message": null
-    },
-    "msg_testimonial_intro": {
-      "id": "msg_testimonial_intro",
-      "type": "text",
-      "content": "Logo abaixo eu vou *enviar* o que uma das *nossas clientes* falou quando recebeu o envelope dela... 🥹",
-      "nextNode": "delay_testimonial_intro"
-    },
-    "delay_testimonial_intro": {
-      "id": "delay_testimonial_intro",
-      "type": "delay",
-      "ms": 4500,
-      "nextNode": "audio_testimonial"
-    },
-    "audio_testimonial": {
-      "id": "audio_testimonial",
-      "type": "audio",
-      "voice": false,
-      "url": "https://files.botsync.site/mkt-guerrilha/audio_miriene.mp3",
-      "nextNode": "delay_after_testimonial"
-    },
-    "delay_after_testimonial": {
-      "id": "delay_after_testimonial",
-      "type": "delay",
-      "ms": 15000,
-      "nextNode": "msg_ben_1"
     }
   }
 }

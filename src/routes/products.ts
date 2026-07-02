@@ -15,27 +15,27 @@ router.get('/product/envelope/:slug', async (req: Request, res: Response) => {
             return res.status(404).json({ error: 'Envelope not found' });
         }
 
-        const envelope = user.envelope.find(el => el.slug === slug);
-        const photos = envelope?.photos;
+        // const envelope = user.envelope.find(el => el.slug === slug);
+        // const photos = envelope?.photos;
 
-        const response = {
-            slug: envelope?.slug,
-            recipient: envelope?.title,
-            message: envelope?.message,
-            signature: envelope?.signature,
+        // const response = {
+        //     slug: envelope?.slug,
+        //     recipient: envelope?.title,
+        //     message: envelope?.message,
+        //     signature: envelope?.signature,
 
-            photos,
+        //     photos,
 
-            music: {
-                name: envelope?.options.musicName,
-                url: envelope?.options.musicUrl,
-            },
+        //     music: {
+        //         name: envelope?.options.musicName,
+        //         url: envelope?.options.musicUrl,
+        //     },
 
-            startDate: envelope?.options.startDate,
-            expiresAt: envelope?.expiresAt,
-        };
+        //     startDate: envelope?.options.startDate,
+        //     expiresAt: envelope?.expiresAt,
+        // };
 
-        return res.json(response);
+        // return res.json(response);
 
     } catch (error) {
         logger.error(`Error fetching envelope: ${error instanceof Error ? error.message : String(error)}`);

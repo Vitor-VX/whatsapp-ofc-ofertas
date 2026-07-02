@@ -17,65 +17,67 @@ const s3Client = new S3({
     }
 });
 
-function detectImageMime(buffer: Buffer) {
-    const hex = buffer.toString("hex", 0, 12);
+const BUCKET = "botsync-files";
+const PUBLIC_URL = "https://files.botsync.site";
 
-    if (hex.startsWith("ffd8ff")) {
-        return { ext: "jpg", mime: "image/jpeg" };
+const allowedAudioMime = [
+    "audio/mpeg",
+    "audio/wav",
+    "audio/webm",
+    "audio/mp4",
+    "audio/ogg"
+];
+
+function detectAudioMime(buffer: Buffer) {
+    const hex = buffer.toString("hex", 0, 16);
+    const ascii = buffer.toString("ascii", 0, 16);
+
+    if (hex.startsWith("494433")) {
+        return { ext: "mp3", mime: "audio/mpeg" };
     }
 
-    if (hex.startsWith("89504e47")) {
-        return { ext: "png", mime: "image/png" };
+    if (hex.startsWith("fff") || hex.startsWith("fffb")) {
+        return { ext: "mp3", mime: "audio/mpeg" };
     }
 
-    if (hex.startsWith("47494638")) {
-        return { ext: "gif", mime: "image/gif" };
+    if (ascii.startsWith("RIFF") && ascii.includes("WAVE")) {
+        return { ext: "wav", mime: "audio/wav" };
     }
 
-    if (
-        hex.startsWith("52494646") &&
-        buffer.toString("ascii", 8, 12) === "WEBP"
-    ) {
-        return { ext: "webp", mime: "image/webp" };
+    if (ascii.startsWith("OggS")) {
+        return { ext: "ogg", mime: "audio/ogg" };
+    }
+
+    if (ascii.startsWith("RIFF") && ascii.includes("WEBM")) {
+        return { ext: "webm", mime: "audio/webm" };
+    }
+
+    if (ascii.includes("ftyp")) {
+        return { ext: "m4a", mime: "audio/mp4" };
     }
 
     return null;
 }
 
-const BUCKET = "botsync-files";
-const PUBLIC_URL = "https://files.botsync.site";
-
 class UploadCloudFlare {
-
-    /**
-     * Upload inteligente:
-     * - detecta tipo real do arquivo
-     * - gera uuid
-     * - define extensão correta
-     * - protege contra arquivos inválidos
-     */
     async uploadBuffer(
         buffer: Buffer,
-        folder = "uploads"
+        folder = "audios"
     ): Promise<{ url: string; key: string } | null> {
-
         try {
-            let type = detectImageMime(buffer);
+            let type = detectAudioMime(buffer);
             if (!type) {
-                const header = buffer.toString("utf8", 0, 4);
-                if (header === "%PDF") {
-                    type = { ext: "pdf", mime: "application/pdf" };
+                const header = buffer.toString("hex", 0, 3);
+                if (header.startsWith("494433") || header.startsWith("fff")) {
+                    type = { ext: "mp3", mime: "audio/mpeg" } as any;
                 }
             }
 
             if (!type) {
-                throw new Error("Formato de arquivo não suportado");
+                throw new Error("Formato de áudio não suportado");
             }
 
-            if (
-                !type.mime.startsWith("image/") &&
-                type.mime !== "application/pdf"
-            ) {
+            if (!allowedAudioMime.includes(type.mime)) {
                 throw new Error(`Tipo não permitido: ${type.mime}`);
             }
 
@@ -101,9 +103,6 @@ class UploadCloudFlare {
         }
     }
 
-    /**
-     * Remove arquivo do bucket
-     */
     async deleteFile(key: string): Promise<boolean> {
         try {
             await s3Client.send(

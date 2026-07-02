@@ -106,4 +106,4 @@ const ordersSchema = new Schema<IOrdersEnvelope>(
     }
 );
 
-export const OrdersEnvelope = connection.useDb("").model<IOrdersEnvelope>("orders-envelope", ordersSchema);
+export const OrdersEnvelope = connection.useDb("").model<IOrdersEnvelope>("orders-musica", ordersSchema);

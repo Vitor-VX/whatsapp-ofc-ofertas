@@ -111,6 +111,43 @@ export class MercadoPagoService {
         }
     }
 
+    async createCheckoutPreference(params: {
+        title: string;
+        price: number;
+        whatsappId: string;
+        userId: string;
+    }) {
+        const env = getEnv();
+        const preference = new Preference(this.client);
+        const response = await preference.create({
+            body: {
+                items: [
+                    {
+                        id: "combo-2-musicas",
+                        title: params.title,
+                        quantity: 1,
+                        unit_price: params.price,
+                        currency_id: "BRL",
+                    },
+                ],
+                payment_methods: {
+                    installments: 6,
+                },
+                metadata: {
+                    whatsapp_id: params.whatsappId,
+                    user_id: params.userId
+                },
+                external_reference: params.whatsappId,
+                notification_url: `${env.APP_URL}/webhook/mercadopago`
+            },
+        });
+
+        return {
+            initPoint: response.init_point as string,
+            preferenceId: response.id as string,
+        };
+    }
+
     /**
      * Get payment by ID
      */

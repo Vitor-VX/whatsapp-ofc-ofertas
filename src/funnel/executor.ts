@@ -72,6 +72,8 @@ export class FunnelExecutor {
                 return await this.executeText(node);
             case 'image':
                 return await this.executeImage(node);
+            case 'ctaUrl':
+                return await this.executeCtaUrl(node);
             case 'audio':
                 return await this.executeAudio(node);
             case 'cards':
@@ -128,6 +130,33 @@ export class FunnelExecutor {
     }
 
     /**
+     * Send CTA URL button to user
+    */
+    private async executeCtaUrl(node: any): Promise<string | null> {
+        const body = this.context.engine.interpolateText(node.body, this.context.user);
+        const url = this.context.engine.interpolateText(node.url, this.context.user);
+        const footerText = node.footerText
+            ? this.context.engine.interpolateText(node.footerText, this.context.user)
+            : undefined;
+
+        try {
+            await this.context.whatsappService.sendCTAUrl(this.context.user.whatsappId, {
+                bodyText: body,
+                buttonText: node.buttonText,
+                url,
+                header: node.header,
+                footerText,
+            });
+            logger.botMessage(this.context.user.phone, `[CTA_URL] ${node.buttonText} -> ${url}`);
+        } catch (error) {
+            logger.error(`Failed to send CTA URL: ${error instanceof Error ? error.message : String(error)}`);
+            throw error;
+        }
+
+        return node.nextNode || null;
+    }
+
+    /**
      * Send image to user
      */
     private async executeImage(node: any): Promise<string | null> {
@@ -177,10 +206,6 @@ export class FunnelExecutor {
         const components = node.components || [];
         const language = node.language || "pt_BR";
 
-        console.log(components);
-        console.log(templateName);
-
-
         try {
             await this.context.whatsappService.sendTemplate(
                 this.context.user.whatsappId,
@@ -201,9 +226,10 @@ export class FunnelExecutor {
      */
     private async executeAudio(node: any): Promise<string | null> {
         try {
+            const url = this.context.engine.interpolateText(node.url, this.context.user);
             await this.context.whatsappService.sendMessage(this.context.user.whatsappId, {
                 type: 'audio',
-                audio: { link: node.url, voice: node.voice },
+                audio: { link: url, voice: node.voice },
             });
             logger.botMessage(this.context.user.phone, `[AUDIO] ${node.url}`);
         } catch (error) {

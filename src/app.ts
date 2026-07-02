@@ -10,8 +10,7 @@ import mercadoRoutes from './routes/mercadopago';
 import productRoutes from './routes/products';
 import { errorHandler } from './middleware/errorHandler';
 import cors from "cors";
-import { envelopeService } from './services/envelope';
-import { r2Cloudflare } from './utils/uploadCloudflare';
+import { sunoService } from './services/sunoService';
 
 const app: Express = express();
 const env = getEnv();
@@ -49,6 +48,11 @@ app.use(whatsappRoutes);
 app.use(stripeRoutes);
 app.use(mercadoRoutes);
 app.use(productRoutes);
+
+app.post("/webhooks/suno-callback", (req, res) => {
+    // logger.debug(`[suno-callback] recebido: ${JSON.stringify(req.body)}`);
+    res.status(200).json({ received: true });
+});
 
 /**
  * 404 handler

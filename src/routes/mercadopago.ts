@@ -87,11 +87,6 @@ router.post('/webhook/mercadopago', async (req: Request, res: Response) => {
         switch (payment.status) {
             case 'approved': {
                 if (whatsappId && userId) {
-                    await User.updateOne(
-                        { whatsappId },
-                        { paymentStatus: 'paid', mpPaymentId: payment.id },
-                    );
-
                     await publishMessage('payment_events', {
                         type: 'PAYMENT_SUCCESS',
                         whatsappId,

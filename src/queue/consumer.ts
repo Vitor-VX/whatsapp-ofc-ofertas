@@ -16,26 +16,11 @@ import { readFileSync, writeFileSync } from 'fs';
 import { tmpdir } from 'os';
 import { r2Cloudflare } from '../utils/uploadCloudflare';
 import { mercadoPagoService } from '../services/mercadoPago';
-import { envelopeService } from '../services/envelope';
 import { isYouTubeUrl } from '../utils/isValidYoutube';
+import { sunoService } from '../services/sunoService';
+import { downloadAudioBuffer, trimAudioBuffer } from '../utils/audioUtils';
 
 const photoDebounceMap = new Map<string, NodeJS.Timeout>();
-
-function getPhotoIndexFromNodeId(nodeId: string): number {
-    const match = nodeId.match(/photo_(?:replace_)?received_(\d+)/);
-    if (!match) return 0;
-    const index = parseInt(match[1], 10);
-    return index >= 1 && index <= 5 ? index : 0;
-}
-
-function collectPhotos(collectedData: Map<string, string>): string[] {
-    const photos: string[] = [];
-    for (let i = 1; i <= 5; i++) {
-        const url = collectedData.get(`photo_${i}`);
-        if (url && url.startsWith("http")) photos.push(url);
-    }
-    return photos;
-}
 
 async function processPhotoUpload(
     userId: any,
@@ -68,248 +53,126 @@ async function processPhotoUpload(
 }
 
 export function initializeActionHandlers(): void {
-    actionRegistry.register("sendPhotoList", async (_node: ActionNode, user, _ctx) => {
-        const freshUser = await User.findById(user._id);
-        if (!freshUser) return;
-
-        const data = freshUser.collectedData as Map<string, string>;
-        let sentAny = false;
-
-        for (let i = 1; i <= 3; i++) {
-            const url = data.get(`photo_${i}`);
-
-            if (url && url.startsWith("http")) {
-                sentAny = true;
-
-                await whatsappService.sendMessage(user.whatsappId, {
-                    type: "image",
-                    image: {
-                        link: url
-                    },
-                    caption: `📷 Foto ${i} recebida ✅`
-                });
-            }
-        }
-
-        if (!sentAny) {
-            await whatsappService.sendMessage(user.whatsappId, {
-                type: "text",
-                body: "📸 Você ainda não enviou nenhuma foto.",
-            });
-
-            await User.updateOne(
-                { _id: user._id },
-                { $set: { currentNodeId: "info_photos" } }
-            );
-        }
-    });
-
-    // ─────────────────────────────────────────────────────────────────────────────
-    // Action: routePhotoEdit
-    // Lê o número digitado (editPhotoIndex) e avança para o nó replace_photo_N
-    // ─────────────────────────────────────────────────────────────────────────────
-    actionRegistry.register("routePhotoEdit", async (_node: ActionNode, user, _ctx) => {
-        const data = user.collectedData as Map<string, string>;
-        const index = parseInt(data.get("editPhotoIndex") ?? "0", 10);
-
-        if (index < 1 || index > 5) {
-            logger.warn(`[routePhotoEdit] Invalid index ${index} for user ${user.whatsappId}`);
-            await User.updateOne({ _id: user._id }, { $set: { currentNodeId: "ask_which_photo" } });
-            return;
-        }
-
-        // Verifica se a foto existe (não faz sentido trocar um slot vazio)
-        const freshUser = await User.findById(user._id);
-        const photoUrl = (freshUser?.collectedData as Map<string, string>)?.get(`photo_${index}`);
-
-        if (!photoUrl || !photoUrl.startsWith("http")) {
-            await whatsappService.sendMessage(user.whatsappId, {
-                type: "text",
-                body: `⚠️ Você não tem essa foto especificada. Digite o número de uma foto existente.`,
-            });
-            await User.updateOne({ _id: user._id }, { $set: { currentNodeId: "wait_which_photo" } });
-            return;
-        }
-
-        const targetNode = `replace_photo_${index}`;
-        await User.updateOne({ _id: user._id }, { $set: { currentNodeId: targetNode } });
-        logger.info(`[routePhotoEdit] Routing user ${user.whatsappId} → ${targetNode}`);
-    });
-
-    actionRegistry.register("savePhoto", async (node: ActionNode, user, _ctx) => {
-        const photoIndex = getPhotoIndexFromNodeId(node.id);
-        if (photoIndex === 0) {
-            logger.warn(`[savePhoto] Could not determine photo index from node.id: "${node.id}"`);
-            return;
-        }
-
-        const data = user.collectedData as Map<string, string>;
-        const photoMediaId = data.get(`photo_${photoIndex}`);
-
-        if (!photoMediaId) {
-            const freshUser = await User.findById(user._id);
-            const freshData = freshUser?.collectedData as Map<string, string> | undefined;
-            const freshMediaId = freshData?.get(`photo_${photoIndex}`);
-
-            if (!freshMediaId) {
-                logger.warn(`[savePhoto] photo_${photoIndex} not found in collectedData for user ${user.whatsappId}`);
-                return;
-            }
-
-            logger.debug(`[savePhoto] Used DB fallback for photo_${photoIndex}`);
-            return processPhotoUpload(user._id, user.whatsappId, photoIndex, freshMediaId);
-        }
-
-        if (photoMediaId.startsWith("http")) {
-            logger.debug(`[savePhoto] photo_${photoIndex} already uploaded, skipping`);
-            return;
-        }
-
-        return processPhotoUpload(user._id, user.whatsappId, photoIndex, photoMediaId);
-    });
-
-    actionRegistry.register("prepareCheckout", async (_node: ActionNode, user, _ctx) => {
-        const data = user.collectedData as Map<string, string>;
-        const price = parseFloat("19.90");
-        const priceInCents = Math.round(price * 100);
-        const priceStr = `R$${price.toFixed(2).replace(".", ",")}`;
-
-        await User.updateOne(
-            { _id: user._id },
-            {
-                $set: {
-                    "collectedData.packagePrice": priceStr,
-                    "collectedData.packagePriceCents": String(priceInCents),
-                },
-            }
-        );
-
-        logger.debug(`[prepareCheckout] ${priceStr} for ${user.whatsappId}`);
-    });
-
-    actionRegistry.register("createPixPayment", async (_node: ActionNode, user, _ctx) => {
-        logger.info(`[createPixPayment] Creating Pix for ${user.whatsappId}`);
+    actionRegistry.register("createComboCheckout", async (_node, user, _ctx) => {
+        logger.info(`[createComboCheckout] Criando checkout combo para ${user.whatsappId}`);
 
         try {
-            const data = user.collectedData as Map<string, string>;
-            const recipient = data.get("recipient") ?? "Envelope Digital";
-            const packagePrice = parseFloat("19.90");
-
-            const { code, qrCodeBase64, paymentId } = await mercadoPagoService.createPixPayment(
-                user.whatsappId,
-                user._id,
-                packagePrice,
-                `Envelope Digital — ${recipient}`
-            );
+            const { initPoint, preferenceId } = await mercadoPagoService.createCheckoutPreference({
+                title: "ZukMusics — Combo 2 Músicas Personalizadas",
+                price: 0.01,
+                whatsappId: user.whatsappId,
+                userId: user._id
+            });
 
             await User.updateOne(
                 { _id: user._id },
                 {
                     $set: {
-                        "payment.id": paymentId,
-                        "payment.qrCode": qrCodeBase64,
-                        "payment.code": code,
-                        "collectedData.pixCode": code,
+                        "payment.id": preferenceId,
+                        "payment.link": initPoint,
+                        "collectedData.checkoutUrl": initPoint,
                     },
                 }
             );
 
-            logger.info(`[createPixPayment] Pix created for ${user.whatsappId} — paymentId: ${paymentId}`);
+            logger.info(`[createComboCheckout] Checkout criado para ${user.whatsappId}: ${initPoint}`);
         } catch (error) {
-            logger.error(`[createPixPayment] ${error instanceof Error ? error.message : String(error)}`);
+            console.log(error);
+
+            logger.error(`[createComboCheckout] ${error instanceof Error ? error.message : String(error)}`);
             throw error;
         }
     });
 
-    actionRegistry.register("deliverEnvelope", async (_node: ActionNode, user, _ctx) => {
-        logger.info(`[deliverEnvelope] Starting delivery for ${user.whatsappId}`);
+    actionRegistry.register("generateSong", async (_node: ActionNode, user, _ctx) => {
+        logger.info(`[generateSong] Iniciando geração para ${user.whatsappId}`);
 
         try {
             const freshUser = await User.findById(user._id);
             if (!freshUser) throw new Error("User not found");
 
-            const paymentId = freshUser.payment?.id;
-            const alreadyExists = freshUser.envelope.some(
-                (env) => env.paymentId === paymentId
-            );
-            if (alreadyExists) {
-                logger.warn(`[deliverEnvelope] Já existe envelope para payment ${paymentId}`);
+            const flow = freshUser.flowData;
+            if (!flow) throw new Error("flowData ausente — flow do WhatsApp não foi processado");
+
+            const { lyrics, style, title } = await sunoService.generateSong(flow);
+            if (!lyrics) {
+                logger.info("[generateSong] Não foi possível gerar a letra da música..");
                 return;
             }
 
-            const data = freshUser.collectedData as Map<string, string>;
-            const photos = collectPhotos(data);
+            const taskId = await sunoService.generateMusic({ prompt: lyrics, style, title, instrumental: false });
+            logger.info(`[generateSong] Task criada no Suno: ${taskId} (${user.whatsappId})`);
 
-            if (photos.length === 0) throw new Error("No photos found — cannot create envelope");
+            const track = await sunoService.waitForCompletion(taskId, {
+                maxWaitMs: 5 * 60 * 1000,
+                intervalMs: 5000,
+            });
 
-            const startDateStr = data.get("startDate") ?? "";
-            const [yyyy, mm, dd] = startDateStr.split("-").map(Number);
-            const startDate = new Date(yyyy, mm - 1, dd);
+            if (!track.audioUrl) throw new Error("Suno não retornou audio_url");
 
-            const expiresAt = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000);
+            const fullAudioBuffer = await downloadAudioBuffer(track.audioUrl);
+            const previewBuffer = await trimAudioBuffer(fullAudioBuffer, 60);
 
-            const rawMusicUrl = data.get("musicUrl") ?? "";
+            const [fullUpload, previewUpload] = await Promise.all([
+                r2Cloudflare.uploadBuffer(fullAudioBuffer, "musicas-completas"),
+                r2Cloudflare.uploadBuffer(previewBuffer, "musicas-previa"),
+            ]);
 
-            const DEFAULT_MUSIC_URL = "https://www.youtube.com/watch?v=cNGjD0VG4R8";
-            const DEFAULT_MUSIC_NAME = "Ed Sheeran - Perfeita";
-            const validMusicUrl = isYouTubeUrl(rawMusicUrl)
-                ? rawMusicUrl
-                : DEFAULT_MUSIC_URL;
-
-            const musicName = isYouTubeUrl(rawMusicUrl)
-                ? data.get("musicName") ?? "Sua música"
-                : DEFAULT_MUSIC_NAME;
-
-            const payload = {
-                title: data.get("recipient") ?? "Para você",
-                message: data.get("message") ?? "",
-                signature: data.get("signature") ?? "",
-                photos,
-                paymentId: paymentId,
-                options: {
-                    startDate,
-                    hasMusic: true,
-                    musicUrl: validMusicUrl,
-                    musicName: musicName,
-                },
-                expiresAt,
-            };
-
-            const { slug, envelopeUrl, qrCodeImageBuffer } = await envelopeService.create(String(user._id), payload);
-
-            const qrUpload = await r2Cloudflare.uploadBuffer(qrCodeImageBuffer, "envelopes-whatsapp");
-            const qrUrl = qrUpload?.url;
-
-            if (!qrUrl) throw new Error("QR Code upload returned no URL");
-            await envelopeService.saveQrCodeUrl(String(user._id), slug, qrUrl);
+            if (!fullUpload?.url || !previewUpload?.url) {
+                throw new Error("Falha ao subir os áudios pro R2");
+            }
 
             await User.updateOne(
                 { _id: user._id },
                 {
                     $set: {
-                        paymentStatus: "paid",
-                        "collectedData.envelopeSlug": slug,
-                        "collectedData.envelopeUrl": envelopeUrl,
-                        "collectedData.envelopeQrCode": qrUrl,
+                        "music.musicUrl": fullUpload.url,
+                        "music.previewUrl": previewUpload.url,
+                        "music.taskId": taskId,
+                        "music.audioId": track.id,
+                        "collectedData.songPreviewUrl": previewUpload.url,
                     },
                 }
             );
 
-            const expiresLabel = expiresAt.toLocaleDateString("pt-BR");
-            await whatsappService.sendMessage(user.whatsappId, {
-                type: "text",
-                body: `🎉 *Seu Envelope Digital está pronto!*\n\n🔗 Acesse ou compartilhe:\n${envelopeUrl}\n\n⏳ _Válido até: ${expiresLabel}_`,
-            });
-
-            await whatsappService.sendMessage(user.whatsappId, {
-                type: "image",
-                image: { link: qrUrl },
-                caption: "📱 *QR Code do seu envelope!*\n\nImprima, mande por mensagem ou coloque num bilhetinho. É só apontar a câmera para abrir! 💌",
-            });
-
-            logger.info(`[deliverEnvelope] Done — slug: ${slug} | user: ${user.whatsappId}`);
+            logger.info(`[generateSong] Música pronta para ${user.whatsappId}`);
         } catch (error) {
-            logger.error(`[deliverEnvelope] ${error instanceof Error ? error.message : String(error)}`);
+            logger.error(`[generateSong] ${error instanceof Error ? error.message : String(error)}`);
+            throw error;
+        }
+    });
+
+    actionRegistry.register("deliverFullSong", async (_node: ActionNode, user, _ctx) => {
+        try {
+            const freshUser = await User.findById(user._id);
+            if (!freshUser?.music?.musicUrl || !freshUser.music.taskId) {
+                throw new Error(`music.musicUrl ausente para ${user.whatsappId}`);
+            }
+
+            await whatsappService.sendMessage(freshUser.whatsappId, {
+                type: "audio",
+                audio: {
+                    link: freshUser.music.musicUrl,
+                    voice: false,
+                }
+            });
+            logger.info(`[deliverFullSong] Música completa enviada para ${freshUser.whatsappId}`);
+
+            const twoMusic = await sunoService.getTaskStatus(freshUser.music.taskId);
+            if (!twoMusic.response?.sunoData[0].audioUrl) {
+                logger.info("[deliverFullSong] Não foi possível obter a primeira música..");
+                return;
+            }
+
+            await whatsappService.sendMessage(freshUser.whatsappId, {
+                type: "audio",
+                audio: {
+                    link: twoMusic.response?.sunoData?.[0].audioUrl,
+                    voice: false,
+                }
+            });
+        } catch (error) {
+            logger.error(`[deliverFullSong] ${error instanceof Error ? error.message : String(error)}`);
             throw error;
         }
     });
@@ -374,45 +237,37 @@ async function processIncomingMessage(msg: ConsumeMessage | null): Promise<void>
 
             console.log("FLOW DATA:", JSON.stringify(data, null, 2));
 
-            const planMap: Record<string, { days: number; price: number; label: string }> = {
-                plan_30: { days: 30, price: 19.90, label: "30 dias" },
-                plan_90: { days: 90, price: 29.90, label: "90 dias" },
-            };
-
-            const plan = planMap[data.plan] ?? planMap["plan_30"];
-            const priceInCents = Math.round(plan.price * 100);
-            const priceStr = `R$${plan.price.toFixed(2).replace(".", ",")}`;
-
-            const expiresAt = new Date();
-            expiresAt.setDate(expiresAt.getDate() + plan.days);
+            const safe = (v: any) => (v === undefined || v === null ? "" : String(v));
 
             await User.updateOne(
                 { _id: user._id },
                 {
                     $set: {
                         flowData: data,
-                        "collectedData.planDays": String(plan.days),
-                        "collectedData.planLabel": plan.label,
-                        "collectedData.packagePrice": priceStr,
-                        "collectedData.packagePriceValue": String(plan.price),
-                        "collectedData.packagePriceCents": String(priceInCents),
-                        "collectedData.envelopeExpiresAt": expiresAt.toISOString(),
-                        "collectedData.recipient": data.recipient,
-                        "collectedData.message": data.message,
-                        "collectedData.signature": data.signature,
-                        "collectedData.musicUrl": data.music_url,
-                        "collectedData.musicName": data.music_name,
-                        "collectedData.startDate": data.start_date,
+                        "collectedData.honoreeName": safe(data.honoreeName),
+                        "collectedData.relationship": safe(data.relationship),
+                        "collectedData.specialMessage": safe(data.specialMessage),
+                        "collectedData.musicStyle": safe(data.musicStyle),
+                        "collectedData.customStyle": safe(data.customStyle),
+                        "collectedData.voicePreference": safe(data.voicePreference),
+
+                        ...(data.specialQuality && {
+                            "collectedData.specialQuality": safe(data.specialQuality),
+                        }),
+
+                        ...(data.feelingsDetails && {
+                            "collectedData.feelingsDetails": safe(data.feelingsDetails),
+                        }),
                     },
                 }
             );
 
             await User.updateOne(
                 { _id: user._id },
-                { currentNodeId: "plan_selected" }
+                { currentNodeId: "flow_received" }
             );
 
-            logger.info(`User ${phoneNumber} → plan_selected (via flow)`);
+            logger.info(`User ${phoneNumber} → flow_received (via flow)`);
         } else {
             const incomingButtonId =
                 button?.payload ||
@@ -485,7 +340,6 @@ async function processIncomingMessage(msg: ConsumeMessage | null): Promise<void>
                         const u = await User.findById(user._id);
                         await executeNodeSequence(u!, funnelEngine, messageId, true);
                     } else {
-                        // Ainda pode receber mais — confirma recebimento e (re)inicia debounce
                         await whatsappService.sendMessage(phoneNumber, {
                             type: 'text',
                             body: `✅ Foto ${nextSlot} recebida! Manda mais ou aguarde para confirmar.`,
@@ -735,7 +589,7 @@ async function processPaymentEvent(msg: ConsumeMessage | null): Promise<void> {
                 logger.info(`Payment success for ${whatsappId}`);
                 await User.updateOne(
                     { _id: user._id },
-                    { currentNodeId: 'payment_confirmed', paymentStatus: 'paid' },
+                    { currentNodeId: 'payment_confirmed', paymentStatus: 'paid', funnelCompleted: false },
                 );
                 await executeNodeSequence(user, engine, "", true);
                 break;

@@ -7,22 +7,34 @@ interface IPayment {
     qrCode: string | null;
 }
 
-export interface IEnvelope {
-    slug: string;
-    qrCode: string;
-    title: string;
-    message: string;
-    signature: string;
-    photos: string[];
-    paymentId: string | null;
-    options: {
-        startDate?: Date;
-        hasMusic: boolean;
-        musicUrl?: string;
-        musicName?: string;
-    };
-    lastAccessAt: Date;
-    expiresAt?: Date | null;
+interface IMusic {
+    previewUrl: string | null;
+    musicUrl: string | null;
+    taskId: string | null;
+    audioId: string | null;
+}
+
+const musicSchema = new Schema<IMusic>(
+    {
+        previewUrl: { type: String, default: null },
+        musicUrl: { type: String, default: null },
+        taskId: { type: String, default: null },
+        audioId: { type: String, default: null },
+    },
+    { _id: false }
+);
+
+interface IFlowData {
+    honoreeName: string;
+    relationship: string;
+    specialMessage: string;
+    musicStyle: string;
+    customStyle: string;
+    voicePreference: string;
+
+    // opcionais
+    specialQuality: string | null;
+    feelingsDetails: string | null;
 }
 
 export interface IUser extends Document {
@@ -38,35 +50,24 @@ export interface IUser extends Document {
     collectedData: Map<string, string>;
     paymentStatus: "pending" | "paid" | "failed";
     payment: IPayment;
-    clientsImage: string[];
-    envelope: IEnvelope[];
+    flowData: IFlowData;
+    music: IMusic;
     remarketingSentAt: Date | null;
     createdAt: Date;
     updatedAt: Date;
 }
 
-const envelopeOptionsSchema = new Schema(
+const flowDataSchema = new Schema(
     {
-        startDate: { type: Date, default: null },
-        hasMusic: { type: Boolean, default: false },
-        musicUrl: { type: String, default: null },
-        musicName: { type: String, default: null },
-    },
-    { _id: false }
-);
+        honoreeName: { type: String, required: true },
+        relationship: { type: String, required: true },
+        specialMessage: { type: String, required: true },
+        musicStyle: { type: String, required: true },
+        customStyle: { type: String, default: null },
+        voicePreference: { type: String, required: true },
 
-const envelopeSchema = new Schema<IEnvelope>(
-    {
-        slug: { type: String, required: true, index: true },
-        qrCode: { type: String, default: "" },
-        title: { type: String, required: true },
-        message: { type: String, required: true },
-        signature: { type: String, required: true },
-        photos: { type: [String], default: [] },
-        paymentId: { type: String, index: true },
-        options: { type: envelopeOptionsSchema, default: () => ({}) },
-        lastAccessAt: { type: Date, default: () => new Date() },
-        expiresAt: { type: Date, default: null },
+        specialQuality: { type: String, default: null },
+        feelingsDetails: { type: String, default: null },
     },
     { _id: false }
 );
@@ -132,21 +133,18 @@ const userSchema = new Schema<IUser>(
             enum: ["pending", "paid", "failed"],
             default: "pending",
         },
+        flowData: {
+            type: flowDataSchema,
+            default: null,
+        },
+        music: {
+            type: musicSchema,
+            default: () => ({ previewUrl: null, musicUrl: null, taskId: null, audioId: null }),
+        },
         payment: {
             type: paymentSchema,
             default: () => ({ id: null, link: null, code: null, qrCode: null }),
         },
-
-        clientsImage: {
-            type: [String],
-            default: [],
-        },
-
-        envelope: {
-            type: [envelopeSchema],
-            default: [],
-        },
-
         remarketingSentAt: {
             type: Date,
             default: null,
@@ -157,12 +155,4 @@ const userSchema = new Schema<IUser>(
     }
 );
 
-userSchema.index({ whatsappId: 1 });
-userSchema.index({ phone: 1 });
-userSchema.index({ funnelCompleted: 1 });
-userSchema.index({ windowExpiresAt: 1 });
-userSchema.index({ paymentStatus: 1 });
-userSchema.index({ "envelope.slug": 1 });
-userSchema.index({ "envelope.expiresAt": 1 });
-
-export const User = connection.useDb("whatsapp-ofc").model<IUser>("User", userSchema);
+export const User = connection.useDb("whatsapp-ofc").model<IUser>("oferta-musicas", userSchema);

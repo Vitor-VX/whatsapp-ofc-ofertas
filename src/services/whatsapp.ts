@@ -382,6 +382,95 @@ export class WhatsAppService {
         }
     }
 
+    async sendCTAUrl(
+        phoneNumber: string,
+        options: {
+            bodyText: string;
+            buttonText: string;
+            url: string;
+            header?: {
+                type: "image" | "video" | "document" | "text";
+                value: string;
+            };
+            footerText?: string;
+        }
+    ): Promise<void> {
+        try {
+            const { bodyText, buttonText, url, header, footerText } = options;
+            const interactive: any = {
+                type: "cta_url",
+                body: {
+                    text: bodyText,
+                },
+                action: {
+                    name: "cta_url",
+                    parameters: {
+                        display_text: buttonText,
+                        url: url,
+                    },
+                },
+            };
+
+            if (header) {
+                switch (header.type) {
+                    case "image":
+                        interactive.header = {
+                            type: "image",
+                            image: { link: header.value },
+                        };
+                        break;
+
+                    case "video":
+                        interactive.header = {
+                            type: "video",
+                            video: { link: header.value },
+                        };
+                        break;
+
+                    case "document":
+                        interactive.header = {
+                            type: "document",
+                            document: { link: header.value },
+                        };
+                        break;
+
+                    case "text":
+                        interactive.header = {
+                            type: "text",
+                            text: header.value,
+                        };
+                        break;
+                }
+            }
+
+            if (footerText) {
+                interactive.footer = {
+                    text: footerText,
+                };
+            }
+
+            const payload = {
+                messaging_product: "whatsapp",
+                recipient_type: "individual",
+                to: phoneNumber.replace(/\D/g, ""),
+                type: "interactive",
+                interactive,
+            };
+
+            await this.client.post("", payload);
+            logger.debug(`CTA URL enviada para ${phoneNumber}`);
+        } catch (error) {
+            const errorMsg = error instanceof Error ? error.message : String(error);
+
+            if (axios.isAxiosError(error) && error.response) {
+                logger.error(`Meta API error: ${JSON.stringify(error.response.data)}`);
+            }
+
+            logger.error(`Erro ao enviar CTA URL: ${errorMsg}`);
+            throw error;
+        }
+    }
+
     /**
      * Verify webhook signature
      */

@@ -22,6 +22,19 @@ export interface PixNode extends BaseNode {
     code: string;
 }
 
+export interface CtaUrlNode extends BaseNode {
+    type: 'ctaUrl';
+    body: string;
+    buttonText: string;
+    url: string;
+    header?: {
+        type: 'image' | 'video' | 'document' | 'text';
+        value: string;
+    };
+    footerText?: string;
+    nextNode?: string;
+}
+
 export interface WaitPhotosNode extends BaseNode {
     type: 'waitPhotos';
     content: string;
@@ -163,6 +176,7 @@ export type FunnelNode =
     | TemplateNode
     | CardsNode
     | WaitPhotosNode
+    | CtaUrlNode
     | EndNode;
 
 export interface Funnel {
