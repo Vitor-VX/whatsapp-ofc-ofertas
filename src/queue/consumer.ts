@@ -59,7 +59,7 @@ export function initializeActionHandlers(): void {
         try {
             const { initPoint, preferenceId } = await mercadoPagoService.createCheckoutPreference({
                 title: "ZukMusics — Combo 2 Músicas Personalizadas",
-                price: 0.01,
+                price: 19.90,
                 whatsappId: user.whatsappId,
                 userId: user._id
             });
