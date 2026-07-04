@@ -54,6 +54,19 @@ app.post("/webhooks/suno-callback", (req, res) => {
     res.status(200).json({ received: true });
 });
 
+// sunoService.generateSong({
+//     honoreeName: "Daniel e may",
+//     relationship: "Os dois e ex",
+//     specialMessage: "Eles se amam mais nao pode fica juntos pos se machucar demais e um amor q dói na alma deles, elex brigava muito mas quando ta longe sente saudades, fala q a may ama ele e quer ela ora pra ele volta, todos os dias eles passaram dois anos juntos os dois são como fogo e água os dois tem uma química so pelo olha e lindo e um amor a doi senti",
+//     musicStyle: "Sertanejo raiz",
+//     voicePreference: "Masculina",
+//     specialQuality: "Um momento especial foi a conexão dos dois q eles sentiram eles entendem vai sabe oq e"
+// }).then(res => {
+//     console.log(res);
+// }).catch(err => {
+//     console.log(err);
+// })
+
 /**
  * 404 handler
  */

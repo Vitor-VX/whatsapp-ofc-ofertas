@@ -69,6 +69,9 @@ export async function generateSong(flow: FlowData) {
     ].filter(Boolean);
 
     const prompt = `
+Você vai transformar uma história REAL em letra de música. A fidelidade aos fatos abaixo é OBRIGATÓRIA e mais importante que criatividade.
+
+HISTÓRIA REAL (não invente fatos além destes, não troque nomes, não crie novos personagens ou cenários):
 ${contextParts.join("\n")}
 
 Crie uma LETRA DE MÚSICA completa.
@@ -76,7 +79,10 @@ Crie uma LETRA DE MÚSICA completa.
 Regras:
 - Estilo: ${style}
 - Idioma: português
-- Deve ser emocional e personalizada
+- Use APENAS os fatos, sentimentos e detalhes fornecidos acima. NÃO invente novos acontecimentos, lugares, objetos ou cenas que não estejam implícitos na história (ex: não crie "estrada", "chão de barro", "pratos quebrados" etc. se isso não foi mencionado)
+- Mantenha o(s) nome(s) EXATAMENTE como foram escritos: ${flow.honoreeName}. Nunca troque ou crie variações do nome
+- A letra deve soar como se alguém estivesse contando ESSA história específica, não uma história genérica de amor
+- Deve ser emocional e personalizada, mas ancorada nos detalhes reais fornecidos
 - Estrutura obrigatória:
   [Verso 1]
   [Verso 2]
@@ -84,10 +90,11 @@ Regras:
   [Verso 3]
   [Refrão Final]
 
-- O refrão deve ser forte e memorável
-- Não use frases genéricas
-- Faça parecer uma música real, pronta para ser cantada
+- O refrão deve ser forte e memorável, e deve refletir a mensagem principal ou o sentimento central descrito na história
+- Evite clichês vazios, mas isso NUNCA justifica inventar fatos novos — prefira ser específico usando os detalhes reais, não usando cenas inventadas
 ${flow.voicePreference ? `- A música deve combinar com uma voz ${flow.voicePreference}` : ""}
+
+Antes de escrever, releia a história e identifique: quem são as pessoas, o que aconteceu, o que sentem. A letra deve poder ser reconhecida pela própria pessoa que mandou a história como sendo SOBRE ela.
 `;
 
     const response = await openai.chat.completions.create({
@@ -95,7 +102,8 @@ ${flow.voicePreference ? `- A música deve combinar com uma voz ${flow.voicePref
         messages: [
             {
                 role: "system",
-                content: "Você é um compositor profissional de músicas emocionais.",
+                content:
+                    "Você é um compositor profissional de músicas emocionais personalizadas. Sua prioridade #1 é a fidelidade à história real que o cliente contou — você NUNCA inventa fatos, cenários, objetos ou nomes que não foram mencionados. Criatividade deve ser aplicada na forma poética das frases, nunca no conteúdo/fatos da história.",
             },
             {
                 role: "user",
